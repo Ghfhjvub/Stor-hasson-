@@ -105,6 +105,7 @@
 
             <div class="flex gap-2 mb-6 border-b border-gray-700 pb-3">
                 <button onclick="switchAdminTab('addGame')" id="tabBtnAdd" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabAddGame">إضافة لعبة جديدة</button>
+                <button onclick="switchAdminTab('manage')" id="tabBtnManage" class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer">إدارة الألعاب</button>
                 <button onclick="switchAdminTab('requests')" id="tabBtnReq" class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabRequests">طلبات التنزيل</button>
                 <button onclick="switchAdminTab('logs')" id="tabBtnLog" class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabLogs">سجل التنزيلات</button>
             </div>
@@ -133,12 +134,13 @@
                         <label class="block text-sm font-medium mb-1" data-translate="gameVideoUrl">رابط الفيديو الترويجي (اختياري - يوتيوب أو رابط مباشر)</label>
                         <input type="url" id="gameVideoUrl" placeholder="https://www.youtube.com/watch?v=..." dir="ltr" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1" data-translate="whatsappNum">رقم الواتساب الخاص بك (مثال: 2499...)</label>
-                        <input type="text" id="whatsappNumber" required placeholder="249..." class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white">
-                    </div>
                     <button type="submit" id="publishBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-lg transition shadow cursor-pointer" data-translate="publishGameBtn">نشر اللعبة</button>
                 </form>
+            </div>
+
+            <!-- تبويب: إدارة الألعاب -->
+            <div id="tabContentManage" class="hidden space-y-3">
+                <div id="manageList" class="space-y-3"></div>
             </div>
 
             <!-- تبويب: الطلبات -->
@@ -183,7 +185,7 @@
     <!-- Firebase SDKs (Firestore only - No Storage cost!) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, getDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, getDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAMAZFJXGE_7zg1nHGyiPmsqp_8Y3n02SE",
@@ -228,7 +230,7 @@
                 enterPassTitle: "أدخل كلمة مرور الإدارة",
                 confirmBtn: "دخول",
                 cancelBtn: "إلغاء",
-                downloadBtn: "تنزيل اللعبة  ",
+                downloadBtn: "Download",
                 downloadsCount: "تم التنزيل بواسطة: ",
                 personUnit: "شخص"
             },
@@ -261,13 +263,14 @@
                 enterPassTitle: "Enter Admin Password",
                 confirmBtn: "Login",
                 cancelBtn: "Cancel",
-                downloadBtn: "Download via WhatsApp",
+                downloadBtn: "Download",
                 downloadsCount: "Downloaded by: ",
                 personUnit: "people"
             }
         };
 
         let currentLang = 'ar';
+        const ADMIN_WHATSAPP = '249118944652'; // 0118944652 بالصيغة الدولية (السودان)
 
         function changeLanguage(lang) {
             currentLang = lang;
@@ -341,6 +344,8 @@
             document.getElementById('tabContentAdd').classList.add('hidden');
             document.getElementById('tabContentReq').classList.add('hidden');
             document.getElementById('tabContentLog').classList.add('hidden');
+            document.getElementById('tabContentManage').classList.add('hidden');
+            document.getElementById('tabBtnManage').className = "px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer";
             document.getElementById('tabBtnAdd').className = "px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer";
             document.getElementById('tabBtnReq').className = "px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer";
             document.getElementById('tabBtnLog').className = "px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer";
@@ -348,6 +353,10 @@
             if(tab === 'addGame') {
                 document.getElementById('tabContentAdd').classList.remove('hidden');
                 document.getElementById('tabBtnAdd').className = "px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium transition cursor-pointer";
+            } else if(tab === 'manage') {
+                document.getElementById('tabContentManage').classList.remove('hidden');
+                document.getElementById('tabBtnManage').className = "px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium transition cursor-pointer";
+                loadManage();
             } else if(tab === 'requests') {
                 document.getElementById('tabContentReq').classList.remove('hidden');
                 document.getElementById('tabBtnReq').className = "px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium transition cursor-pointer";
@@ -409,13 +418,11 @@
 
             const title = document.getElementById('gameTitle').value.trim();
             const description = document.getElementById('gameDescription').value.trim();
-            const whatsapp = document.getElementById('whatsappNumber').value.replace(/\D/g, '');
             const videoUrl = document.getElementById('gameVideoUrl').value.trim();
             const coverFile = document.getElementById('gameCoverFile').files[0];
             const subFiles = Array.from(document.getElementById('gameSubFiles').files).slice(0, 3);
 
             try {
-                if (!whatsapp) throw new Error('INVALID_WHATSAPP');
                 if (!coverFile) throw new Error('NO_COVER');
 
                 // نضغط الصور تدريجياً حتى يصبح حجم المستند أقل من حد Firestore
@@ -426,7 +433,7 @@
                     for (const f of subFiles) {
                         subImages.push(await compressImage(f, step.sub, step.quality));
                     }
-                    const candidate = { title, description, cover, subImages, video: videoUrl, whatsapp, downloadsCount: 0 };
+                    const candidate = { title, description, cover, subImages, video: videoUrl, downloadsCount: 0 };
                     if (docSize(candidate) <= MAX_DOC_BYTES) {
                         payload = candidate;
                         break;
@@ -443,8 +450,7 @@
             } catch (err) {
                 console.error('Publish error:', err);
                 let msg = 'حدث خطأ أثناء حفظ البيانات.';
-                if (err.message === 'INVALID_WHATSAPP') msg = 'رقم الواتساب غير صحيح، اكتب أرقاماً فقط (مثال: 2499...).';
-                else if (err.message === 'TOO_LARGE' || err.code === 'invalid-argument') msg = 'حجم الصور كبير جداً حتى بعد الضغط. اختر صوراً أصغر أو قلل عددها.';
+                if (err.message === 'TOO_LARGE' || err.code === 'invalid-argument') msg = 'حجم الصور كبير جداً حتى بعد الضغط. اختر صوراً أصغر أو قلل عددها.';
                 else if (err.code === 'permission-denied') msg = 'Firestore رفض الحفظ (permission-denied). عدّل قواعد Firestore Rules في Firebase Console للسماح بالكتابة على مجموعة games.';
                 else if (err.code === 'unavailable') msg = 'تعذر الاتصال بـ Firebase. تأكد من الإنترنت وحاول مرة أخرى.';
                 alert(msg + (err.code ? '\n(' + err.code + ')' : ''));
@@ -510,14 +516,14 @@
                                 <img src="1.jpg" class="w-6 h-6 rounded-full border border-indigo-500 object-cover">
                                 <span>المطور: <strong>حسن مصطفى حسن طه</strong></span>
                             </div>
-                            <button class="download-btn w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2 text-sm cursor-pointer">
-                                <i class="fa-brands fa-whatsapp text-lg"></i> ${translations[currentLang].downloadBtn}
+                            <button class="download-btn w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2 text-sm cursor-pointer">
+                                <i class="fa-solid fa-download text-lg"></i> ${translations[currentLang].downloadBtn}
                             </button>
                         </div>
                     `;
                     // ربط الزر عبر addEventListener حتى لا ينكسر الكود إذا احتوى اسم اللعبة على علامة ' مثل Assassin's Creed
                     card.querySelector('.download-btn').addEventListener('click', () => {
-                        window.requestDownload(docSnap.id, data.title, data.whatsapp);
+                        window.requestDownload(docSnap.id, data.title);
                     });
                     container.appendChild(card);
                 });
@@ -527,7 +533,7 @@
             }
         }
 
-        window.requestDownload = async function(gameId, gameTitle, whatsappNum) {
+        window.requestDownload = async function(gameId, gameTitle) {
             try {
                 await addDoc(collection(db, "requests"), {
                     gameId,
@@ -536,11 +542,54 @@
                     createdAt: serverTimestamp()
                 });
                 const message = encodeURIComponent(`مرحباً حسن، أود تنزيل اللعبة التالية: ${gameTitle}`);
-                window.open(`https://wa.me/${whatsappNum}?text=${message}`, '_blank');
+                window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${message}`, '_blank');
                 alert('تم إرسال طلب التنزيل إلى الإدارة، وجاري تحويلك إلى واتساب.');
             } catch (err) {
                 console.error(err);
                 alert('حدث خطأ أثناء إرسال الطلب.');
+            }
+        }
+
+        async function loadManage() {
+            const list = document.getElementById('manageList');
+            list.innerHTML = `<p class="text-gray-400 text-center py-4">جاري التحميل...</p>`;
+            try {
+                const q = query(collection(db, "games"), orderBy("createdAt", "desc"));
+                const snap = await getDocs(q);
+                if (snap.empty) {
+                    list.innerHTML = `<p class="text-gray-400 text-center py-6">لا توجد ألعاب معروضة.</p>`;
+                    return;
+                }
+                list.innerHTML = '';
+                snap.forEach((d) => {
+                    const g = d.data();
+                    const row = document.createElement('div');
+                    row.className = "bg-gray-700/50 p-3 rounded-xl border border-gray-600 flex items-center gap-3";
+                    row.innerHTML = `
+                        <img src="${escapeHtml(g.cover)}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
+                        <h4 class="flex-grow font-bold text-white text-sm">${escapeHtml(g.title)}</h4>
+                        <button class="del-btn bg-red-600 hover:bg-red-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow cursor-pointer"><i class="fa-solid fa-trash"></i> حذف</button>
+                    `;
+                    row.querySelector('.del-btn').addEventListener('click', () => deleteGame(d.id, g.title));
+                    list.appendChild(row);
+                });
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = `<p class="text-red-400 text-center py-4">حدث خطأ أثناء التحميل.</p>`;
+            }
+        }
+
+        async function deleteGame(id, title) {
+            if (!confirm('هل أنت متأكد من حذف اللعبة "' + title + '" نهائياً؟')) return;
+            try {
+                await deleteDoc(doc(db, "games", id));
+                loadManage();
+                loadGames();
+            } catch (err) {
+                console.error(err);
+                alert(err.code === 'permission-denied'
+                    ? 'Firestore رفض الحذف (permission-denied). اسمح بالحذف في قواعد Firestore.'
+                    : 'حدث خطأ أثناء الحذف.');
             }
         }
 
