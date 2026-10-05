@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7ASSON GAMING</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 500: '#6366f1', 600: '#4f46e5' }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <button id="menuBtn" class="p-2.5 rounded-xl bg-gray-700 hover:bg-gray-600 text-gray-200 transition cursor-pointer shadow">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <div class="flex items-center gap-3">
+                <div class="text-right">
+                    <h1 class="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-500">7ASSON GAMING</h1>
+                    <span class="text-xs text-gray-400" data-translate="developerTitle">المطور: حسن مصطفى</span>
+                </div>
+                <img src="1.jpg" alt="Hassan Mustafa" class="w-11 h-11 rounded-full border-2 border-indigo-500 object-cover shadow">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-extrabold mb-2" data-translate="mainTitle">مكتبة الألعاب الحصرية</h2>
+            <p class="text-gray-400" data-translate="mainSubtitle">استكشف أحدث الألعاب، شاهد العروض، وقم بالتنزيل مباشرة</p>
+        </div>
+
+        <div id="gamesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="text-center py-12 col-span-full text-gray-400" data-translate="loadingGames">جاري تحميل الألعاب...</div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700 py-6 text-center text-sm text-gray-400">
+        <p>© 2026 <strong>7ASSON GAMING</strong>. All Rights Reserved.</p>
+        <p class="mt-1" data-translate="footerDev">تم التطوير بواسطة المطور <span class="text-indigo-400 font-bold">حسن مصطفى حسن طه</span></p>
+    </footer>
+
+    <!-- Side Menu / Settings Drawer -->
+    <div id="sideMenu" class="fixed inset-0 bg-black/60 z-50 hidden transition-opacity backdrop-blur-sm">
+        <div class="absolute top-0 right-0 h-full w-80 bg-gray-800 shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300" id="menuPanel">
+            <div>
+                <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                    <h3 class="text-lg font-bold" data-translate="settingsTitle">إعدادات الموقع</h3>
+                    <button id="closeMenuBtn" class="text-gray-400 hover:text-white text-xl p-2 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium" data-translate="darkMode">الوضع الليلي</span>
+                        <button id="themeToggle" class="w-12 h-6 flex items-center bg-indigo-600 rounded-full p-1 duration-300 cursor-pointer">
+                            <div id="themeToggleDot" class="bg-white w-4 h-4 rounded-full shadow-md transform translate-x-6 transition-transform"></div>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium" data-translate="language">اللغة / Language</span>
+                        <select id="langSelect" class="bg-gray-700 text-sm rounded px-2 py-1 border border-gray-600 focus:outline-none text-white cursor-pointer">
+                            <option value="ar">العربية</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="pt-4 border-t border-gray-700">
+                        <button id="adminLoginBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 rounded-lg transition shadow flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-lock"></i> <span data-translate="adminPanelBtn">لوحة الإدارة</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="text-xs text-center text-gray-500">7ASSON GAMING v2.5</div>
+        </div>
+    </div>
+
+    <!-- Admin Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 border border-gray-700 shadow-2xl">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                <h3 class="text-xl font-bold text-indigo-400" data-translate="adminDashboard">لوحة تحكم المدير</h3>
+                <button id="closeAdminBtn" class="text-gray-400 hover:text-white text-xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="flex gap-2 mb-6 border-b border-gray-700 pb-3">
+                <button onclick="switchAdminTab('addGame')" id="tabBtnAdd" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabAddGame">إضافة لعبة جديدة</button>
+                <button onclick="switchAdminTab('manage')" id="tabBtnManage" class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer">إدارة الألعاب</button>
+                <button onclick="switchAdminTab('requests')" id="tabBtnReq" class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabRequests">طلبات التنزيل</button>
+                <button onclick="switchAdminTab('logs')" id="tabBtnLog" class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabLogs">سجل التنزيلات</button>
+            </div>
+
+            <!-- تبويب: إضافة لعبة -->
+            <div id="tabContentAdd" class="space-y-4">
+                <form id="addGameForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1" data-translate="gameName">اسم اللعبة</label>
+                        <input type="text" id="gameTitle" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" data-translate="gameDesc">وصف اللعبة</label>
+                        <textarea id="gameDescription" rows="3" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" data-translate="mainImg">اختر الصورة الرئيسية (من الهاتف)</label>
+                        <input type="file" id="gameCoverFile" accept="image/*" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-300 cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" data-translate="subImgs">الصور الفرعية المتعددة (اختر حتى 3 صور)</label>
+                        <input type="file" id="gameSubFiles" accept="image/*" multiple class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-300 cursor-pointer">
+                        <span class="text-xs text-gray-400 mt-1 block">يمكنك تحديد حتى ٣ صور دفعة واحدة من معرض هاتفك.</span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" data-translate="gameVideoUrl">رابط الفيديو الترويجي (اختياري - يوتيوب أو رابط مباشر)</label>
+                        <input type="url" id="gameVideoUrl" placeholder="https://www.youtube.com/watch?v=..." dir="ltr" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white">
+                    </div>
+                    <button type="submit" id="publishBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-lg transition shadow cursor-pointer" data-translate="publishGameBtn">نشر اللعبة</button>
+                </form>
+            </div>
+
+            <!-- تبويب: إدارة الألعاب -->
+            <div id="tabContentManage" class="hidden space-y-3">
+                <div id="manageList" class="space-y-3"></div>
+            </div>
+
+            <!-- تبويب: الطلبات -->
+            <div id="tabContentReq" class="hidden space-y-4">
+                <div id="requestsList" class="space-y-3">
+                    <p class="text-gray-400 text-center py-6" data-translate="noRequests">لا توجد طلبات تنزيل معلقة حالياً.</p>
+                </div>
+            </div>
+
+            <!-- تبويب: السجلات -->
+            <div id="tabContentLog" class="hidden space-y-4">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-gray-700 text-gray-300">
+                            <tr>
+                                <th class="p-3" data-translate="thGame">اسم اللعبة</th>
+                                <th class="p-3" data-translate="thDate">وقت الطلب</th>
+                                <th class="p-3" data-translate="thStatus">الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logsTableBody" class="divide-y divide-gray-700">
+                            <tr><td colspan="3" class="text-center py-4 text-gray-400" data-translate="noLogs">لا يوجد سجل تنزيلات حتى الآن.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Prompt Modal -->
+    <div id="passwordModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl p-6 max-w-sm w-full border border-gray-700 text-center shadow-2xl">
+            <h3 class="text-lg font-bold mb-4 text-white" data-translate="enterPassTitle">أدخل كلمة مرور الإدارة</h3>
+            <input type="password" id="adminPasswordInput" placeholder="••••••••" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-center text-lg mb-4 focus:outline-none focus:border-indigo-500 text-white">
+            <div class="flex gap-2">
+                <button id="submitPasswordBtn" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 rounded-lg transition cursor-pointer" data-translate="confirmBtn">دخول</button>
+                <button id="cancelPasswordBtn" class="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium py-2 rounded-lg transition cursor-pointer" data-translate="cancelBtn">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs (Firestore only - No Storage cost!) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, getDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMAZFJXGE_7zg1nHGyiPmsqp_8Y3n02SE",
+            authDomain: "stor-7asson.firebaseapp.com",
+            projectId: "stor-7asson",
+            storageBucket: "stor-7asson.firebasestorage.app",
+            messagingSenderId: "537917348086",
+            appId: "1:537917348086:web:69b13ed3ca30aaae2234d7",
+            measurementId: "G-QVT8WW5V99"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const translations = {
+            ar: {
+                developerTitle: "المطور: حسن مصطفى",
+                mainTitle: "مكتبة الألعاب الحصرية",
+                mainSubtitle: "استكشف أحدث الألعاب، شاهد العروض، وقم بالتنزيل مباشرة",
+                loadingGames: "جاري تحميل الألعاب...",
+                settingsTitle: "إعدادات الموقع",
+                darkMode: "الوضع الليلي",
+                language: "اللغة / Language",
+                adminPanelBtn: "لوحة الإدارة",
+                adminDashboard: "لوحة تحكم المدير",
+                tabAddGame: "إضافة لعبة جديدة",
+                tabRequests: "طلبات التنزيل",
+                tabLogs: "سجل التنزيلات",
+                gameName: "اسم اللعبة",
+                gameDesc: "وصف اللعبة",
+                mainImg: "اختر الصورة الرئيسية (من الهاتف)",
+                subImgs: "الصور الفرعية المتعددة (اختر حتى 3 صور)",
+                gameVideoUrl: "رابط الفيديو الترويجي (اختياري - يوتيوب أو رابط مباشر)",
+                whatsappNum: "رقم الواتساب الخاص بك (مثال: 2499...)",
+                publishGameBtn: "نشر اللعبة",
+                publishing: "جاري حفظ بيانات اللعبة...",
+                noRequests: "لا توجد طلبات تنزيل معلقة حالياً.",
+                thGame: "اسم اللعبة",
+                thDate: "وقت الطلب",
+                thStatus: "الحالة",
+                noLogs: "لا يوجد سجل تنزيلات حتى الآن.",
+                enterPassTitle: "أدخل كلمة مرور الإدارة",
+                confirmBtn: "دخول",
+                cancelBtn: "إلغاء",
+                downloadBtn: "Download",
+                downloadsCount: "تم التنزيل بواسطة: ",
+                personUnit: "شخص"
+            },
+            en: {
+                developerTitle: "Developer: Hassan M.",
+                mainTitle: "Exclusive Game Library",
+                mainSubtitle: "Explore latest games, watch previews, and download directly",
+                loadingGames: "Loading games...",
+                settingsTitle: "Site Settings",
+                darkMode: "Dark Mode",
+                language: "Language / اللغة",
+                adminPanelBtn: "Admin Panel",
+                adminDashboard: "Admin Dashboard",
+                tabAddGame: "Add New Game",
+                tabRequests: "Download Requests",
+                tabLogs: "Download Logs",
+                gameName: "Game Name",
+                gameDesc: "Game Description",
+                mainImg: "Select Main Image (From Phone)",
+                subImgs: "Multiple Sub Images (Select up to 3)",
+                gameVideoUrl: "Trailer link (optional - YouTube or direct link)",
+                whatsappNum: "Your WhatsApp Number (e.g. 2499...)",
+                publishGameBtn: "Publish Game",
+                publishing: "Saving game data...",
+                noRequests: "No pending download requests.",
+                thGame: "Game Name",
+                thDate: "Request Time",
+                thStatus: "Status",
+                noLogs: "No download logs yet.",
+                enterPassTitle: "Enter Admin Password",
+                confirmBtn: "Login",
+                cancelBtn: "Cancel",
+                downloadBtn: "Download",
+                downloadsCount: "Downloaded by: ",
+                personUnit: "people"
+            }
+        };
+
+        let currentLang = 'ar';
+        const ADMIN_WHATSAPP = '249118944652'; // 0118944652 بالصيغة الدولية (السودان)
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            loadGames();
+        }
+
+        const sideMenu = document.getElementById('sideMenu');
+        const menuPanel = document.getElementById('menuPanel');
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+        function openMenu() {
+            sideMenu.classList.remove('hidden');
+            setTimeout(() => { menuPanel.classList.remove('translate-x-full'); }, 10);
+        }
+
+        function closeMenu() {
+            menuPanel.classList.add('translate-x-full');
+            setTimeout(() => { sideMenu.classList.add('hidden'); }, 300);
+        }
+
+        menuBtn.addEventListener('click', openMenu);
+        closeMenuBtn.addEventListener('click', closeMenu);
+        sideMenu.addEventListener('click', (e) => { if (e.target === sideMenu) closeMenu(); });
+
+        const themeToggle = document.getElementById('themeToggle');
+        const themeToggleDot = document.getElementById('themeToggleDot');
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            themeToggleDot.style.transform = isDark ? 'translateX(24px)' : 'translateX(0px)';
+        });
+
+        document.getElementById('langSelect').addEventListener('change', (e) => {
+            changeLanguage(e.target.value);
+        });
+
+        const adminModal = document.getElementById('adminModal');
+        const passwordModal = document.getElementById('passwordModal');
+        
+        document.getElementById('adminLoginBtn').addEventListener('click', () => {
+            closeMenu();
+            passwordModal.classList.remove('hidden');
+        });
+        
+        document.getElementById('cancelPasswordBtn').addEventListener('click', () => passwordModal.classList.add('hidden'));
+        document.getElementById('closeAdminBtn').addEventListener('click', () => adminModal.classList.add('hidden'));
+
+        document.getElementById('submitPasswordBtn').addEventListener('click', () => {
+            const pass = document.getElementById('adminPasswordInput').value;
+            if(pass === '7ASSON') {
+                passwordModal.classList.add('hidden');
+                document.getElementById('adminPasswordInput').value = '';
+                adminModal.classList.remove('hidden');
+                loadRequests();
+                loadLogs();
+            } else {
+                alert('كلمة المرور غير صحيحة!');
+            }
+        });
+
+        window.switchAdminTab = function(tab) {
+            document.getElementById('tabContentAdd').classList.add('hidden');
+            document.getElementById('tabContentReq').classList.add('hidden');
+            document.getElementById('tabContentLog').classList.add('hidden');
+            document.getElementById('tabContentManage').classList.add('hidden');
+            document.getElementById('tabBtnManage').className = "px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer";
+            document.getElementById('tabBtnAdd').className = "px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer";
+            document.getElementById('tabBtnReq').className = "px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer";
+            document.getElementById('tabBtnLog').className = "px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium transition cursor-pointer";
+
+            if(tab === 'addGame') {
+                document.getElementById('tabContentAdd').classList.remove('hidden');
+                document.getElementById('tabBtnAdd').className = "px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium transition cursor-pointer";
+            } else if(tab === 'manage') {
+                document.getElementById('tabContentManage').classList.remove('hidden');
+                document.getElementById('tabBtnManage').className = "px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium transition cursor-pointer";
+                loadManage();
+            } else if(tab === 'requests') {
+                document.getElementById('tabContentReq').classList.remove('hidden');
+                document.getElementById('tabBtnReq').className = "px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium transition cursor-pointer";
+                loadRequests();
+            } else if(tab === 'logs') {
+                document.getElementById('tabContentLog').classList.remove('hidden');
+                document.getElementById('tabBtnLog').className = "px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium transition cursor-pointer";
+                loadLogs();
+            }
+        }
+
+        // ===== أدوات مساعدة =====
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        // ضغط الصورة وتصغيرها قبل الحفظ.
+        // السبب: Firestore يرفض أي مستند حجمه أكبر من 1MB، وصور الهاتف الأصلية (2-6MB) تتجاوز هذا الحد وحدها.
+        function compressImage(file, maxSide, quality) {
+            return new Promise((resolve, reject) => {
+                const url = URL.createObjectURL(file);
+                const img = new Image();
+                img.onload = () => {
+                    const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+                    const w = Math.max(1, Math.round(img.width * scale));
+                    const h = Math.max(1, Math.round(img.height * scale));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.drawImage(img, 0, 0, w, h);
+                    URL.revokeObjectURL(url);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
+                };
+                img.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    reject(new Error('تعذر قراءة الصورة: ' + file.name));
+                };
+                img.src = url;
+            });
+        }
+
+        const MAX_DOC_BYTES = 900 * 1024; // حد Firestore هو 1MiB، نترك هامش أمان
+        const COMPRESSION_STEPS = [
+            { cover: 720, sub: 640, quality: 0.75 },
+            { cover: 520, sub: 480, quality: 0.6 },
+            { cover: 360, sub: 320, quality: 0.5 }
+        ];
+        const docSize = obj => new Blob([JSON.stringify(obj)]).size;
+
+        // إضافة لعبة جديدة
+        document.getElementById('addGameForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const publishBtn = document.getElementById('publishBtn');
+            publishBtn.disabled = true;
+            publishBtn.textContent = translations[currentLang].publishing;
+
+            const title = document.getElementById('gameTitle').value.trim();
+            const description = document.getElementById('gameDescription').value.trim();
+            const videoUrl = document.getElementById('gameVideoUrl').value.trim();
+            const coverFile = document.getElementById('gameCoverFile').files[0];
+            const subFiles = Array.from(document.getElementById('gameSubFiles').files).slice(0, 3);
+
+            try {
+                if (!coverFile) throw new Error('NO_COVER');
+
+                // نضغط الصور تدريجياً حتى يصبح حجم المستند أقل من حد Firestore
+                let payload = null;
+                for (const step of COMPRESSION_STEPS) {
+                    const cover = await compressImage(coverFile, step.cover, step.quality);
+                    const subImages = [];
+                    for (const f of subFiles) {
+                        subImages.push(await compressImage(f, step.sub, step.quality));
+                    }
+                    const candidate = { title, description, cover, subImages, video: videoUrl, downloadsCount: 0 };
+                    if (docSize(candidate) <= MAX_DOC_BYTES) {
+                        payload = candidate;
+                        break;
+                    }
+                }
+                if (!payload) throw new Error('TOO_LARGE');
+
+                await addDoc(collection(db, "games"), { ...payload, createdAt: serverTimestamp() });
+
+                alert('تم نشر اللعبة وحفظها بنجاح!');
+                document.getElementById('addGameForm').reset();
+                adminModal.classList.add('hidden');
+                loadGames();
+            } catch (err) {
+                console.error('Publish error:', err);
+                let msg = 'حدث خطأ أثناء حفظ البيانات.';
+                if (err.message === 'TOO_LARGE' || err.code === 'invalid-argument') msg = 'حجم الصور كبير جداً حتى بعد الضغط. اختر صوراً أصغر أو قلل عددها.';
+                else if (err.code === 'permission-denied') msg = 'Firestore رفض الحفظ (permission-denied). عدّل قواعد Firestore Rules في Firebase Console للسماح بالكتابة على مجموعة games.';
+                else if (err.code === 'unavailable') msg = 'تعذر الاتصال بـ Firebase. تأكد من الإنترنت وحاول مرة أخرى.';
+                alert(msg + (err.code ? '\n(' + err.code + ')' : ''));
+            } finally {
+                publishBtn.disabled = false;
+                publishBtn.textContent = translations[currentLang].publishGameBtn;
+            }
+        });
+
+        // عرض الفيديو: يوتيوب كـ iframe، وغيره كوسم video
+        function renderVideo(url) {
+            if (!url) return '';
+            const yt = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
+            if (yt) {
+                return `<div class="mt-3"><iframe src="https://www.youtube.com/embed/${yt[1]}" class="w-full h-40 rounded-xl border border-gray-700 shadow" loading="lazy" allowfullscreen></iframe></div>`;
+            }
+            return `<div class="mt-3"><video src="${escapeHtml(url)}" controls preload="metadata" class="w-full h-36 object-cover rounded-xl border border-gray-700 shadow"></video></div>`;
+        }
+
+        // عرض الألعاب في الواجهة الرئيسية (الأحدث أولاً)
+        async function loadGames() {
+            const container = document.getElementById('gamesContainer');
+            container.innerHTML = `<div class="text-center py-12 col-span-full text-gray-400">${translations[currentLang].loadingGames}</div>`;
+
+            try {
+                const q = query(collection(db, "games"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    container.innerHTML = `<div class="text-center py-12 col-span-full text-gray-500">لا توجد ألعاب مضافة حالياً. افتح لوحة الإدارة لإضافة ألعاب.</div>`;
+                    return;
+                }
+
+                container.innerHTML = '';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+
+                    let subImagesHtml = '';
+                    if (data.subImages && data.subImages.length > 0) {
+                        subImagesHtml = `<div class="grid grid-cols-3 gap-2 mt-3">` +
+                            data.subImages.map(img => `<img src="${escapeHtml(img)}" class="w-full h-16 object-cover rounded-md border border-gray-700 hover:scale-105 transition cursor-pointer">`).join('') +
+                            `</div>`;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = "bg-gray-800 border border-gray-700 rounded-2xl p-5 shadow-xl flex flex-col justify-between transition hover:border-indigo-500";
+                    card.innerHTML = `
+                        <div>
+                            <div class="flex gap-4 items-start">
+                                <img src="${escapeHtml(data.cover)}" alt="${escapeHtml(data.title)}" class="w-24 h-24 rounded-xl object-cover border border-gray-600 shadow flex-shrink-0">
+                                <div class="flex-grow">
+                                    <h3 class="text-lg font-bold text-white mb-1">${escapeHtml(data.title)}</h3>
+                                    <p class="text-xs text-gray-400 line-clamp-3 mb-2">${escapeHtml(data.description)}</p>
+                                    <span class="inline-block bg-indigo-900/60 text-indigo-300 text-xs px-2 py-0.5 rounded-full border border-indigo-700">
+                                        ${translations[currentLang].downloadsCount} <strong>${data.downloadsCount || 0}</strong> ${translations[currentLang].personUnit}
+                                    </span>
+                                </div>
+                            </div>
+                            ${subImagesHtml}
+                            ${renderVideo(data.video)}
+                        </div>
+                        <div class="mt-5 pt-4 border-t border-gray-700 flex flex-col gap-2">
+                            <div class="flex items-center gap-2 text-xs text-gray-400 mb-1">
+                                <img src="1.jpg" class="w-6 h-6 rounded-full border border-indigo-500 object-cover">
+                                <span>المطور: <strong>حسن مصطفى حسن طه</strong></span>
+                            </div>
+                            <button class="download-btn w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2 text-sm cursor-pointer">
+                                <i class="fa-solid fa-download text-lg"></i> ${translations[currentLang].downloadBtn}
+                            </button>
+                        </div>
+                    `;
+                    // ربط الزر عبر addEventListener حتى لا ينكسر الكود إذا احتوى اسم اللعبة على علامة ' مثل Assassin's Creed
+                    card.querySelector('.download-btn').addEventListener('click', () => {
+                        window.requestDownload(docSnap.id, data.title);
+                    });
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div class="text-center py-12 col-span-full text-red-400">حدث خطأ أثناء تحميل الألعاب.</div>`;
+            }
+        }
+
+        window.requestDownload = async function(gameId, gameTitle) {
+            try {
+                await addDoc(collection(db, "requests"), {
+                    gameId,
+                    gameTitle,
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+                const message = encodeURIComponent(`مرحباً حسن، أود تنزيل اللعبة التالية: ${gameTitle}`);
+                window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${message}`, '_blank');
+                alert('تم إرسال طلب التنزيل إلى الإدارة، وجاري تحويلك إلى واتساب.');
+            } catch (err) {
+                console.error(err);
+                alert('حدث خطأ أثناء إرسال الطلب.');
+            }
+        }
+
+        async function loadManage() {
+            const list = document.getElementById('manageList');
+            list.innerHTML = `<p class="text-gray-400 text-center py-4">جاري التحميل...</p>`;
+            try {
+                const q = query(collection(db, "games"), orderBy("createdAt", "desc"));
+                const snap = await getDocs(q);
+                if (snap.empty) {
+                    list.innerHTML = `<p class="text-gray-400 text-center py-6">لا توجد ألعاب معروضة.</p>`;
+                    return;
+                }
+                list.innerHTML = '';
+                snap.forEach((d) => {
+                    const g = d.data();
+                    const row = document.createElement('div');
+                    row.className = "bg-gray-700/50 p-3 rounded-xl border border-gray-600 flex items-center gap-3";
+                    row.innerHTML = `
+                        <img src="${escapeHtml(g.cover)}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
+                        <h4 class="flex-grow font-bold text-white text-sm">${escapeHtml(g.title)}</h4>
+                        <button class="del-btn bg-red-600 hover:bg-red-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow cursor-pointer"><i class="fa-solid fa-trash"></i> حذف</button>
+                    `;
+                    row.querySelector('.del-btn').addEventListener('click', () => deleteGame(d.id, g.title));
+                    list.appendChild(row);
+                });
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = `<p class="text-red-400 text-center py-4">حدث خطأ أثناء التحميل.</p>`;
+            }
+        }
+
+        async function deleteGame(id, title) {
+            if (!confirm('هل أنت متأكد من حذف اللعبة "' + title + '" نهائياً؟')) return;
+            try {
+                await deleteDoc(doc(db, "games", id));
+                loadManage();
+                loadGames();
+            } catch (err) {
+                console.error(err);
+                alert(err.code === 'permission-denied'
+                    ? 'Firestore رفض الحذف (permission-denied). اسمح بالحذف في قواعد Firestore.'
+                    : 'حدث خطأ أثناء الحذف.');
+            }
+        }
+
+        async function loadRequests() {
+            const list = document.getElementById('requestsList');
+            list.innerHTML = `<p class="text-gray-400 text-center py-4">جاري التحميل...</p>`;
+            try {
+                const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                if(querySnapshot.empty) {
+                    list.innerHTML = `<p class="text-gray-400 text-center py-6">${translations[currentLang].noRequests}</p>`;
+                    return;
+                }
+                list.innerHTML = '';
+                querySnapshot.forEach((docSnap) => {
+                    const req = docSnap.data();
+                    if(req.status === 'approved') return;
+                    const div = document.createElement('div');
+                    div.className = "bg-gray-700/50 p-4 rounded-xl border border-gray-600 flex justify-between items-center";
+                    div.innerHTML = `
+                        <div>
+                            <h4 class="font-bold text-white text-sm">${escapeHtml(req.gameTitle)}</h4>
+                            <span class="text-xs text-yellow-400">قيد الانتظار للموافقة</span>
+                        </div>
+                        <button onclick="approveRequest('${docSnap.id}', '${req.gameId}')" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow cursor-pointer">
+                            موافقة وتحديث العداد
+                        </button>
+                    `;
+                    list.appendChild(div);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        window.approveRequest = async function(reqId, gameId) {
+            try {
+                const reqRef = doc(db, "requests", reqId);
+                await updateDoc(reqRef, { status: 'approved' });
+
+                const gameRef = doc(db, "games", gameId);
+                const gameSnap = await getDoc(gameRef);
+                if(gameSnap.exists()) {
+                    const currentCount = gameSnap.data().downloadsCount || 0;
+                    await updateDoc(gameRef, { downloadsCount: currentCount + 1 });
+                }
+
+                await addDoc(collection(db, "logs"), {
+                    gameTitle: gameSnap.exists() ? gameSnap.data().title : 'لعبة محذوفة',
+                    timestamp: serverTimestamp()
+                });
+
+                alert('تمت الموافقة بنجاح وزيادة عداد التنزيلات!');
+                loadRequests();
+                loadGames();
+            } catch (err) {
+                console.error(err);
+                alert('حدث خطأ أثناء الموافقة.');
+            }
+        }
+
+        async function loadLogs() {
+            const tbody = document.getElementById('logsTableBody');
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-gray-400">جاري التحميل...</td></tr>`;
+            try {
+                const q = query(collection(db, "logs"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                if(querySnapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-gray-400">${translations[currentLang].noLogs}</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = '';
+                querySnapshot.forEach((docSnap) => {
+                    const log = docSnap.data();
+                    const dateStr = log.timestamp ? new Date(log.timestamp.seconds * 1000).toLocaleString() : 'الآن';
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-gray-700/40";
+                    tr.innerHTML = `
+                        <td class="p-3 font-semibold text-white">${escapeHtml(log.gameTitle)}</td>
+                        <td class="p-3 text-gray-400 text-xs">${dateStr}</td>
+                        <td class="p-3 text-emerald-400 font-medium">تم التنزيل بنجاح</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        loadGames();
+    </script>
+</body>
+</html>
