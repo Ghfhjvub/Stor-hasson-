@@ -182,10 +182,26 @@
         </div>
     </div>
 
+    <!-- Comments Modal -->
+    <div id="commentsModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl max-w-lg w-full max-h-[90vh] flex flex-col border border-gray-700 shadow-2xl">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h3 id="commentsModalTitle" class="text-lg font-bold text-indigo-400 truncate"></h3>
+                <button id="closeCommentsBtn" class="text-gray-400 hover:text-white text-xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="commentsList" class="flex-grow overflow-y-auto p-4 space-y-3" style="min-height:120px"></div>
+            <form id="commentForm" class="p-4 border-t border-gray-700 space-y-2">
+                <input type="text" id="commentName" maxlength="30" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white">
+                <textarea id="commentText" rows="2" maxlength="500" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-white"></textarea>
+                <button type="submit" id="sendCommentBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-lg transition shadow cursor-pointer"></button>
+            </form>
+        </div>
+    </div>
+
     <!-- Firebase SDKs (Firestore only - No Storage cost!) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, getDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, getDoc, deleteDoc, serverTimestamp, query, orderBy, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAMAZFJXGE_7zg1nHGyiPmsqp_8Y3n02SE",
@@ -232,7 +248,14 @@
                 cancelBtn: "إلغاء",
                 downloadBtn: "Download",
                 downloadsCount: "تم التنزيل بواسطة: ",
-                personUnit: "شخص"
+                personUnit: "شخص",
+                commentsBtn: "تعليقات",
+                rateHint: "اضغط على النجوم لتقييم اللعبة",
+                yourRating: "تقييمك: ",
+                noComments: "لا توجد تعليقات بعد. كن أول من يعلّق!",
+                namePh: "اسمك",
+                commentPh: "اكتب تعليقك هنا...",
+                sendBtn: "إرسال التعليق"
             },
             en: {
                 developerTitle: "Developer: Hassan M.",
@@ -265,7 +288,14 @@
                 cancelBtn: "Cancel",
                 downloadBtn: "Download",
                 downloadsCount: "Downloaded by: ",
-                personUnit: "people"
+                personUnit: "people",
+                commentsBtn: "Comments",
+                rateHint: "Tap the stars to rate this game",
+                yourRating: "Your rating: ",
+                noComments: "No comments yet. Be the first!",
+                namePh: "Your name",
+                commentPh: "Write your comment...",
+                sendBtn: "Send comment"
             }
         };
 
@@ -470,6 +500,160 @@
             return `<div class="mt-3"><video src="${escapeHtml(url)}" controls preload="metadata" class="w-full h-36 object-cover rounded-xl border border-gray-700 shadow"></video></div>`;
         }
 
+        // ===== التقييم بالنجوم + التعليقات =====
+        const RATING_BASE = 3.5;       // كل لعبة تبدأ بتقييم 3.5
+        const RATING_BASE_WEIGHT = 2;  // وزن التقييم الابتدائي (كأنه صوتان). زوّده ليتحرك التقييم ببطء أكثر
+        const calcRating = (sum, count) => (RATING_BASE * RATING_BASE_WEIGHT + sum) / (RATING_BASE_WEIGHT + count);
+        const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
+
+        function cardStatsHtml() {
+            const stars = '<i class="fa-solid fa-star w-5 text-center flex-shrink-0"></i>'.repeat(5);
+            const btns = [1, 2, 3, 4, 5].map(n => `<button type="button" data-star="${n}" aria-label="${n}" class="star-btn h-full cursor-pointer" style="width:20%"></button>`).join('');
+            return `
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <div class="stars relative flex-shrink-0" dir="ltr" style="width:100px;height:20px">
+                            <div class="absolute inset-0 flex text-gray-600">${stars}</div>
+                            <div class="stars-fill absolute top-0 bottom-0 left-0 overflow-hidden flex text-yellow-400">${stars}</div>
+                            <div class="absolute inset-0 flex">${btns}</div>
+                        </div>
+                        <span class="rating-value font-bold text-yellow-400 text-sm"></span>
+                        <span class="rating-count text-xs text-gray-400"></span>
+                    </div>
+                    <button type="button" class="comments-btn bg-gray-700 hover:bg-gray-600 text-gray-200 text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-comments"></i>
+                        <span class="comments-label"></span>
+                        <span class="comments-count bg-indigo-600 text-white rounded-full px-1.5 text-[11px]">0</span>
+                    </button>
+                </div>
+                <p class="rating-hint text-[11px] text-gray-500"></p>`;
+        }
+
+        function setupCardStats(card, gameId, data) {
+            let sum = data.ratingSum || 0, count = data.ratingCount || 0, cCount = data.commentsCount || 0;
+            const myKey = 'rating_' + gameId;
+            const fill = card.querySelector('.stars-fill');
+            const countEl = card.querySelector('.comments-count');
+
+            const render = () => {
+                const tr = translations[currentLang];
+                const avg = calcRating(sum, count);
+                fill.style.width = (avg / 5 * 100) + '%';
+                card.querySelector('.rating-value').textContent = avg.toFixed(1);
+                card.querySelector('.rating-count').textContent = '(' + count + ')';
+                card.querySelector('.comments-label').textContent = tr.commentsBtn;
+                countEl.textContent = cCount;
+                const mine = Number(lsGet(myKey)) || 0;
+                card.querySelector('.rating-hint').textContent = mine ? tr.yourRating + mine + ' ★' : tr.rateHint;
+            };
+            render();
+
+            card.querySelector('.stars').addEventListener('mouseleave', render);
+            card.querySelectorAll('.star-btn').forEach(btn => {
+                const n = Number(btn.dataset.star);
+                btn.addEventListener('mouseover', () => { fill.style.width = (n * 20) + '%'; });
+                btn.addEventListener('click', async () => {
+                    const prev = Number(lsGet(myKey)) || 0;
+                    if (n === prev) return;
+                    try {
+                        await updateDoc(doc(db, "games", gameId), {
+                            ratingSum: increment(n - prev),
+                            ratingCount: increment(prev ? 0 : 1)
+                        });
+                        sum += n - prev;
+                        if (!prev) count++;
+                        lsSet(myKey, n);
+                        render();
+                    } catch (err) {
+                        console.error(err);
+                        alert(err.code === 'permission-denied'
+                            ? 'Firestore رفض حفظ التقييم (permission-denied). اسمح بالتحديث في قواعد Firestore.'
+                            : 'حدث خطأ أثناء حفظ التقييم.');
+                    }
+                });
+            });
+
+            card.querySelector('.comments-btn').addEventListener('click', () => {
+                openComments(gameId, data.title, () => { cCount++; render(); });
+            });
+        }
+
+        const commentsModal = document.getElementById('commentsModal');
+        let commentsCtx = null;
+
+        function openComments(gameId, title, onAdded) {
+            const tr = translations[currentLang];
+            commentsCtx = { gameId, onAdded };
+            document.getElementById('commentsModalTitle').textContent = title;
+            document.getElementById('commentName').placeholder = tr.namePh;
+            document.getElementById('commentName').value = lsGet('comment_name') || '';
+            document.getElementById('commentText').placeholder = tr.commentPh;
+            document.getElementById('sendCommentBtn').textContent = tr.sendBtn;
+            commentsModal.classList.remove('hidden');
+            loadComments(gameId);
+        }
+
+        async function loadComments(gameId) {
+            const list = document.getElementById('commentsList');
+            list.innerHTML = `<p class="text-gray-400 text-center py-4">...</p>`;
+            try {
+                const snap = await getDocs(query(collection(db, "games", gameId, "comments"), orderBy("createdAt", "desc")));
+                if (snap.empty) {
+                    list.innerHTML = `<p class="text-gray-400 text-center py-6">${translations[currentLang].noComments}</p>`;
+                    return;
+                }
+                list.innerHTML = '';
+                snap.forEach(d => {
+                    const c = d.data();
+                    const when = c.createdAt ? new Date(c.createdAt.seconds * 1000).toLocaleDateString() : '';
+                    const div = document.createElement('div');
+                    div.className = "bg-gray-700/50 p-3 rounded-xl border border-gray-600";
+                    div.innerHTML = `
+                        <div class="flex justify-between items-center mb-1">
+                            <strong class="text-sm text-white">${escapeHtml(c.name)}</strong>
+                            <span class="text-xs text-gray-500">${when}</span>
+                        </div>
+                        <p class="text-sm text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(c.text)}</p>`;
+                    list.appendChild(div);
+                });
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = `<p class="text-red-400 text-center py-4">حدث خطأ أثناء تحميل التعليقات.</p>`;
+            }
+        }
+
+        document.getElementById('closeCommentsBtn').addEventListener('click', () => commentsModal.classList.add('hidden'));
+        commentsModal.addEventListener('click', (e) => { if (e.target === commentsModal) commentsModal.classList.add('hidden'); });
+
+        document.getElementById('commentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!commentsCtx) return;
+            const btn = document.getElementById('sendCommentBtn');
+            const nameEl = document.getElementById('commentName');
+            const textEl = document.getElementById('commentText');
+            const name = nameEl.value.trim().slice(0, 30);
+            const text = textEl.value.trim().slice(0, 500);
+            if (!name || !text) return;
+            btn.disabled = true;
+            const { gameId, onAdded } = commentsCtx;
+            try {
+                await addDoc(collection(db, "games", gameId, "comments"), { name, text, createdAt: serverTimestamp() });
+                await updateDoc(doc(db, "games", gameId), { commentsCount: increment(1) });
+                lsSet('comment_name', name);
+                textEl.value = '';
+                onAdded();
+                loadComments(gameId);
+            } catch (err) {
+                console.error(err);
+                alert(err.code === 'permission-denied'
+                    ? 'Firestore رفض حفظ التعليق (permission-denied). اسمح بالكتابة على games/{id}/comments في قواعد Firestore.'
+                    : 'حدث خطأ أثناء إرسال التعليق.');
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
         // عرض الألعاب في الواجهة الرئيسية (الأحدث أولاً)
         async function loadGames() {
             const container = document.getElementById('gamesContainer');
@@ -512,6 +696,7 @@
                             ${renderVideo(data.video)}
                         </div>
                         <div class="mt-5 pt-4 border-t border-gray-700 flex flex-col gap-2">
+                            ${cardStatsHtml()}
                             <div class="flex items-center gap-2 text-xs text-gray-400 mb-1">
                                 <img src="1.jpg" class="w-6 h-6 rounded-full border border-indigo-500 object-cover">
                                 <span>المطور: <strong>حسن مصطفى حسن طه</strong></span>
@@ -525,6 +710,7 @@
                     card.querySelector('.download-btn').addEventListener('click', () => {
                         window.requestDownload(docSnap.id, data.title);
                     });
+                    setupCardStats(card, docSnap.id, data);
                     container.appendChild(card);
                 });
             } catch (err) {
