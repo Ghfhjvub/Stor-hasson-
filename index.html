@@ -412,6 +412,10 @@
                         <label class="block text-sm font-medium mb-1" data-translate="gameVideoUrl">رابط الفيديو الترويجي (اختياري - يوتيوب أو رابط مباشر)</label>
                         <input type="url" id="gameVideoUrl" placeholder="https://www.youtube.com/watch?v=..." dir="ltr" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" data-translate="gameDownloadUrl">رابط التنزيل (Google Drive - اختياري، وإن تُرك فارغاً يتحول الزر إلى واتساب)</label>
+                        <input type="url" id="gameDownloadUrl" placeholder="https://drive.google.com/file/d/..." dir="ltr" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
+                    </div>
                     <button type="submit" id="publishBtn" class="w-full font-bold py-2.5 rounded-lg transition cursor-pointer btn-primary" data-translate="publishGameBtn">نشر اللعبة</button>
                 </form>
             </div>
@@ -537,6 +541,7 @@
                 mainImg: "اختر الصورة الرئيسية (من الهاتف)",
                 subImgs: "الصور الفرعية المتعددة (اختر حتى 3 صور)",
                 gameVideoUrl: "رابط الفيديو الترويجي (اختياري - يوتيوب أو رابط مباشر)",
+                gameDownloadUrl: "رابط التنزيل (Google Drive - اختياري، وإن تُرك فارغاً يتحول الزر إلى واتساب)",
                 whatsappNum: "رقم الواتساب الخاص بك (مثال: 2499...)",
                 publishGameBtn: "نشر اللعبة",
                 publishing: "جاري حفظ بيانات اللعبة...",
@@ -593,6 +598,7 @@
                 mainImg: "Select Main Image (From Phone)",
                 subImgs: "Multiple Sub Images (Select up to 3)",
                 gameVideoUrl: "Trailer link (optional - YouTube or direct link)",
+                gameDownloadUrl: "Download link (Google Drive - optional; if empty the button opens WhatsApp)",
                 whatsappNum: "Your WhatsApp Number (e.g. 2499...)",
                 publishGameBtn: "Publish Game",
                 publishing: "Saving game data...",
@@ -805,6 +811,7 @@
             const title = document.getElementById('gameTitle').value.trim();
             const description = document.getElementById('gameDescription').value.trim();
             const videoUrl = document.getElementById('gameVideoUrl').value.trim();
+            const downloadUrl = document.getElementById('gameDownloadUrl').value.trim();
             const coverFile = document.getElementById('gameCoverFile').files[0];
             const subFiles = Array.from(document.getElementById('gameSubFiles').files).slice(0, 3);
 
@@ -819,7 +826,7 @@
                     for (const f of subFiles) {
                         subImages.push(await compressImage(f, step.sub, step.quality));
                     }
-                    const candidate = { title, description, cover, subImages, video: videoUrl, downloadsCount: 0, kind: document.getElementById('gameKind').value === 'app' ? 'app' : 'game' };
+                    const candidate = { title, description, cover, subImages, video: videoUrl, downloadUrl, downloadsCount: 0, kind: document.getElementById('gameKind').value === 'app' ? 'app' : 'game' };
                     if (docSize(candidate) <= MAX_DOC_BYTES) {
                         payload = candidate;
                         break;
@@ -1028,7 +1035,7 @@
                     `;
                     // ربط الزر عبر addEventListener حتى لا ينكسر الكود إذا احتوى اسم اللعبة على علامة ' مثل Assassin's Creed
                     card.querySelector('.download-btn').addEventListener('click', () => {
-                        window.requestDownload(docSnap.id, data.title);
+                        window.requestDownload(docSnap.id, data.title, data.downloadUrl || data.driveLink || data.link || '');
                     });
                     setupCommentsBtn(card, docSnap.id, data);
                     setupFlip(card, data);
@@ -1041,7 +1048,37 @@
             }
         }
 
-        window.requestDownload = async function(gameId, gameTitle) {
+        // تحويل رابط Google Drive إلى رابط تنزيل مباشر
+        function toDirectDownload(url) {
+            try {
+                const u = new URL(url);
+                if (/(^|\.)drive\.google\.com$/.test(u.hostname) || /(^|\.)docs\.google\.com$/.test(u.hostname)) {
+                    const m = u.pathname.match(/\/d\/([\w-]+)/) || u.pathname.match(/\/folders\/([\w-]+)/);
+                    const id = (m && m[1]) || u.searchParams.get('id');
+                    if (id && !/\/folders\//.test(u.pathname)) return `https://drive.google.com/uc?export=download&id=${id}`;
+                }
+            } catch (e) {}
+            return url;
+        }
+
+        window.requestDownload = async function(gameId, gameTitle, downloadUrl) {
+            // الحالة 1: توجد رابط تنزيل => تنزيل مباشر (يُفتح قبل أي await حتى لا يحجبه المتصفح)
+            if (downloadUrl && downloadUrl.trim()) {
+                const a = document.createElement('a');
+                a.href = toDirectDownload(downloadUrl.trim());
+                a.target = '_blank';
+                a.rel = 'noopener';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                // تحديث العدّاد والسجل في الخلفية (إن سمحت قواعد Firestore، وإلا يُتجاهل بصمت)
+                try {
+                    await updateDoc(doc(db, "games", gameId), { downloadsCount: increment(1) });
+                    await addDoc(collection(db, "logs"), { gameTitle, timestamp: serverTimestamp() });
+                } catch (e) { console.warn('counter skipped', e); }
+                return;
+            }
+            // الحالة 2: لا يوجد رابط => طلب عبر واتساب
             try {
                 await addDoc(collection(db, "requests"), {
                     gameId,
@@ -1076,14 +1113,32 @@
                     row.innerHTML = `
                         <img src="${escapeHtml(g.cover)}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
                         <h4 class="flex-grow font-bold ui-ink text-sm">${escapeHtml(g.title)}</h4>
+                        <button class="link-btn text-xs font-bold px-3 py-2 rounded-lg transition cursor-pointer btn-primary" title="رابط التنزيل"><i class="fa-solid fa-link"></i> رابط</button>
                         <button class="del-btn text-xs font-bold px-4 py-2 rounded-lg transition cursor-pointer btn-danger"><i class="fa-solid fa-trash"></i> حذف</button>
                     `;
                     row.querySelector('.del-btn').addEventListener('click', () => deleteGame(d.id, g.title));
+                    row.querySelector('.link-btn').addEventListener('click', () => editDownloadUrl(d.id, g.title, g.downloadUrl || g.driveLink || g.link || ''));
                     list.appendChild(row);
                 });
             } catch (err) {
                 console.error(err);
                 list.innerHTML = `<p class="ui-err text-center py-4">حدث خطأ أثناء التحميل.</p>`;
+            }
+        }
+
+        async function editDownloadUrl(id, title, current) {
+            const val = prompt('رابط التنزيل (Google Drive) للعبة "' + title + '"\nاتركه فارغاً ليتحول الزر إلى واتساب:', current);
+            if (val === null) return;
+            try {
+                await updateDoc(doc(db, "games", id), { downloadUrl: val.trim() });
+                alert('تم حفظ رابط التنزيل.');
+                loadManage();
+                loadGames();
+            } catch (err) {
+                console.error(err);
+                alert(err.code === 'permission-denied'
+                    ? 'Firestore رفض التعديل (permission-denied). اسمح بالتعديل في قواعد Firestore.'
+                    : 'حدث خطأ أثناء حفظ الرابط.');
             }
         }
 
