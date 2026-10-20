@@ -102,6 +102,23 @@
         /* game cards: glass + blur */
         html .game-card{position:relative;border-radius:1.4rem;background:var(--glass);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);border:1px solid var(--glass-line);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.6);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s}
         html .game-card:hover{transform:translateY(-5px);border-color:rgba(124,58,237,.42);box-shadow:0 28px 60px -20px rgba(109,40,217,.5),0 0 0 1px rgba(124,58,237,.12),inset 0 1px 0 rgba(255,255,255,.7)}
+
+        /* compact flip card: front = cover/title/actions, back = video/description */
+        html .game-card{display:grid;overflow:hidden;transition:height .7s cubic-bezier(.4,.2,.2,1),transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s}
+        .face{grid-area:1/1;align-self:start;display:flex;flex-direction:column;gap:.6rem;padding:.65rem;-webkit-backface-visibility:hidden;backface-visibility:hidden;transition:transform .7s cubic-bezier(.4,.2,.2,1)}
+        @media (min-width:640px){.face{padding:1rem;gap:.8rem}}
+        .face-front{transform:perspective(2500px) rotateY(0deg)}
+        .face-back{transform:perspective(2500px) rotateY(-180deg)}
+        .game-card.is-flipped .face-front{transform:perspective(2500px) rotateY(180deg)}
+        .game-card.is-flipped .face-back{transform:perspective(2500px) rotateY(0deg)}
+        .cover-wrap{aspect-ratio:4/3;border-radius:1rem;overflow:hidden;border:1px solid var(--line)}
+        @media (min-width:640px){.cover-wrap{aspect-ratio:16/10}}
+        .game-cover{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+        .game-card:hover .game-cover{transform:scale(1.05)}
+        .game-title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em;line-height:1.35}
+        .cm-btn{position:relative;width:2.6rem;flex:none;display:grid;place-items:center;border-radius:.75rem;background:var(--soft);border:1px solid var(--line);color:var(--accent);cursor:pointer;transition:background .25s,transform .25s,border-color .25s}
+        .cm-btn:hover{background:var(--soft-hover);border-color:rgba(124,58,237,.45);transform:translateY(-2px)}
+        .cm-count{position:absolute;top:-6px;inset-inline-end:-6px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;font-size:10px;font-weight:700;display:grid;place-items:center;box-shadow:0 2px 8px rgba(109,40,217,.5)}
         /* drawer */
         .menu-panel{background:var(--glass-strong);-webkit-backdrop-filter:blur(26px) saturate(1.6);backdrop-filter:blur(26px) saturate(1.6);border-inline-start:1px solid var(--glass-line);box-shadow:-30px 0 80px -30px rgba(76,29,149,.55)}
         .cs-card{border-radius:1.25rem;padding:1rem;background:linear-gradient(160deg,rgba(139,92,246,.16),var(--glass));border:1px solid var(--glass-line)}
@@ -153,7 +170,7 @@
             </button>
         </div>
 
-        <div id="gamesContainer" class="grid grid-cols-2 gap-3 sm:gap-6">
+        <div id="gamesContainer" class="grid grid-cols-2 gap-3 sm:gap-6 items-start max-w-5xl mx-auto">
             <div class="text-center py-12 col-span-full ui-muted" data-translate="loadingGames">جاري تحميل الألعاب...</div>
         </div>
     </main>
@@ -422,7 +439,8 @@
                 footerAbout: "مكتبة ألعاب حصرية بتنزيل مباشر وخدمة دعم عبر واتساب.",
                 footerLinks: "روابط سريعة",
                 footerContact: "تواصل معنا",
-                linkGames: "الألعاب"
+                linkGames: "الألعاب",
+                backBtn: "رجوع"
             },
             en: {
                 developerTitle: "Developer: Hassan M.",
@@ -474,7 +492,8 @@
                 footerAbout: "An exclusive game library with direct downloads and WhatsApp support.",
                 footerLinks: "Quick links",
                 footerContact: "Contact us",
-                linkGames: "Games"
+                linkGames: "Games",
+                backBtn: "Back"
             }
         };
 
@@ -682,83 +701,44 @@
             return `<div class="mt-3"><video src="${escapeHtml(url)}" controls preload="metadata" class="w-full h-32 sm:h-52 object-cover rounded-xl border ui-line shadow"></video></div>`;
         }
 
-        // ===== التقييم بالنجوم + التعليقات =====
-        const RATING_BASE = 3.5;       // كل لعبة تبدأ بتقييم 3.5
-        const RATING_BASE_WEIGHT = 2;  // وزن التقييم الابتدائي (كأنه صوتان). زوّده ليتحرك التقييم ببطء أكثر
-        const calcRating = (sum, count) => (RATING_BASE * RATING_BASE_WEIGHT + sum) / (RATING_BASE_WEIGHT + count);
+        // ===== التعليقات =====
         const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
         const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
 
-        function cardStatsHtml() {
-            const stars = '<i class="fa-solid fa-star w-5 text-center flex-shrink-0"></i>'.repeat(5);
-            const btns = [1, 2, 3, 4, 5].map(n => `<button type="button" data-star="${n}" aria-label="${n}" class="star-btn h-full cursor-pointer" style="width:20%"></button>`).join('');
-            return `
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <div class="flex items-center flex-wrap gap-x-2 gap-y-1">
-                        <div class="stars relative flex-shrink-0" dir="ltr" style="width:100px;height:20px">
-                            <div class="absolute inset-0 flex star-empty">${stars}</div>
-                            <div class="stars-fill absolute top-0 bottom-0 left-0 overflow-hidden flex star-fill">${stars}</div>
-                            <div class="absolute inset-0 flex">${btns}</div>
-                        </div>
-                        <span class="rating-value font-bold star-fill text-sm"></span>
-                        <span class="rating-count text-xs ui-muted"></span>
-                    </div>
-                    <button type="button" class="comments-btn ui-soft ui-soft-hover ui-ink text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
-                        <i class="fa-solid fa-comments"></i>
-                        <span class="comments-label"></span>
-                        <span class="comments-count rounded-full px-1.5 text-[11px] badge">0</span>
-                    </button>
-                </div>
-                <p class="rating-hint text-[11px] ui-faint"></p>`;
+        function setupCommentsBtn(card, gameId, data) {
+            let cCount = data.commentsCount || 0;
+            const countEl = card.querySelector('.comments-count');
+            countEl.textContent = cCount;
+            card.querySelector('.comments-btn').addEventListener('click', () => {
+                openComments(gameId, data.title, () => { cCount++; countEl.textContent = cCount; });
+            });
         }
 
-        function setupCardStats(card, gameId, data) {
-            let sum = data.ratingSum || 0, count = data.ratingCount || 0, cCount = data.commentsCount || 0;
-            const myKey = 'rating_' + gameId;
-            const fill = card.querySelector('.stars-fill');
-            const countEl = card.querySelector('.comments-count');
+        // قلب الكارد: الواجهة = صورة + اسم + أزرار، الخلف = فيديو + وصف
+        function fitCards() {
+            document.querySelectorAll('#gamesContainer .game-card').forEach(c => {
+                const f = c.classList.contains('is-flipped') ? c.querySelector('.face-back') : c.querySelector('.face-front');
+                c.style.height = f.offsetHeight + 'px';
+            });
+        }
+        window.addEventListener('resize', fitCards);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCards);
 
-            const render = () => {
-                const tr = translations[currentLang];
-                const avg = calcRating(sum, count);
-                fill.style.width = (avg / 5 * 100) + '%';
-                card.querySelector('.rating-value').textContent = avg.toFixed(1);
-                card.querySelector('.rating-count').textContent = '(' + count + ')';
-                card.querySelector('.comments-label').textContent = tr.commentsBtn;
-                countEl.textContent = cCount;
-                const mine = Number(lsGet(myKey)) || 0;
-                card.querySelector('.rating-hint').textContent = mine ? tr.yourRating + mine + ' ★' : tr.rateHint;
+        function setupFlip(card, data) {
+            const front = card.querySelector('.face-front');
+            const back = card.querySelector('.face-back');
+            const slot = card.querySelector('.video-slot');
+            back.inert = true;
+            const flip = (on) => {
+                if (on) slot.innerHTML = renderVideo(data.video);
+                card.classList.toggle('is-flipped', on);
+                front.inert = on;
+                back.inert = !on;
+                card.style.height = (on ? back : front).offsetHeight + 'px';
+                if (!on) setTimeout(() => { if (!card.classList.contains('is-flipped')) slot.innerHTML = ''; }, 750);
             };
-            render();
-
-            card.querySelector('.stars').addEventListener('mouseleave', render);
-            card.querySelectorAll('.star-btn').forEach(btn => {
-                const n = Number(btn.dataset.star);
-                btn.addEventListener('mouseover', () => { fill.style.width = (n * 20) + '%'; });
-                btn.addEventListener('click', async () => {
-                    const prev = Number(lsGet(myKey)) || 0;
-                    if (n === prev) return;
-                    try {
-                        await updateDoc(doc(db, "games", gameId), {
-                            ratingSum: increment(n - prev),
-                            ratingCount: increment(prev ? 0 : 1)
-                        });
-                        sum += n - prev;
-                        if (!prev) count++;
-                        lsSet(myKey, n);
-                        render();
-                    } catch (err) {
-                        console.error(err);
-                        alert(err.code === 'permission-denied'
-                            ? 'Firestore رفض حفظ التقييم (permission-denied). اسمح بالتحديث في قواعد Firestore.'
-                            : 'حدث خطأ أثناء حفظ التقييم.');
-                    }
-                });
-            });
-
-            card.querySelector('.comments-btn').addEventListener('click', () => {
-                openComments(gameId, data.title, () => { cCount++; render(); });
-            });
+            card.querySelector('.flip-btn').addEventListener('click', () => flip(true));
+            card.querySelector('.flip-back').addEventListener('click', () => flip(false));
         }
 
         const commentsModal = document.getElementById('commentsModal');
@@ -853,38 +833,41 @@
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
 
+                    const tr = translations[currentLang];
                     let subImagesHtml = '';
                     if (data.subImages && data.subImages.length > 0) {
-                        subImagesHtml = `<div class="grid grid-cols-3 gap-2 mt-3">` +
-                            data.subImages.map(img => `<img src="${escapeHtml(img)}" class="w-full h-12 sm:h-20 object-cover rounded-lg border ui-line hover:scale-105 transition cursor-pointer">`).join('') +
+                        subImagesHtml = `<div class="grid grid-cols-3 gap-2">` +
+                            data.subImages.map(img => `<img src="${escapeHtml(img)}" class="w-full h-12 sm:h-20 object-cover rounded-lg border ui-line">`).join('') +
                             `</div>`;
                     }
 
                     const card = document.createElement('div');
-                    card.className = "game-card p-3 sm:p-5 flex flex-col justify-between";
+                    card.className = "game-card";
                     card.innerHTML = `
-                        <div>
-                            <div class="flex flex-col gap-3">
-                                <img src="${escapeHtml(data.cover)}" alt="${escapeHtml(data.title)}" class="w-full h-32 sm:h-44 lg:h-52 rounded-2xl object-cover border ui-line">
-                                <div class="flex-grow">
-                                    <h3 class="text-base sm:text-lg font-bold ui-ink mb-1 leading-snug">${escapeHtml(data.title)}</h3>
-                                    <p class="text-xs ui-muted line-clamp-3 mb-2">${escapeHtml(data.description)}</p>
-                                    <span class="pill inline-block text-[11px] sm:text-xs px-2 py-0.5 rounded-full">
-                                        ${translations[currentLang].downloadsCount} <strong>${data.downloadsCount || 0}</strong> ${translations[currentLang].personUnit}
-                                    </span>
-                                </div>
+                        <div class="face face-front">
+                            <div class="cover-wrap"><img src="${escapeHtml(data.cover)}" alt="${escapeHtml(data.title)}" class="game-cover"></div>
+                            <h3 class="game-title text-sm sm:text-lg font-bold ui-ink">${escapeHtml(data.title)}</h3>
+                            <div class="flex gap-1.5 sm:gap-2">
+                                <button type="button" class="flip-btn btn-primary flex-1 py-2.5 rounded-xl font-bold flex items-center justify-center gap-1.5 text-xs sm:text-sm cursor-pointer">
+                                    <i class="fa-solid fa-download"></i> ${tr.downloadBtn}
+                                </button>
+                                <button type="button" class="comments-btn cm-btn" aria-label="${tr.commentsBtn}" title="${tr.commentsBtn}">
+                                    <i class="fa-solid fa-comments"></i>
+                                    <span class="comments-count cm-count badge">0</span>
+                                </button>
                             </div>
-                            ${subImagesHtml}
-                            ${renderVideo(data.video)}
                         </div>
-                        <div class="mt-5 pt-4 border-t ui-line flex flex-col gap-2">
-                            ${cardStatsHtml()}
-                            <div class="flex items-center gap-2 text-xs ui-muted mb-1">
-                                <img src="1.jpg" class="w-6 h-6 rounded-full border border-violet-500 object-cover">
-                                <span>المطور: <strong>حسن مصطفى حسن طه</strong></span>
+                        <div class="face face-back">
+                            <div class="flex items-center justify-between gap-2">
+                                <h3 class="text-sm sm:text-base font-bold ui-ink truncate">${escapeHtml(data.title)}</h3>
+                                <button type="button" class="flip-back ui-soft ui-soft-hover border ui-line ui-ink text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 flex-none cursor-pointer"><i class="fa-solid fa-rotate-left"></i> ${tr.backBtn}</button>
                             </div>
-                            <button class="download-btn w-full font-bold py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-sm cursor-pointer btn-primary">
-                                <i class="fa-solid fa-download text-lg"></i> ${translations[currentLang].downloadBtn}
+                            <div class="video-slot"></div>
+                            <p class="text-xs sm:text-sm ui-muted leading-relaxed whitespace-pre-wrap break-words">${escapeHtml(data.description)}</p>
+                            <span class="pill self-start text-[11px] sm:text-xs px-2 py-0.5 rounded-full">${tr.downloadsCount} <strong>${data.downloadsCount || 0}</strong> ${tr.personUnit}</span>
+                            ${subImagesHtml}
+                            <button type="button" class="download-btn btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer">
+                                <i class="fa-solid fa-download text-lg"></i> ${tr.downloadBtn}
                             </button>
                         </div>
                     `;
@@ -892,9 +875,11 @@
                     card.querySelector('.download-btn').addEventListener('click', () => {
                         window.requestDownload(docSnap.id, data.title);
                     });
-                    setupCardStats(card, docSnap.id, data);
+                    setupCommentsBtn(card, docSnap.id, data);
+                    setupFlip(card, data);
                     container.appendChild(card);
                 });
+                fitCards();
             } catch (err) {
                 console.error(err);
                 container.innerHTML = `<div class="text-center py-12 col-span-full ui-err">حدث خطأ أثناء تحميل الألعاب.</div>`;
