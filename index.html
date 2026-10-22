@@ -12,6 +12,7 @@
     <script>
         (function () {
             try { if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark'); } catch (e) {}
+            try { if (localStorage.getItem('username')) document.documentElement.classList.add('has-user'); } catch (e) {}
             var st = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
             if (st) document.documentElement.classList.add('is-standalone');
             window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); window.__deferredInstall = e; });
@@ -193,6 +194,10 @@
         .app-ico{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;box-shadow:0 10px 24px -10px rgba(109,40,217,.8)}
         .step-n{width:1.5rem;height:1.5rem;flex:none;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;display:grid;place-items:center;font-size:.75rem;font-weight:700}
         .is-standalone [data-install]{display:none!important}
+        #loginGate{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;background:radial-gradient(900px 520px at 90% -8%,var(--blob),transparent 62%),radial-gradient(700px 480px at 0% 100%,var(--blob),transparent 62%),var(--bg-gate,#f5f2ff)}
+        html.dark #loginGate{--bg-gate:#0f0a22}
+        html.has-user #loginGate{display:none}
+        html:not(.has-user){overflow:hidden}
         .visitor-badge{display:flex;width:max-content;max-width:100%;align-items:center;gap:.5rem;margin:.9rem auto 0;padding:.4rem .95rem;border-radius:999px;font-size:.8rem;font-weight:600;color:rgba(237,233,254,.95);background:rgba(15,10,30,.45);border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);text-shadow:0 1px 8px rgba(0,0,0,.4)}
         .visitor-badge strong{font-size:.95rem;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
         /* footer */
@@ -206,6 +211,17 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
+    <!-- تسجيل الدخول: اسم المستخدم فقط -->
+    <div id="loginGate" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+        <form id="loginForm" class="glass-strong rounded-xl p-7 max-w-sm w-full border ui-line text-center shadow-2xl" autocomplete="off">
+            <h1 class="logo mb-1" dir="ltr" style="font-size:1.6rem"><span class="logo-7">7</span><span class="logo-shine">ASSON GAMING</span></h1>
+            <h2 id="loginTitle" class="text-lg font-bold ui-ink mt-4 mb-1" data-translate="loginTitle">تسجيل الدخول</h2>
+            <p class="text-sm ui-muted mb-4" data-translate="loginHint">اكتب اسم المستخدم للدخول إلى الموقع</p>
+            <input type="text" id="loginName" maxlength="30" required placeholder="اسم المستخدم" data-translate-ph="loginPlaceholder" class="w-full ui-soft border ui-line rounded-lg px-3 py-2.5 text-center text-base mb-3 focus:outline-none focus:border-violet-500 ui-ink">
+            <p id="loginErr" class="text-xs mb-3 hidden" style="color:#e11d48"></p>
+            <button type="submit" class="btn-primary w-full py-2.5 rounded-xl font-bold cursor-pointer" data-translate="loginBtn">دخول</button>
+        </form>
+    </div>
     <div class="orb" style="width:380px;height:380px;top:-120px;right:-100px"></div>
     <div class="orb" style="width:320px;height:320px;top:45%;left:-140px"></div>
 
@@ -216,7 +232,7 @@
             <button id="menuBtn" class="robot-btn" aria-label="القائمة وخدمة العملاء">
                 <svg class="robot" viewBox="0 0 64 64" aria-hidden="true"><g class="r-antenna"><path d="M32 15V8" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle class="r-bulb" cx="32" cy="6" r="3.6"/></g><rect class="r-ear" x="3" y="29" width="8" height="15" rx="4"/><rect class="r-ear" x="53" y="29" width="8" height="15" rx="4"/><path d="M57 42v4a8 8 0 0 1-8 8h-6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="41" cy="54" r="2.6" fill="#fff"/><rect class="r-head" x="9" y="15" width="46" height="38" rx="14"/><rect class="r-face" x="15" y="22" width="34" height="24" rx="10"/><ellipse class="r-eye" cx="25" cy="32.5" rx="3.4" ry="4.4"/><ellipse class="r-eye" cx="39" cy="32.5" rx="3.4" ry="4.4"/><path class="r-mouth" d="M27 40.5q5 4 10 0"/></svg>
                 <span class="robot-badge"><i class="fa-solid fa-bars"></i></span>
-                <span class="robot-bubble" aria-hidden="true" data-translate="greet">مرحبا بك</span>
+                <span class="robot-bubble" id="robotBubble" aria-hidden="true">مرحبا بك</span>
             </button>
             <div class="flex items-center gap-3">
                 <div class="text-right">
@@ -391,6 +407,7 @@
                 <button onclick="switchAdminTab('requests')" id="tabBtnReq" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabRequests">طلبات التنزيل</button>
                 <button onclick="switchAdminTab('wall')" id="tabBtnWall" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">الخلفيات</button>
                 <button onclick="switchAdminTab('logs')" id="tabBtnLog" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabLogs">سجل التنزيلات</button>
+                <button onclick="switchAdminTab('customers')" id="tabBtnCust" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-users"></i> <span data-translate="tabCustomers">العملاء</span></button>
             </div>
 
             <!-- تبويب: إضافة لعبة -->
@@ -435,6 +452,19 @@
             <!-- تبويب: إدارة الألعاب -->
             <div id="tabContentManage" class="hidden space-y-3">
                 <div id="manageList" class="space-y-3"></div>
+            </div>
+
+            <!-- تبويب: العملاء -->
+            <div id="tabContentCust" class="hidden space-y-3">
+                <p id="custTotal" class="text-sm font-bold ui-accent"></p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-start text-sm">
+                        <thead><tr class="ui-muted text-xs border-b ui-line">
+                            <th class="p-3 text-start">الاسم</th><th class="p-3 text-start">أول دخول</th><th class="p-3 text-start">آخر دخول</th><th class="p-3 text-start">عدد الزيارات</th>
+                        </tr></thead>
+                        <tbody id="custTableBody" class="divide-y ui-divide"></tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- تبويب: الطلبات -->
@@ -584,6 +614,7 @@
                 installApp: "ثبّت التطبيق",
                 installHero: "ثبّت التطبيق على هاتفك",
                 visitorsLabel: "عدد الزوار",
+                tabCustomers: "العملاء", loginTitle: "تسجيل الدخول", loginHint: "اكتب اسم المستخدم للدخول إلى الموقع", loginBtn: "دخول", loginPlaceholder: "اسم المستخدم", loginShort: "اكتب اسماً من حرفين على الأقل", welcomeName: "مرحبا ",
                 footerAbout: "مكتبة ألعاب حصرية بتنزيل مباشر وخدمة دعم عبر واتساب.",
                 footerLinks: "روابط سريعة",
                 footerContact: "تواصل معنا",
@@ -642,6 +673,7 @@
                 installApp: "Install app",
                 installHero: "Install the app on your phone",
                 visitorsLabel: "Visitors",
+                tabCustomers: "Customers", loginTitle: "Sign in", loginHint: "Enter a username to enter the site", loginBtn: "Enter", loginPlaceholder: "Username", loginShort: "Enter a name with at least 2 characters", welcomeName: "Welcome ",
                 footerAbout: "An exclusive game library with direct downloads and WhatsApp support.",
                 footerLinks: "Quick links",
                 footerContact: "Contact us",
@@ -689,6 +721,8 @@
                     el.textContent = translations[lang][key];
                 }
             });
+            document.querySelectorAll('[data-translate-ph]').forEach(el => { const t = translations[lang][el.getAttribute('data-translate-ph')]; if (t) el.placeholder = t; });
+            if (typeof updateGreetText === 'function') updateGreetText();
             buildSupportLinks();
             loadGames();
             if (visitorBadge.dataset.n !== undefined) visitorCountEl.textContent = Number(visitorBadge.dataset.n).toLocaleString(lang === 'ar' ? 'ar-EG' : 'en-US');
@@ -771,6 +805,8 @@
             document.getElementById('tabContentLog').classList.add('hidden');
             document.getElementById('tabContentManage').classList.add('hidden');
             document.getElementById('tabContentWall').classList.add('hidden');
+            document.getElementById('tabContentCust').classList.add('hidden');
+            document.getElementById('tabBtnCust').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
             document.getElementById('tabBtnManage').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
             document.getElementById('tabBtnAdd').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
             document.getElementById('tabBtnReq').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
@@ -792,6 +828,10 @@
                 document.getElementById('tabContentWall').classList.remove('hidden');
                 document.getElementById('tabBtnWall').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
                 loadWallManage();
+            } else if(tab === 'customers') {
+                document.getElementById('tabContentCust').classList.remove('hidden');
+                document.getElementById('tabBtnCust').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
+                loadCustomers();
             } else if(tab === 'logs') {
                 document.getElementById('tabContentLog').classList.remove('hidden');
                 document.getElementById('tabBtnLog').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
@@ -1281,6 +1321,31 @@
             }
         }
 
+        async function loadCustomers() {
+            const tbody = document.getElementById('custTableBody');
+            const total = document.getElementById('custTotal');
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 ui-muted">جاري التحميل...</td></tr>`;
+            try {
+                const snap = await getDocs(collection(db, 'customers'));
+                const rows = [];
+                snap.forEach(d => rows.push(d.data()));
+                const ts = v => (v && v.seconds) ? v.seconds : 0;
+                rows.sort((a, b) => ts(b.lastSeen) - ts(a.lastSeen));
+                total.textContent = 'إجمالي العملاء: ' + rows.length;
+                if (!rows.length) { tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 ui-muted">لا يوجد عملاء حتى الآن.</td></tr>`; return; }
+                const fmt = v => v && v.seconds ? new Date(v.seconds * 1000).toLocaleString() : '—';
+                tbody.innerHTML = rows.map(c => `<tr class="row-hover">
+                    <td class="p-3 font-semibold ui-ink">${escapeHtml(c.name)}</td>
+                    <td class="p-3 ui-muted text-xs">${fmt(c.createdAt)}</td>
+                    <td class="p-3 ui-muted text-xs">${fmt(c.lastSeen)}</td>
+                    <td class="p-3 ui-ink">${Number(c.visits) || 1}</td></tr>`).join('');
+            } catch (err) {
+                console.error(err);
+                total.textContent = '';
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4" style="color:#e11d48">تعذّرت القراءة. اسمح بالقراءة على مجموعة customers في قواعد Firestore.</td></tr>`;
+            }
+        }
+
         // ===== خدمة العملاء (واتساب) =====
         const SUPPORT_MSG = {
             ar: { chat: 'مرحباً، أحتاج مساعدة من خدمة عملاء 7ASSON GAMING.', download: 'مرحباً، أواجه مشكلة في تنزيل لعبة من موقع 7ASSON GAMING.', suggest: 'مرحباً، أود اقتراح لعبة جديدة لإضافتها إلى مكتبة 7ASSON GAMING.', general: 'مرحباً، لدي استفسار بخصوص موقع 7ASSON GAMING.' },
@@ -1333,6 +1398,9 @@
         // المتصفحات تمنع الصوت قبل أول لمسة، فنحاول عند التحميل وإن مُنع يُنطق عند أول لمسة.
         let greeted = false;
         const GESTURES = ['click', 'touchend', 'pointerup', 'keydown'];
+        function getUser() { try { return localStorage.getItem('username') || ''; } catch (e) { return ''; } }
+        function greetMsg() { const n = getUser(); return n ? translations[currentLang].welcomeName + n : translations[currentLang].greet; }
+        function updateGreetText() { const b = document.getElementById('robotBubble'); if (b) b.textContent = greetMsg(); }
         function markGreeted() {
             greeted = true;
             GESTURES.forEach(e => window.removeEventListener(e, onGesture));
@@ -1358,7 +1426,7 @@
             } catch (e) {}
         }
         function sayHello(fromGesture) {
-            if (greeted) return;
+            if (greeted || !getUser()) return;
             const ar = currentLang === 'ar';
             const hasTTS = 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
             const voices = hasTTS ? speechSynthesis.getVoices() : [];
@@ -1367,7 +1435,7 @@
                 if (fromGesture) { markGreeted(); beepHello(); }
                 return;
             }
-            const u = new SpeechSynthesisUtterance(translations[currentLang].greet);
+            const u = new SpeechSynthesisUtterance(greetMsg());
             u.lang = ar ? 'ar-SA' : 'en-US';
             if (ar && arVoice) u.voice = arVoice;
             u.pitch = 1.5; u.rate = 0.95; u.volume = 1;
@@ -1379,11 +1447,57 @@
         GESTURES.forEach(e => window.addEventListener(e, onGesture, { passive: true }));
         sayHello(false);
         // الفقاعة تظهر حتى لو مُنع الصوت، ثم تتكرر مع الصوت عند أول لمسة
+        updateGreetText();
         setTimeout(() => {
-            if (greeted) return;
+            if (greeted || !getUser()) return;
             menuBtn.classList.add('greet');
             setTimeout(() => menuBtn.classList.remove('greet'), 3200);
         }, 700);
+
+        // ===== تسجيل الدخول بالاسم + سجل العملاء (Firestore: customers) =====
+        // الاسم يُحفظ في المتصفح فلا يُطلب مرة أخرى، ويُسجَّل في مجموعة customers لتظهر في لوحة المدير.
+        function getCustId() {
+            let id = null;
+            try { id = localStorage.getItem('custId'); } catch (e) {}
+            if (!id) {
+                id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2));
+                try { localStorage.setItem('custId', id); } catch (e) {}
+            }
+            return id;
+        }
+        async function registerCustomer(name) {
+            try {
+                await setDoc(doc(db, 'customers', getCustId()), { name, createdAt: serverTimestamp(), lastSeen: serverTimestamp(), visits: 1 }, { merge: true });
+                try { localStorage.setItem('custRegistered', '1'); } catch (e) {}
+            } catch (e) { console.warn('customer register skipped', e); }
+        }
+        async function touchCustomer() {
+            // زيارة عائدة: نحدّث آخر دخول وعدد الزيارات مرة واحدة لكل جلسة
+            let reg = null, done = null;
+            try { reg = localStorage.getItem('custRegistered'); done = sessionStorage.getItem('custTouched'); } catch (e) {}
+            if (!reg) { await registerCustomer(getUser()); return; }
+            if (done) return;
+            try {
+                await updateDoc(doc(db, 'customers', getCustId()), { lastSeen: serverTimestamp(), visits: increment(1) });
+                try { sessionStorage.setItem('custTouched', '1'); } catch (e) {}
+            } catch (e) { console.warn('customer touch skipped', e); }
+        }
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('loginName').value.trim().replace(/\s+/g, ' ');
+            const err = document.getElementById('loginErr');
+            if (name.length < 2) { err.textContent = translations[currentLang].loginShort; err.classList.remove('hidden'); return; }
+            try { localStorage.setItem('username', name); } catch (e2) {}
+            document.documentElement.classList.add('has-user');
+            try { sessionStorage.setItem('custTouched', '1'); } catch (e2) {}
+            registerCustomer(name);
+            updateGreetText();
+            sayHello(true);
+            menuBtn.classList.add('greet');
+            setTimeout(() => menuBtn.classList.remove('greet'), 3200);
+        });
+        if (getUser()) touchCustomer();
+        else setTimeout(() => { const i = document.getElementById('loginName'); if (i) i.focus(); }, 100);
 
         loadGames();
         // ===== إشعارات الألعاب والتطبيقات الجديدة (Firebase Cloud Messaging) =====
