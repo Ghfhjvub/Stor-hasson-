@@ -418,9 +418,6 @@
             <button type="button" data-install class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm cursor-pointer">
                 <i class="fa-solid fa-mobile-screen-button text-lg"></i><span data-translate="installHero">ثبّت التطبيق على هاتفك</span>
             </button>
-            <button type="button" id="tutorialBtn" class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm cursor-pointer mt-3 sm:mt-0 sm:ms-2" style="background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.4);backdrop-filter:blur(8px)">
-                <i class="fa-solid fa-circle-play text-lg"></i><span data-translate="tutorialBtn">شاهد شرح الاستخدام</span>
-            </button>
             <div id="visitorBadge" class="visitor-badge" aria-live="polite">
                 <i class="fa-solid fa-eye"></i>
                 <span data-translate="visitorsLabel">عدد الزوار</span>
@@ -432,8 +429,6 @@
         <div class="flex flex-wrap justify-center gap-2 mb-6">
             <button type="button" id="tabGamesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-primary flex items-center gap-2"><i class="fa-solid fa-gamepad"></i><span data-translate="tabGamesBtn">الألعاب</span></button>
             <button type="button" id="tabWallsBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-image"></i><span data-translate="tabWallsBtn">الخلفيات</span></button>
-            <button type="button" id="tabProjBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-diagram-project"></i><span data-translate="tabProjBtn">المشاريع</span></button>
-            <button type="button" id="tabMoviesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-film"></i><span data-translate="tabMoviesBtn">الأفلام</span></button>
             <button type="button" id="tabFilesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-folder-open"></i><span data-translate="tabFilesBtn">الملفات</span></button>
         </div>
         <div id="gamesContainer" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-5 items-start">
@@ -448,9 +443,6 @@
         </section>
     <section id="projSection" class="hidden">
             <div id="projContainer" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 items-start"></div>
-        </section>
-    <section id="movieSection" class="hidden">
-            <div id="movieContainer" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-5 items-start"></div>
         </section>
     <section id="fileSection" class="hidden">
             <div id="fileContainer" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-5 items-start"></div>
@@ -493,25 +485,6 @@
         </div>
     </div>
 
-    <!-- Movie details / player -->
-    <div id="movieModal" class="fixed inset-0 overlay z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-strong border ui-line max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl">
-            <div class="flex justify-between items-center p-3 border-b ui-line">
-                <h3 id="movieModalTitle" class="text-base font-bold ui-accent truncate"></h3>
-                <button id="closeMovieModal" type="button" class="ui-muted hover-ink text-xl cursor-pointer" aria-label="close"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="flex-grow overflow-auto p-3 space-y-3">
-                <div id="moviePlayer" class="w-full rounded-xl overflow-hidden border ui-line" style="aspect-ratio:16/9;background:#000"></div>
-                <p id="movieModalMeta" class="text-xs ui-muted"></p>
-                <p id="movieModalDesc" class="text-sm ui-ink whitespace-pre-line leading-7"></p>
-            </div>
-            <div class="p-3 border-t ui-line flex gap-2">
-                <button id="movieWatchBtn" type="button" class="btn-primary flex-1 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-play"></i><span data-translate="movieWatch">مشاهدة</span></button>
-                <a id="movieDlBtn" href="#" target="_blank" rel="noopener noreferrer" download class="btn-primary flex-1 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-download"></i><span data-translate="movieDownload">تنزيل</span></a>
-            </div>
-        </div>
-    </div>
-
     <!-- Wallpaper preview -->
     <div id="wallPreview" class="fixed inset-0 overlay z-50 hidden flex items-center justify-center p-4">
         <div class="glass-strong border ui-line max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl">
@@ -526,22 +499,6 @@
                     <span class="flex items-center gap-2 text-sm font-bold ui-muted"><i class="fa-solid fa-download"></i><span class="wall-dl-count"></span></span>
                 </div>
                 <button id="wallPreviewDl" type="button" class="btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-download"></i><span data-translate="downloadBtn">Download</span></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tutorial video -->
-    <div id="tutorialModal" class="fixed inset-0 overlay z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-strong border ui-line max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl">
-            <div class="flex justify-between items-center p-3 border-b ui-line">
-                <h3 class="text-base font-bold ui-accent truncate" data-translate="tutorialTitle">شرح طريقة الاستخدام</h3>
-                <button id="closeTutorial" type="button" class="ui-muted hover-ink text-xl cursor-pointer" aria-label="close"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-3">
-                <div id="tutorialBox" class="w-full rounded-xl overflow-hidden border ui-line relative" style="aspect-ratio:16/9;background:#000">
-                    <video id="tutorialVideo" controls playsinline preload="none" class="w-full h-full" style="background:#000"></video>
-                    <p id="tutorialMissing" class="hidden absolute inset-0 grid place-items-center text-center text-sm p-4" style="color:#ddd6fe" data-translate="tutorialMissing">الفيديو غير متوفر حالياً.</p>
-                </div>
             </div>
         </div>
     </div>
@@ -671,7 +628,6 @@
                 <button onclick="switchAdminTab('requests')" id="tabBtnReq" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabRequests">طلبات التنزيل</button>
                 <button onclick="switchAdminTab('wall')" id="tabBtnWall" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">الخلفيات</button>
                 <button onclick="switchAdminTab('projects')" id="tabBtnProj" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">المشاريع</button>
-                <button onclick="switchAdminTab('movies')" id="tabBtnMovie" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">الأفلام</button>
                 <button onclick="switchAdminTab('messages')" id="tabBtnMsg" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">الرسائل<span id="msgBadge" class="hidden" style="background:#ef4444;color:#fff;border-radius:9999px;padding:0 .45rem;font-size:.7rem;margin-inline-start:.35rem">0</span></button>
                 <button onclick="switchAdminTab('files')" id="tabBtnFile" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">الملفات</button>
                 <button onclick="switchAdminTab('logs')" id="tabBtnLog" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabLogs">سجل التنزيلات</button>
@@ -815,60 +771,6 @@
                 <div id="projManageList" class="space-y-3 pt-4 border-t ui-line"></div>
             </div>
 
-            <!-- تبويب: الأفلام -->
-            <div id="tabContentMovie" class="hidden space-y-5">
-                <div class="ui-soft border ui-line rounded-xl p-4 space-y-3">
-                    <h4 class="font-bold ui-accent text-sm"><i class="fa-solid fa-computer"></i> فيلم من جهازي (بدون رفع للإنترنت)</h4>
-                    <p class="text-xs ui-muted leading-6">اختر ملف الفيلم من جهازك، وعند الضغط على «مشاهدة» يُشغَّل مباشرة من جهازك. الفيلم لا يُرفع لأي مكان، ويظهر في هذا المتصفح وعلى هذا الجهاز فقط (الزوار لن يروه).</p>
-                    <input type="text" id="localMovieTitle" placeholder="اسم الفيلم (اختياري، وإلا يؤخذ من اسم الملف)" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="localMovieYear" maxlength="4" inputmode="numeric" dir="ltr" placeholder="السنة (اختياري)" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
-                        <input type="text" id="localMovieGenre" maxlength="30" placeholder="النوع (اختياري)" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
-                    </div>
-                    <div>
-                        <label class="block text-xs ui-muted mb-1">البوستر (اختياري — وإن تركته يُبحث عنه تلقائياً)</label>
-                        <input type="file" id="localMoviePoster" accept="image/*" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm ui-muted cursor-pointer">
-                    </div>
-                    <button type="button" id="addLocalMovieBtn" class="w-full font-bold py-2.5 rounded-lg transition cursor-pointer btn-primary"><i class="fa-solid fa-folder-open"></i> اختيار الفيلم من جهازي وإضافته</button>
-                    <div id="localMovieList" class="space-y-2"></div>
-                </div>
-                <form id="addMovieForm" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">اسم الفيلم</label>
-                        <input type="text" id="movieTitle" required class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium mb-1">السنة (اختياري)</label>
-                            <input type="text" id="movieYear" maxlength="4" inputmode="numeric" dir="ltr" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">التصنيف (اختياري)</label>
-                            <input type="text" id="movieGenre" maxlength="30" placeholder="أكشن، كوميدي..." class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">وصف الفيلم</label>
-                        <textarea id="movieDesc" rows="3" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">رابط المشاهدة (YouTube / Vimeo / ملف mp4 مباشر / أي رابط)</label>
-                        <input type="url" id="movieWatchUrl" placeholder="https://..." dir="ltr" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">رابط التنزيل</label>
-                        <input type="url" id="movieDlUrl" placeholder="https://..." dir="ltr" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">بوستر الفيلم</label>
-                        <input type="file" id="moviePoster" accept="image/*" required class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm ui-muted cursor-pointer">
-                    </div>
-                    <p class="text-xs ui-muted">يجب إدخال رابط مشاهدة أو رابط تنزيل على الأقل (أو الاثنين).</p>
-                    <button type="submit" id="moviePublishBtn" class="w-full font-bold py-2.5 rounded-lg transition cursor-pointer btn-primary">نشر الفيلم</button>
-                </form>
-                <div id="movieManageList" class="space-y-3 pt-4 border-t ui-line"></div>
-            </div>
-
             <!-- تبويب: الرسائل -->
             <div id="tabContentMsg" class="hidden space-y-4">
                 <div class="flex items-center justify-between gap-2">
@@ -905,7 +807,7 @@
             <!-- تبويب: سجل التنزيلات (من نزّل ماذا) -->
             <div id="tabContentLog" class="hidden space-y-4">
                 <div class="flex items-center gap-2 flex-wrap">
-                    <input type="search" id="logSearch" placeholder="ابحث باسم الشخص أو اسم اللعبة/التطبيق/الخلفية/الفيلم..." class="flex-1 min-w-[12rem] ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
+                    <input type="search" id="logSearch" placeholder="ابحث باسم الشخص أو اسم اللعبة/التطبيق/الخلفية..." class="flex-1 min-w-[12rem] ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
                     <button type="button" id="refreshLogBtn" class="text-xs font-bold px-3 py-2 rounded-lg transition cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line"><i class="fa-solid fa-rotate"></i> تحديث</button>
                 </div>
                 <p id="logTotal" class="text-xs ui-muted"></p>
@@ -916,6 +818,7 @@
                                 <th class="p-3" data-translate="thGame">التنزيل</th>
                                 <th class="p-3" data-translate="thStatus">النوع</th>
                                 <th class="p-3" data-translate="thDate">الوقت</th>
+                                <th class="p-3">شكر</th>
                             </tr>
                         </thead>
                         <tbody id="logsTableBody" class="divide-y ui-divide">
@@ -959,7 +862,7 @@
     <!-- Firebase SDKs (Firestore only - No Storage cost!) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, getDoc, deleteDoc, serverTimestamp, query, orderBy, limit, increment, setDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, getDoc, deleteDoc, serverTimestamp, query, orderBy, limit, where, increment, setDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAMAZFJXGE_7zg1nHGyiPmsqp_8Y3n02SE",
@@ -1022,7 +925,7 @@
                 csSuggest: "اقتراح لعبة",
                 csGeneral: "استفسار عام",
                 installApp: "ثبّت التطبيق",
-                installHero: "ثبّت التطبيق على هاتفك", tutorialBtn: "شاهد شرح الاستخدام", tutorialTitle: "شرح طريقة الاستخدام", tutorialMissing: "الفيديو غير متوفر حالياً.",
+                installHero: "ثبّت التطبيق على هاتفك",
                 visitorsLabel: "عدد الزوار",
                 tabCustomers: "العملاء", loginTitle: "بوابة الدخول الحصرية", loginHint: "سجّل اسمك الحقيقي الكامل لتدخل مكتبتنا الحصرية", loginBtn: "دخول", loginPlaceholder: "الاسم الكامل (مثال: محمد أحمد علي)", loginShort: "اكتب اسمك الحقيقي الكامل (اسمان على الأقل)", welcomeName: "مرحبا ",
                 footerAbout: "مكتبة ألعاب حصرية بتنزيل مباشر وخدمة دعم عبر واتساب.",
@@ -1030,7 +933,7 @@
                 footerContact: "تواصل معنا",
                 linkGames: "الألعاب",
                 backBtn: "رجوع",
-                greet: "مرحبا بك", tabGamesBtn: "الألعاب", tabWallsBtn: "الخلفيات", tabProjBtn: "المشاريع", projOpen: "معاينة المشروع", noProj: "لا توجد مشاريع حالياً.", tabMoviesBtn: "الأفلام", movieWatch: "مشاهدة", movieDownload: "تنزيل", noMovies: "لا توجد أفلام حالياً.", movieNoWatch: "رابط المشاهدة غير متوفر.", tabFilesBtn: "الملفات", noFiles: "لا توجد ملفات حالياً.", fileDownload: "تنزيل الملف", menuContact: "مراسلة المدير", menuFiles: "الملفات المهمة", contactTitle: "مراسلة المدير", contactSub: "اكتب رسالتك وستصل مباشرة إلى المدير.", contactName: "اسمك", contactInfo: "رقم واتساب أو بريد للرد عليك (اختياري)", contactMsg: "اكتب رسالتك هنا...", contactSend: "إرسال الرسالة", contactSent: "تم إرسال رسالتك إلى المدير، شكراً لك!", contactWait: "انتظر قليلاً قبل إرسال رسالة أخرى.", contactErr: "تعذر إرسال الرسالة، حاول مرة أخرى.", subPhone: "خلفيات الهاتف", subPc: "خلفيات PC", noWalls: "لا توجد خلفيات في هذا القسم حالياً.",
+                greet: "مرحبا بك", tabGamesBtn: "الألعاب", tabWallsBtn: "الخلفيات", tabProjBtn: "المشاريع", projOpen: "معاينة المشروع", noProj: "لا توجد مشاريع حالياً." ,  tabFilesBtn: "الملفات", noFiles: "لا توجد ملفات حالياً.", fileDownload: "تنزيل الملف", menuContact: "مراسلة المدير", menuFiles: "الملفات المهمة", contactTitle: "مراسلة المدير", contactSub: "اكتب رسالتك وستصل مباشرة إلى المدير.", contactName: "اسمك", contactInfo: "رقم واتساب أو بريد للرد عليك (اختياري)", contactMsg: "اكتب رسالتك هنا...", contactSend: "إرسال الرسالة", contactSent: "تم إرسال رسالتك إلى المدير، شكراً لك!", contactWait: "انتظر قليلاً قبل إرسال رسالة أخرى.", contactErr: "تعذر إرسال الرسالة، حاول مرة أخرى.", subPhone: "خلفيات الهاتف", subPc: "خلفيات PC", noWalls: "لا توجد خلفيات في هذا القسم حالياً.",
                 kindLabel: "نوع المنشور", kindGame: "لعبة", kindApp: "تطبيق",
                 notifOn: "فعّل إشعارات الألعاب الجديدة", notifDone: "الإشعارات مفعّلة ✓", notifBlocked: "الإشعارات محظورة — فعّلها من إعدادات المتصفح",
                 gateWelcome: "أهلاً بك", migrateNote: "حدّثنا اسمك: اكتب اسمك الحقيقي الكامل لمتابعة التصفح.",
@@ -1091,7 +994,7 @@
                 csSuggest: "Suggest a game",
                 csGeneral: "General question",
                 installApp: "Install app",
-                installHero: "Install the app on your phone", tutorialBtn: "Watch how-to video", tutorialTitle: "How to use the site", tutorialMissing: "Video not available yet.",
+                installHero: "Install the app on your phone",
                 visitorsLabel: "Visitors",
                 tabCustomers: "Customers", loginTitle: "Exclusive Entry", loginHint: "Register your full real name to enter our exclusive library", loginBtn: "Enter", loginPlaceholder: "Full name (e.g. Mohamed Ahmed Ali)", loginShort: "Enter your full real name (at least two names)", welcomeName: "Welcome ",
                 footerAbout: "An exclusive game library with direct downloads and WhatsApp support.",
@@ -1099,7 +1002,7 @@
                 footerContact: "Contact us",
                 linkGames: "Games",
                 backBtn: "Back",
-                greet: "Welcome", tabGamesBtn: "Games", tabWallsBtn: "Wallpapers", tabProjBtn: "Projects", projOpen: "Preview project", noProj: "No projects yet.", tabMoviesBtn: "Movies", movieWatch: "Watch", movieDownload: "Download", noMovies: "No movies yet.", movieNoWatch: "No watch link available.", tabFilesBtn: "Files", noFiles: "No files yet.", fileDownload: "Download file", menuContact: "Message the admin", menuFiles: "Important files", contactTitle: "Message the admin", contactSub: "Write your message and it will reach the admin directly.", contactName: "Your name", contactInfo: "WhatsApp number or email for a reply (optional)", contactMsg: "Write your message here...", contactSend: "Send message", contactSent: "Your message was sent to the admin. Thank you!", contactWait: "Please wait a moment before sending another message.", contactErr: "Could not send the message, please try again.", subPhone: "Phone wallpapers", subPc: "PC wallpapers", noWalls: "No wallpapers in this section yet.",
+                greet: "Welcome", tabGamesBtn: "Games", tabWallsBtn: "Wallpapers", tabProjBtn: "Projects", projOpen: "Preview project", noProj: "No projects yet." ,  tabFilesBtn: "Files", noFiles: "No files yet.", fileDownload: "Download file", menuContact: "Message the admin", menuFiles: "Important files", contactTitle: "Message the admin", contactSub: "Write your message and it will reach the admin directly.", contactName: "Your name", contactInfo: "WhatsApp number or email for a reply (optional)", contactMsg: "Write your message here...", contactSend: "Send message", contactSent: "Your message was sent to the admin. Thank you!", contactWait: "Please wait a moment before sending another message.", contactErr: "Could not send the message, please try again.", subPhone: "Phone wallpapers", subPc: "PC wallpapers", noWalls: "No wallpapers in this section yet.",
                 kindLabel: "Post type", kindGame: "Game", kindApp: "App",
                 notifOn: "Enable new game notifications", notifDone: "Notifications enabled ✓", notifBlocked: "Notifications blocked — enable them in browser settings",
                 gateWelcome: "Welcome", migrateNote: "Please update your name: enter your full real name to keep browsing.",
@@ -1238,7 +1141,6 @@
                 requests:    ['tabContentReq',    'tabBtnReq',    () => loadRequests()],
                 wall:        ['tabContentWall',   'tabBtnWall',   () => loadWallManage()],
                 projects:    ['tabContentProj',   'tabBtnProj',   () => loadProjManage()],
-                movies:      ['tabContentMovie',  'tabBtnMovie',  () => loadMovieManage()],
                 messages:    ['tabContentMsg',    'tabBtnMsg',    () => loadMessages()],
                 files:       ['tabContentFile',   'tabBtnFile',   () => loadFileManage()],
                 logs:        ['tabContentLog',    'tabBtnLog',    () => loadLogs()],
@@ -1561,13 +1463,12 @@
         }
 
         // ===== سجل التنزيلات: من نزّل ماذا =====
-        // كل تنزيل (لعبة / تطبيق / خلفية / فيلم / ملف) يُسجَّل في مجموعة logs مع اسم المستخدم المسجَّل،
+        // كل تنزيل (لعبة / تطبيق / خلفية / ملف) يُسجَّل في مجموعة logs مع اسم المستخدم المسجَّل،
         // ويظهر للمدير في تبويب "سجل التنزيلات" بصيغة: قام فلان بتنزيل اللعبة «...».
         const DL_TYPES = {
             game:      { label: 'اللعبة',   icon: 'fa-gamepad' },
             app:       { label: 'التطبيق',  icon: 'fa-mobile-screen-button' },
             wallpaper: { label: 'الخلفية',  icon: 'fa-image' },
-            movie:     { label: 'الفيلم',   icon: 'fa-film' },
             file:      { label: 'الملف',    icon: 'fa-folder-open' }
         };
         const _dlRecent = new Map();
@@ -1749,7 +1650,7 @@
             }
         }
 
-        // ---- سجل التنزيلات: قام فلان بتنزيل اللعبة/التطبيق/الخلفية/الفيلم/الملف ----
+        // ---- سجل التنزيلات: قام فلان بتنزيل اللعبة/التطبيق/الخلفية/الملف ----
         let logRows = [];
         const tsMs = v => (v && v.seconds) ? v.seconds * 1000 : 0;
         function renderLogs() {
@@ -1759,33 +1660,35 @@
             const rows = !term ? logRows : logRows.filter(l => ((l.userName || '') + ' ' + (l.itemTitle || l.gameTitle || '')).toLowerCase().includes(term));
             total.textContent = logRows.length ? `عدد التنزيلات: ${rows.length}${term ? ' من ' + logRows.length : ''}` : '';
             if (!rows.length) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 ui-muted">${logRows.length ? 'لا توجد نتائج مطابقة.' : translations[currentLang].noLogs}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 ui-muted">${logRows.length ? 'لا توجد نتائج مطابقة.' : translations[currentLang].noLogs}</td></tr>`;
                 return;
             }
             tbody.innerHTML = rows.map(l => {
                 const title = escapeHtml(l.itemTitle || l.gameTitle || '');
                 const ms = tsMs(l.timestamp);
-                const dateStr = ms ? new Date(ms).toLocaleString() : 'الآن';
+                const dateStr = ms ? new Date(ms).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : 'الآن';
+                const likeBtn = l._id ? `<button type="button" class="log-like cursor-pointer text-lg ${l.liked ? '' : 'ui-faint'}" style="${l.liked ? 'color:#ef4444' : ''}" data-id="${l._id}" title="${l.liked ? 'تم شكر هذا الشخص' : 'إرسال شكر للمستخدم'}"><i class="fa-${l.liked ? 'solid' : 'regular'} fa-heart"></i></button>` : '';
                 if (l.userName) {
                     const ty = DL_TYPES[l.itemType] || DL_TYPES.game;
                     return `<tr class="row-hover">
                         <td class="p-3 ui-ink leading-7">قام <strong class="ui-accent">${escapeHtml(l.userName)}</strong> بتنزيل ${ty.label} <strong>«${title}»</strong></td>
                         <td class="p-3"><span class="pill text-xs px-2 py-0.5 rounded-full whitespace-nowrap"><i class="fa-solid ${ty.icon}"></i> ${ty.label}</span></td>
-                        <td class="p-3 ui-muted text-xs whitespace-nowrap">${dateStr}</td></tr>`;
+                        <td class="p-3 ui-muted text-xs whitespace-nowrap">${dateStr}</td>
+                        <td class="p-3 text-center">${l.userName ? likeBtn : ''}</td></tr>`;
                 }
                 return `<tr class="row-hover">
                     <td class="p-3 ui-ink leading-7"><span class="ui-faint">شخص غير معروف</span> نزّل <strong>«${title}»</strong></td>
                     <td class="p-3 ui-faint text-xs">قبل التحديث</td>
-                    <td class="p-3 ui-muted text-xs whitespace-nowrap">${dateStr}</td></tr>`;
+                    <td class="p-3 ui-muted text-xs whitespace-nowrap">${dateStr}</td><td></td></tr>`;
             }).join('');
         }
         async function loadLogs() {
             const tbody = document.getElementById('logsTableBody');
-            tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 ui-muted">جاري التحميل...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 ui-muted">جاري التحميل...</td></tr>`;
             try {
                 const q = query(collection(db, "logs"), orderBy("timestamp", "desc"), limit(500));
                 const querySnapshot = await getDocs(q);
-                logRows = querySnapshot.docs.map(d => d.data());
+                logRows = querySnapshot.docs.map(d => ({ ...d.data(), _id: d.id }));
                 renderLogs();
             } catch (err) {
                 console.error(err);
@@ -1793,6 +1696,50 @@
             }
         }
         document.getElementById('logSearch').addEventListener('input', renderLogs);
+        // المدير يضغط القلب => يُوسَم سجل التنزيل liked، فيظهر للمستخدم إشعار شكر عند فتح الموقع
+        document.getElementById('logsTableBody').addEventListener('click', async (e) => {
+            const b = e.target.closest('.log-like'); if (!b) return;
+            const row = logRows.find(r => r._id === b.dataset.id); if (!row || row.liked) return;
+            b.disabled = true;
+            try {
+                await updateDoc(doc(db, 'logs', row._id), { liked: true, likedAt: serverTimestamp() });
+                row.liked = true; renderLogs();
+            } catch (err) {
+                console.error(err); b.disabled = false;
+                alert(err.code === 'permission-denied' ? 'Firestore رفض التعديل. اسمح بالتحديث (update) على مجموعة logs في قواعد Firestore.' : 'تعذّر إرسال الشكر.');
+            }
+        });
+
+        // ---- إشعار الشكر عند المستخدم ----
+        async function checkThanks() {
+            try {
+                const name = getUser(), cid = getCustId();
+                let seen = []; try { seen = JSON.parse(localStorage.getItem('thanksSeen') || '[]'); } catch (e) {}
+                const found = new Map();
+                for (const [f, v] of [['custId', cid], ['userName', name]]) {
+                    if (!v) continue;
+                    const snap = await getDocs(query(collection(db, 'logs'), where(f, '==', v)));
+                    snap.docs.forEach(d => { const x = d.data(); if (x.liked && !seen.includes(d.id)) found.set(d.id, x); });
+                }
+                if (!found.size) return;
+                const items = [...found.values()].map(x => x.itemTitle || x.gameTitle).filter(Boolean);
+                const ids = [...found.keys()];
+                const wrap = document.createElement('div');
+                wrap.className = 'log-thanks-open fixed inset-0 overlay z-[70] flex items-center justify-center p-4';
+                wrap.innerHTML = `<div class="glass-strong border ui-line max-w-sm w-full p-6 text-center">
+                    <div style="font-size:3rem">☺️❤️</div>
+                    <h3 class="text-lg font-bold ui-ink my-3">المدير يشكرك على دعمك!</h3>
+                    ${items.length ? `<p class="text-sm ui-muted mb-4">شكراً لتنزيلك «${escapeHtml(items.slice(0, 3).join('، '))}»</p>` : ''}
+                    <button type="button" class="btn-primary w-full py-2.5 rounded-xl font-bold cursor-pointer">حاضر 💜</button></div>`;
+                wrap.querySelector('button').onclick = () => {
+                    try { localStorage.setItem('thanksSeen', JSON.stringify(seen.concat(ids).slice(-300))); } catch (e) {}
+                    wrap.remove();
+                };
+                document.body.appendChild(wrap);
+            } catch (e) { console.warn('thanks check skipped', e); }
+        }
+        setTimeout(checkThanks, 3000);
+        setInterval(() => { if (!document.hidden && !document.querySelector('.log-thanks-open')) checkThanks(); }, 120000);
         document.getElementById('refreshLogBtn').addEventListener('click', loadLogs);
 
         // ---- العملاء: زوار جدد + عملاء مميزون ----
@@ -2380,14 +2327,12 @@
             document.getElementById('gamesContainer').classList.toggle('hidden', name !== 'games');
             document.getElementById('wallSection').classList.toggle('hidden', name !== 'walls');
             document.getElementById('projSection').classList.toggle('hidden', name !== 'projects');
-            document.getElementById('movieSection').classList.toggle('hidden', name !== 'movies');
             document.getElementById('fileSection').classList.toggle('hidden', name !== 'files');
             document.getElementById('tabGamesBtn').className = name === 'games' ? TAB_ON : TAB_OFF;
             document.getElementById('tabWallsBtn').className = name === 'walls' ? TAB_ON : TAB_OFF;
-            document.getElementById('tabProjBtn').className = name === 'projects' ? TAB_ON : TAB_OFF;
-            document.getElementById('tabMoviesBtn').className = name === 'movies' ? TAB_ON : TAB_OFF;
+            
             document.getElementById('tabFilesBtn').className = name === 'files' ? TAB_ON : TAB_OFF;
-            if (name === 'walls') renderWallpapers(); else if (name === 'projects') renderProjects(); else if (name === 'movies') renderMovies(); else if (name === 'files') renderFiles(); else fitCards();
+            if (name === 'walls') renderWallpapers(); else if (name === 'projects') renderProjects(); else if (name === 'files') renderFiles(); else fitCards();
         }
         function showWallKind(k) {
             curWallKind = k;
@@ -2397,8 +2342,6 @@
         }
         document.getElementById('tabGamesBtn').addEventListener('click', () => showSection(false));
         document.getElementById('tabWallsBtn').addEventListener('click', () => showSection('walls'));
-        document.getElementById('tabProjBtn').addEventListener('click', () => showSection('projects'));
-        document.getElementById('tabMoviesBtn').addEventListener('click', () => showSection('movies'));
         document.getElementById('tabFilesBtn').addEventListener('click', () => showSection('files'));
         document.getElementById('subPhoneBtn').addEventListener('click', () => showWallKind('phone'));
         document.getElementById('subPcBtn').addEventListener('click', () => showWallKind('pc'));
@@ -2747,371 +2690,6 @@
         }
         loadProjects();
 
-        // ===== قسم الأفلام =====
-        // movies/{id}: title, description, year, genre, poster (صورة مضغوطة), watchUrl, downloadUrl, createdAt
-        const MAX_MOVIE_CHARS = 700000;
-        let movieData = [], curMovie = null;
-
-        // ---- أفلام مصرية حديثة جاهزة (البيانات من الصحافة الفنية المصرية) ----
-        // الغلاف يُجلب تلقائياً من ويكيبيديا عند فتح الصفحة، والزر يفتح الإعلان الرسمي على يوتيوب.
-        // أفلامك المنشورة من لوحة الإدارة (Firestore) تظهر أولاً، ولا تتكرر إن كان الاسم نفسه.
-        const BUILTIN_MOVIES = [
-            { id: 'b-7dogs', title: '7Dogs', year: '2026', genre: 'أكشن', en: '7Dogs',
-              description: 'بطولة كريم عبد العزيز وأحمد عز.\nضابط يطارد عصابة دولية تحمل اسم 7Dogs، ينجح في القبض على أحد أبرز أعضائها ثم يضطر للتعاون معه لإحباط عملية تهريب ضخمة.\nعُرض في موسم عيد الأضحى 2026.' },
-            { id: 'b-asad', title: 'أسد', year: '2026', genre: '',
-              description: 'بطولة محمد رمضان ورزان جمال وعلي قاسم وكامل الباشا وعمرو القاضي.\nعُرض في موسم عيد الأضحى 2026، ثم طُرح رقمياً بعد عرضه السينمائي.' },
-            { id: 'b-saqr', title: 'صقر وكناريا', year: '2026', genre: 'أكشن • كوميدي',
-              description: 'بطولة محمد إمام وشيكو مع يسرا اللوزي وخالد الصاوي ويارا السكري وانتصار، تأليف أيمن وتار وإخراج حسين المنباوي.\n«صقر» مرتزق أسطوري يقرر الابتعاد عن عالم العصابات، فتنقلب حياته بعد تعارفه على «بلال» الكاتب المهووس بعالم الجاسوسية.\nذكرت الأهرام أنه سيُعرض على منصة يانغو بلاي بعد السينما.' },
-            { id: 'b-kalam', title: 'الكلام على إيه', year: '2026', genre: 'كوميدي • تشويق',
-              description: 'أربع قصص لأزواج من خلفيات وأعمار مختلفة، تتحول ليلة زفافهم إلى سلسلة مواقف كوميدية وأزمات مفاجئة.\nبطولة حاتم صلاح ومصطفى غريب وأحمد حاتم وجيهان الشماشرجي وآخرين، إخراج ساندرو كنعان.' },
-            { id: 'b-izma', title: 'إذما', year: '2026', genre: '',
-              description: 'بطولة أحمد داود، مأخوذ عن رواية الكاتب محمد صادق الصادرة عام 2020.\nإنتاج «ذا بروديسرز» برئاسة هاني أسامة.' },
-            { id: 'b-crush', title: 'الكراش', year: '2026', genre: '',
-              description: 'بطولة أحمد داود وباسم سمرة وميرنا جميل وشيرين رضا.' },
-            { id: 'b-shamshoon', title: 'شمشون ودليلة', year: '2026', genre: '',
-              description: 'يجمع أحمد العوضي ومي عمر لأول مرة سينمائياً.\nبدأ عرضه في 8 يوليو 2026.' },
-            { id: 'b-ibn', title: 'ابن مين فيهم', year: '2026', genre: 'كوميدي',
-              description: 'بطولة ليلى علوي وبيومي فؤاد، إخراج هشام فتحي.\nبدأ عرضه في 9 يوليو 2026.' },
-            { id: 'b-qesas', title: 'القصص', year: '2026', genre: '',
-              description: 'بطولة نيللي كريم وأمير المصري.\nبدأ عرضه في يونيو 2026.' },
-            { id: 'b-bigrami', title: 'بيج رامي', year: '2026', genre: '',
-              description: 'بطولة رامز جلال بمشاركة محمد أنور ونسرين أمين وعدد من ضيوف الشرف، ضمن أفلام صيف 2026.' },
-            { id: 'b-barshama', title: 'برشامة', year: '2026', genre: '',
-              description: 'تصدّر إيرادات أفلام عيد الفطر 2026 في مصر.\nأعلن صناعه عرضه على منصة يانغو بلاي (الأهرام).' },
-            { id: 'b-dashash', title: 'الدشاش', year: '2025', genre: '',
-              description: 'بطولة محمد سعد، عُرض في يناير 2025.' },
-            { id: 'b-mostarieha', title: 'المستريحة', year: '2025', genre: 'كوميدي',
-              description: 'بطولة ليلى علوي وبيومي فؤاد، عُرض في يناير 2025.' }
-        ].map(b => ({
-            ...b,
-            watchLabel: 'الإعلان الرسمي',
-            watchUrl: 'https://www.youtube.com/results?search_query=' + encodeURIComponent('فيلم ' + b.title + ' ' + b.year + ' الإعلان الرسمي'),
-            builtin: true
-        }));
-
-        // غلاف بديل أنيق إلى أن يُجلب الغلاف الحقيقي (أو إن لم يوجد)
-        function moviePlaceholder(title) {
-            const t = String(title).replace(/[<>&"']/g, '');
-            const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='400' height='600' viewBox='0 0 400 600'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#2e1065'/><stop offset='1' stop-color='#7c3aed'/></linearGradient></defs><rect width='400' height='600' fill='url(#g)'/><text x='200' y='305' font-size='40' font-family='Cairo,Arial,sans-serif' font-weight='700' fill='#fff' text-anchor='middle'>" + t + "</text></svg>";
-            return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-        }
-
-        const POSTER_CACHE_KEY = 'moviePosterCache.v1';
-        let posterCache = {};
-        try { posterCache = JSON.parse(localStorage.getItem(POSTER_CACHE_KEY) || '{}') || {}; } catch (e) { posterCache = {}; }
-        function savePosterCache() { try { localStorage.setItem(POSTER_CACHE_KEY, JSON.stringify(posterCache)); } catch (e) {} }
-
-        // يبحث في ويكيبيديا عن صفحة الفيلم ويأخذ صورتها الرئيسية (بوستر الفيلم)، ولا يقبل إلا صفحة عنوانها يحتوي اسم الفيلم
-        async function wikiPoster(host, query, mustHave) {
-            const url = 'https://' + host + '/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=6'
-                + '&gsrsearch=' + encodeURIComponent(query)
-                + '&prop=pageimages&piprop=thumbnail&pithumbsize=500&pilicense=any';
-            const r = await fetch(url);
-            if (!r.ok) return null;
-            const j = await r.json();
-            const norm = s => String(s).toLowerCase().replace(/[\s\-_:؟?!"'«»()]/g, '');
-            const need = norm(mustHave);
-            const pages = Object.values((j.query && j.query.pages) || {}).sort((a, b) => a.index - b.index);
-            for (const p of pages) {
-                if (p.thumbnail && p.thumbnail.source && norm(p.title).includes(need)) return p.thumbnail.source;
-            }
-            return null;
-        }
-        function ensurePoster(m, img) {
-            if (m.poster) return;
-            const apply = src => { m.poster = src; if (img && img.isConnected) img.src = src; };
-            if (posterCache[m.id]) { apply(posterCache[m.id]); return; }
-            if (!m._posterJob) {
-                m._posterJob = (async () => {
-                    try {
-                        let src = await wikiPoster('ar.wikipedia.org', 'فيلم ' + m.title + ' ' + m.year, m.title);
-                        if (!src && m.en) src = await wikiPoster('en.wikipedia.org', m.en + ' film ' + m.year, m.en);
-                        if (src) { posterCache[m.id] = src; savePosterCache(); }
-                        return src;
-                    } catch (e) { console.error(e); return null; }
-                })();
-            }
-            m._posterJob.then(src => { if (src) apply(src); });
-        }
-
-        // ---- أفلام من جهاز المدير: تُحفظ في IndexedDB على هذا المتصفح فقط، ولا يُرفع أي ملف ----
-        let localMovies = [];
-        function ldbOpen() {
-            return new Promise((res, rej) => {
-                const r = indexedDB.open('localMoviesDB', 1);
-                r.onupgradeneeded = () => r.result.createObjectStore('movies', { keyPath: 'id' });
-                r.onsuccess = () => res(r.result);
-                r.onerror = () => rej(r.error);
-            });
-        }
-        async function ldbTx(mode, fn) {
-            const d0 = await ldbOpen();
-            return new Promise((res, rej) => {
-                const tx = d0.transaction('movies', mode);
-                const rq = fn(tx.objectStore('movies'));
-                tx.oncomplete = () => res(rq ? rq.result : undefined);
-                tx.onerror = () => rej(tx.error);
-            });
-        }
-        async function loadLocalMovies() {
-            try {
-                const rows = (await ldbTx('readonly', s => s.getAll())) || [];
-                localMovies = rows.sort((a, b) => b.createdAt - a.createdAt)
-                    .map(r => ({ ...r, local: true, watchUrl: 'local-file', poster: r.poster || undefined }));
-            } catch (e) { console.error(e); localMovies = []; }
-        }
-        function pickFileViaInput() {
-            return new Promise(res => {
-                const i = document.createElement('input');
-                i.type = 'file'; i.accept = 'video/*,.mkv,.avi,.mov';
-                i.onchange = () => res(i.files[0] || null);
-                i.oncancel = () => res(null);
-                i.click();
-            });
-        }
-        async function playLocal(m) {
-            let file = null;
-            try {
-                if (m.handle) {
-                    let perm = await m.handle.queryPermission({ mode: 'read' });
-                    if (perm !== 'granted') perm = await m.handle.requestPermission({ mode: 'read' });
-                    if (perm === 'granted') file = await m.handle.getFile();
-                }
-            } catch (e) { console.error(e); }
-            if (!file) file = await pickFileViaInput();
-            if (!file) return;
-            const box = document.getElementById('moviePlayer');
-            stopMoviePlayer();
-            const url = URL.createObjectURL(file);
-            const v = document.createElement('video');
-            v.src = url; v.dataset.blob = url; v.controls = true; v.playsInline = true; v.autoplay = true;
-            v.style.cssText = 'width:100%;height:100%;background:#000';
-            v.onerror = () => alert('المتصفح لا يستطيع تشغيل هذا الملف. استخدم صيغة MP4 (H.264) أو WebM.');
-            box.appendChild(v);
-        }
-        function renderLocalManage() {
-            const list = document.getElementById('localMovieList');
-            if (!list) return;
-            list.innerHTML = '';
-            localMovies.forEach(m => {
-                const row = document.createElement('div');
-                row.className = 'flex items-center gap-2 text-sm ui-ink';
-                row.innerHTML = `<i class="fa-solid fa-film ui-accent"></i><span class="flex-grow truncate">${escapeHtml(m.title)}</span><button type="button" class="del-btn text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer btn-danger"><i class="fa-solid fa-trash"></i></button>`;
-                row.querySelector('.del-btn').addEventListener('click', async () => {
-                    if (!confirm('إزالة "' + m.title + '" من الموقع؟ (ملف الفيلم على جهازك لن يُحذف)')) return;
-                    try { await ldbTx('readwrite', s => s.delete(m.id)); } catch (e) { console.error(e); }
-                    await loadLocalMovies(); renderLocalManage(); renderMovies();
-                });
-                list.appendChild(row);
-            });
-        }
-        document.getElementById('addLocalMovieBtn').addEventListener('click', async () => {
-            let handle = null, name = '';
-            if (window.showOpenFilePicker) {
-                try {
-                    [handle] = await window.showOpenFilePicker({ multiple: false, types: [{ description: 'فيديو', accept: { 'video/*': ['.mp4', '.webm', '.mkv', '.mov', '.m4v', '.ogv', '.avi'] } }] });
-                    name = handle.name;
-                } catch (e) { return; }
-            } else {
-                const f = await pickFileViaInput();
-                if (!f) return;
-                name = f.name;
-            }
-            const title = document.getElementById('localMovieTitle').value.trim() || name.replace(/\.[^.]+$/, '');
-            let poster = null;
-            const pf = document.getElementById('localMoviePoster').files[0];
-            if (pf) { try { poster = await compressImage(pf, 500, 0.7); } catch (e) { console.error(e); } }
-            const rec = {
-                id: 'l-' + Date.now(), title,
-                year: document.getElementById('localMovieYear').value.trim(),
-                genre: document.getElementById('localMovieGenre').value.trim(),
-                description: 'فيلم يُشغَّل من جهازك مباشرة دون رفعه للإنترنت.',
-                poster, handle, createdAt: Date.now()
-            };
-            try { await ldbTx('readwrite', s => s.put(rec)); }
-            catch (e) { console.error(e); alert('تعذّر حفظ الفيلم في المتصفح.'); return; }
-            ['localMovieTitle', 'localMovieYear', 'localMovieGenre', 'localMoviePoster'].forEach(id => document.getElementById(id).value = '');
-            await loadLocalMovies(); renderLocalManage(); renderMovies();
-            alert('تمت الإضافة. اذهب لصفحة الأفلام واضغط «مشاهدة».');
-        });
-
-        async function loadMovies() {
-            await loadLocalMovies();
-            let remote = [];
-            try {
-                const snap = await getDocs(query(collection(db, 'movies'), orderBy('createdAt', 'desc')));
-                remote = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            } catch (err) { console.error(err); }
-            const have = new Set(remote.map(x => String(x.title || '').trim()));
-            movieData = localMovies.concat(remote, BUILTIN_MOVIES.filter(b => !have.has(b.title)));
-            renderMovies();
-            renderLocalManage();
-        }
-
-        function renderMovies() {
-            const c = document.getElementById('movieContainer');
-            const tr = translations[currentLang];
-            c.innerHTML = '';
-            if (!movieData.length) { c.innerHTML = `<div class="text-center py-12 col-span-full ui-faint">${tr.noMovies}</div>`; return; }
-            movieData.forEach(m => {
-                const t = escapeHtml(m.title);
-                const meta = [m.year, m.genre].filter(Boolean).map(escapeHtml).join(' • ');
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.innerHTML = `
-                    <div class="face face-front">
-                        <button type="button" class="cover-wrap block w-full cursor-pointer" style="aspect-ratio:2/3" aria-label="${t}"><img src="${escapeHtml(m.poster || moviePlaceholder(m.title))}" alt="${t}" class="game-cover" loading="lazy"></button>
-                        <h3 class="game-title text-sm font-bold ui-ink" style="min-height:0">${t}</h3>
-                        ${meta ? `<p class="text-xs ui-muted">${meta}</p>` : ''}
-                        <div class="flex gap-2">
-                            ${m.watchUrl ? `<button type="button" class="m-watch btn-primary flex-1 py-2 rounded-xl font-bold flex items-center justify-center gap-1 text-xs cursor-pointer"><i class="fa-solid fa-play"></i><span>${escapeHtml(m.watchLabel || tr.movieWatch)}</span></button>` : ''}
-                            ${m.downloadUrl ? `<a href="${escapeHtml(safeUrl(m.downloadUrl))}" target="_blank" rel="noopener noreferrer" download class="btn-primary flex-1 py-2 rounded-xl font-bold flex items-center justify-center gap-1 text-xs cursor-pointer"><i class="fa-solid fa-download"></i><span>${tr.movieDownload}</span></a>` : ''}
-                        </div>
-                    </div>`;
-                card.querySelector('.cover-wrap').addEventListener('click', () => openMovie(m, false));
-                const wb = card.querySelector('.m-watch');
-                if (wb) wb.addEventListener('click', () => openMovie(m, true));
-                const dlA = card.querySelector('a[download]');
-                if (dlA) dlA.addEventListener('click', () => logDownload('movie', m.title, m.id));
-                c.appendChild(card);
-                ensurePoster(m, card.querySelector('.game-cover'));
-            });
-        }
-
-        // يحوّل رابط المشاهدة إلى مشغّل داخل الصفحة إن أمكن، وإلا يرجع null (فيُفتح الرابط في تبويب جديد)
-        function buildPlayer(url) {
-            const u = safeUrl(url);
-            if (u === '#') return null;
-            let m = u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/i);
-            if (m) {
-                const f = document.createElement('iframe');
-                f.src = 'https://www.youtube.com/embed/' + m[1] + '?rel=0&autoplay=1';
-                f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-                f.allowFullscreen = true;
-                f.style.cssText = 'width:100%;height:100%;border:0';
-                return f;
-            }
-            m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
-            if (m) {
-                const f = document.createElement('iframe');
-                f.src = 'https://player.vimeo.com/video/' + m[1] + '?autoplay=1';
-                f.allow = 'autoplay; fullscreen; picture-in-picture';
-                f.allowFullscreen = true;
-                f.style.cssText = 'width:100%;height:100%;border:0';
-                return f;
-            }
-            if (/\.(mp4|webm|ogv|m4v|mov)(\?|#|$)/i.test(u)) {
-                const v = document.createElement('video');
-                v.src = u; v.controls = true; v.playsInline = true; v.autoplay = true;
-                v.style.cssText = 'width:100%;height:100%;background:#000';
-                return v;
-            }
-            return null;
-        }
-
-        function stopMoviePlayer() {
-            const box = document.getElementById('moviePlayer');
-            box.querySelectorAll('video').forEach(v => { try { v.pause(); } catch (e) {} if (v.dataset.blob) URL.revokeObjectURL(v.dataset.blob); v.removeAttribute('src'); v.load(); });
-            box.innerHTML = '';
-        }
-        function showMoviePoster(m) {
-            const box = document.getElementById('moviePlayer');
-            stopMoviePlayer();
-            box.innerHTML = `<img src="${escapeHtml(m.poster || moviePlaceholder(m.title))}" alt="${escapeHtml(m.title)}" style="width:100%;height:100%;object-fit:contain">`;
-        }
-        function playMovie(m) {
-            if (m.local) { playLocal(m); return; }
-            const tr = translations[currentLang];
-            const p = buildPlayer(m.watchUrl);
-            if (p) { const box = document.getElementById('moviePlayer'); stopMoviePlayer(); box.appendChild(p); }
-            else if (safeUrl(m.watchUrl) !== '#') window.open(safeUrl(m.watchUrl), '_blank', 'noopener,noreferrer');
-            else alert(tr.movieNoWatch);
-        }
-        function openMovie(m, autoplay) {
-            curMovie = m;
-            document.getElementById('movieModalTitle').textContent = m.title;
-            document.getElementById('movieModalMeta').textContent = [m.year, m.genre].filter(Boolean).join(' • ');
-            document.getElementById('movieModalDesc').textContent = m.description || '';
-            const wb = document.getElementById('movieWatchBtn'), db_ = document.getElementById('movieDlBtn');
-            wb.classList.toggle('hidden', !m.watchUrl);
-            { const sp = wb.querySelector('span'); if (sp) sp.textContent = m.watchLabel || translations[currentLang].movieWatch; }
-            db_.classList.toggle('hidden', !m.downloadUrl);
-            db_.href = safeUrl(m.downloadUrl);
-            showMoviePoster(m);
-            document.getElementById('movieModal').classList.remove('hidden');
-            if (autoplay && m.watchUrl) playMovie(m);
-        }
-        function closeMovie() {
-            stopMoviePlayer();
-            curMovie = null;
-            document.getElementById('movieModal').classList.add('hidden');
-        }
-        document.getElementById('closeMovieModal').addEventListener('click', closeMovie);
-        document.getElementById('movieModal').addEventListener('click', (e) => { if (e.target.id === 'movieModal') closeMovie(); });
-        document.getElementById('movieWatchBtn').addEventListener('click', () => { if (curMovie) playMovie(curMovie); });
-        document.getElementById('movieDlBtn').addEventListener('click', () => { if (curMovie) logDownload('movie', curMovie.title, curMovie.id); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMovie(); });
-        document.getElementById('langSelect').addEventListener('change', () => renderMovies());
-
-        // ---- لوحة المدير: نشر/حذف الأفلام ----
-        document.getElementById('addMovieForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('moviePublishBtn');
-            const file = document.getElementById('moviePoster').files[0];
-            const watchUrl = document.getElementById('movieWatchUrl').value.trim();
-            const downloadUrl = document.getElementById('movieDlUrl').value.trim();
-            if (!file) return;
-            if (!watchUrl && !downloadUrl) { alert('أدخل رابط مشاهدة أو رابط تنزيل على الأقل.'); return; }
-            btn.disabled = true; btn.textContent = 'جاري الرفع...';
-            try {
-                let poster = null;
-                for (const [side, q] of [[700, 0.75], [560, 0.65], [440, 0.55], [340, 0.5]]) {
-                    const img = await compressImage(file, side, q);
-                    if (img.length <= MAX_MOVIE_CHARS) { poster = img; break; }
-                }
-                if (!poster) throw new Error('TOO_LARGE');
-                await addDoc(collection(db, 'movies'), {
-                    title: document.getElementById('movieTitle').value.trim(),
-                    description: document.getElementById('movieDesc').value.trim(),
-                    year: document.getElementById('movieYear').value.trim(),
-                    genre: document.getElementById('movieGenre').value.trim(),
-                    watchUrl, downloadUrl, poster, createdAt: serverTimestamp()
-                });
-                alert('تم نشر الفيلم بنجاح!');
-                document.getElementById('addMovieForm').reset();
-                loadMovies(); loadMovieManage();
-            } catch (err) {
-                console.error(err);
-                alert(err.code === 'permission-denied'
-                    ? 'Firestore رفض الحفظ (permission-denied). اسمح بالقراءة والكتابة على المجموعة movies في قواعد Firestore.'
-                    : err.message === 'TOO_LARGE' ? 'حجم البوستر كبير جداً، اختر صورة أصغر.' : 'حدث خطأ أثناء حفظ الفيلم.');
-            } finally { btn.disabled = false; btn.textContent = 'نشر الفيلم'; }
-        });
-        async function loadMovieManage() {
-            const list = document.getElementById('movieManageList');
-            list.innerHTML = `<p class="ui-muted text-center py-4">جاري التحميل...</p>`;
-            try {
-                const snap = await getDocs(query(collection(db, 'movies'), orderBy('createdAt', 'desc')));
-                if (snap.empty) { list.innerHTML = `<p class="ui-muted text-center py-6">لا توجد أفلام.</p>`; return; }
-                list.innerHTML = '';
-                snap.docs.forEach(d => {
-                    const m = d.data();
-                    const row = document.createElement('div');
-                    row.className = 'ui-soft p-3 rounded-xl border ui-line flex items-center gap-2 flex-wrap';
-                    row.innerHTML = `
-                        <img src="${escapeHtml(m.poster || '')}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
-                        <div class="flex-grow min-w-0"><h4 class="font-bold ui-ink text-sm truncate">${escapeHtml(m.title)}</h4></div>
-                        <button class="del-btn text-xs font-bold px-3 py-2 rounded-lg transition cursor-pointer btn-danger"><i class="fa-solid fa-trash"></i> حذف</button>`;
-                    row.querySelector('.del-btn').addEventListener('click', async () => {
-                        if (!confirm('هل أنت متأكد من حذف الفيلم "' + m.title + '" نهائياً؟')) return;
-                        try { await deleteDoc(doc(db, 'movies', d.id)); loadMovieManage(); loadMovies(); }
-                        catch (err) { console.error(err); alert('حدث خطأ أثناء الحذف.'); }
-                    });
-                    list.appendChild(row);
-                });
-            } catch (err) { console.error(err); list.innerHTML = `<p class="ui-err text-center py-4">حدث خطأ أثناء التحميل.</p>`; }
-        }
-        loadMovies();
 
         // ===== مراسلة المدير (Firestore: messages) =====
         // messages/{id}: name, contact, text, custId, read, createdAt
@@ -3565,19 +3143,6 @@
     sync();
 })();
     </script>
-<script>
-(function () {
-    var VIDEO_FILE = 'tutorial.mp4'; // ضع ملف الفيديو بهذا الاسم بجانب index.html
-    var m = document.getElementById('tutorialModal'), v = document.getElementById('tutorialVideo'), miss = document.getElementById('tutorialMissing');
-    function open() { m.classList.remove('hidden'); miss.classList.add('hidden'); if (!v.getAttribute('src')) v.src = VIDEO_FILE; v.play().catch(function () {}); }
-    function close() { m.classList.add('hidden'); v.pause(); }
-    v.addEventListener('error', function () { miss.classList.remove('hidden'); });
-    document.getElementById('tutorialBtn').addEventListener('click', open);
-    document.getElementById('closeTutorial').addEventListener('click', close);
-    m.addEventListener('click', function (e) { if (e.target === m) close(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
-})();
-</script>
 </body>
 </html>
 </html>
