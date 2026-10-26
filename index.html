@@ -798,6 +798,21 @@
 
             <!-- تبويب: الأفلام -->
             <div id="tabContentMovie" class="hidden space-y-5">
+                <div class="ui-soft border ui-line rounded-xl p-4 space-y-3">
+                    <h4 class="font-bold ui-accent text-sm"><i class="fa-solid fa-computer"></i> فيلم من جهازي (بدون رفع للإنترنت)</h4>
+                    <p class="text-xs ui-muted leading-6">اختر ملف الفيلم من جهازك، وعند الضغط على «مشاهدة» يُشغَّل مباشرة من جهازك. الفيلم لا يُرفع لأي مكان، ويظهر في هذا المتصفح وعلى هذا الجهاز فقط (الزوار لن يروه).</p>
+                    <input type="text" id="localMovieTitle" placeholder="اسم الفيلم (اختياري، وإلا يؤخذ من اسم الملف)" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="localMovieYear" maxlength="4" inputmode="numeric" dir="ltr" placeholder="السنة (اختياري)" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
+                        <input type="text" id="localMovieGenre" maxlength="30" placeholder="النوع (اختياري)" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
+                    </div>
+                    <div>
+                        <label class="block text-xs ui-muted mb-1">البوستر (اختياري — وإن تركته يُبحث عنه تلقائياً)</label>
+                        <input type="file" id="localMoviePoster" accept="image/*" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm ui-muted cursor-pointer">
+                    </div>
+                    <button type="button" id="addLocalMovieBtn" class="w-full font-bold py-2.5 rounded-lg transition cursor-pointer btn-primary"><i class="fa-solid fa-folder-open"></i> اختيار الفيلم من جهازي وإضافته</button>
+                    <div id="localMovieList" class="space-y-2"></div>
+                </div>
                 <form id="addMovieForm" class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium mb-1">اسم الفيلم</label>
@@ -2800,15 +2815,118 @@
             m._posterJob.then(src => { if (src) apply(src); });
         }
 
+        // ---- أفلام من جهاز المدير: تُحفظ في IndexedDB على هذا المتصفح فقط، ولا يُرفع أي ملف ----
+        let localMovies = [];
+        function ldbOpen() {
+            return new Promise((res, rej) => {
+                const r = indexedDB.open('localMoviesDB', 1);
+                r.onupgradeneeded = () => r.result.createObjectStore('movies', { keyPath: 'id' });
+                r.onsuccess = () => res(r.result);
+                r.onerror = () => rej(r.error);
+            });
+        }
+        async function ldbTx(mode, fn) {
+            const d0 = await ldbOpen();
+            return new Promise((res, rej) => {
+                const tx = d0.transaction('movies', mode);
+                const rq = fn(tx.objectStore('movies'));
+                tx.oncomplete = () => res(rq ? rq.result : undefined);
+                tx.onerror = () => rej(tx.error);
+            });
+        }
+        async function loadLocalMovies() {
+            try {
+                const rows = (await ldbTx('readonly', s => s.getAll())) || [];
+                localMovies = rows.sort((a, b) => b.createdAt - a.createdAt)
+                    .map(r => ({ ...r, local: true, watchUrl: 'local-file', poster: r.poster || undefined }));
+            } catch (e) { console.error(e); localMovies = []; }
+        }
+        function pickFileViaInput() {
+            return new Promise(res => {
+                const i = document.createElement('input');
+                i.type = 'file'; i.accept = 'video/*,.mkv,.avi,.mov';
+                i.onchange = () => res(i.files[0] || null);
+                i.oncancel = () => res(null);
+                i.click();
+            });
+        }
+        async function playLocal(m) {
+            let file = null;
+            try {
+                if (m.handle) {
+                    let perm = await m.handle.queryPermission({ mode: 'read' });
+                    if (perm !== 'granted') perm = await m.handle.requestPermission({ mode: 'read' });
+                    if (perm === 'granted') file = await m.handle.getFile();
+                }
+            } catch (e) { console.error(e); }
+            if (!file) file = await pickFileViaInput();
+            if (!file) return;
+            const box = document.getElementById('moviePlayer');
+            stopMoviePlayer();
+            const url = URL.createObjectURL(file);
+            const v = document.createElement('video');
+            v.src = url; v.dataset.blob = url; v.controls = true; v.playsInline = true; v.autoplay = true;
+            v.style.cssText = 'width:100%;height:100%;background:#000';
+            v.onerror = () => alert('المتصفح لا يستطيع تشغيل هذا الملف. استخدم صيغة MP4 (H.264) أو WebM.');
+            box.appendChild(v);
+        }
+        function renderLocalManage() {
+            const list = document.getElementById('localMovieList');
+            if (!list) return;
+            list.innerHTML = '';
+            localMovies.forEach(m => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-2 text-sm ui-ink';
+                row.innerHTML = `<i class="fa-solid fa-film ui-accent"></i><span class="flex-grow truncate">${escapeHtml(m.title)}</span><button type="button" class="del-btn text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer btn-danger"><i class="fa-solid fa-trash"></i></button>`;
+                row.querySelector('.del-btn').addEventListener('click', async () => {
+                    if (!confirm('إزالة "' + m.title + '" من الموقع؟ (ملف الفيلم على جهازك لن يُحذف)')) return;
+                    try { await ldbTx('readwrite', s => s.delete(m.id)); } catch (e) { console.error(e); }
+                    await loadLocalMovies(); renderLocalManage(); renderMovies();
+                });
+                list.appendChild(row);
+            });
+        }
+        document.getElementById('addLocalMovieBtn').addEventListener('click', async () => {
+            let handle = null, name = '';
+            if (window.showOpenFilePicker) {
+                try {
+                    [handle] = await window.showOpenFilePicker({ multiple: false, types: [{ description: 'فيديو', accept: { 'video/*': ['.mp4', '.webm', '.mkv', '.mov', '.m4v', '.ogv', '.avi'] } }] });
+                    name = handle.name;
+                } catch (e) { return; }
+            } else {
+                const f = await pickFileViaInput();
+                if (!f) return;
+                name = f.name;
+            }
+            const title = document.getElementById('localMovieTitle').value.trim() || name.replace(/\.[^.]+$/, '');
+            let poster = null;
+            const pf = document.getElementById('localMoviePoster').files[0];
+            if (pf) { try { poster = await compressImage(pf, 500, 0.7); } catch (e) { console.error(e); } }
+            const rec = {
+                id: 'l-' + Date.now(), title,
+                year: document.getElementById('localMovieYear').value.trim(),
+                genre: document.getElementById('localMovieGenre').value.trim(),
+                description: 'فيلم يُشغَّل من جهازك مباشرة دون رفعه للإنترنت.',
+                poster, handle, createdAt: Date.now()
+            };
+            try { await ldbTx('readwrite', s => s.put(rec)); }
+            catch (e) { console.error(e); alert('تعذّر حفظ الفيلم في المتصفح.'); return; }
+            ['localMovieTitle', 'localMovieYear', 'localMovieGenre', 'localMoviePoster'].forEach(id => document.getElementById(id).value = '');
+            await loadLocalMovies(); renderLocalManage(); renderMovies();
+            alert('تمت الإضافة. اذهب لصفحة الأفلام واضغط «مشاهدة».');
+        });
+
         async function loadMovies() {
+            await loadLocalMovies();
             let remote = [];
             try {
                 const snap = await getDocs(query(collection(db, 'movies'), orderBy('createdAt', 'desc')));
                 remote = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             } catch (err) { console.error(err); }
             const have = new Set(remote.map(x => String(x.title || '').trim()));
-            movieData = remote.concat(BUILTIN_MOVIES.filter(b => !have.has(b.title)));
+            movieData = localMovies.concat(remote, BUILTIN_MOVIES.filter(b => !have.has(b.title)));
             renderMovies();
+            renderLocalManage();
         }
 
         function renderMovies() {
@@ -2874,7 +2992,7 @@
 
         function stopMoviePlayer() {
             const box = document.getElementById('moviePlayer');
-            box.querySelectorAll('video').forEach(v => { try { v.pause(); } catch (e) {} v.removeAttribute('src'); v.load(); });
+            box.querySelectorAll('video').forEach(v => { try { v.pause(); } catch (e) {} if (v.dataset.blob) URL.revokeObjectURL(v.dataset.blob); v.removeAttribute('src'); v.load(); });
             box.innerHTML = '';
         }
         function showMoviePoster(m) {
@@ -2883,6 +3001,7 @@
             box.innerHTML = `<img src="${escapeHtml(m.poster || moviePlaceholder(m.title))}" alt="${escapeHtml(m.title)}" style="width:100%;height:100%;object-fit:contain">`;
         }
         function playMovie(m) {
+            if (m.local) { playLocal(m); return; }
             const tr = translations[currentLang];
             const p = buildPlayer(m.watchUrl);
             if (p) { const box = document.getElementById('moviePlayer'); stopMoviePlayer(); box.appendChild(p); }
