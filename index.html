@@ -2718,11 +2718,96 @@
         const MAX_MOVIE_CHARS = 700000;
         let movieData = [], curMovie = null;
 
+        // ---- أفلام مصرية حديثة جاهزة (البيانات من الصحافة الفنية المصرية) ----
+        // الغلاف يُجلب تلقائياً من ويكيبيديا عند فتح الصفحة، والزر يفتح الإعلان الرسمي على يوتيوب.
+        // أفلامك المنشورة من لوحة الإدارة (Firestore) تظهر أولاً، ولا تتكرر إن كان الاسم نفسه.
+        const BUILTIN_MOVIES = [
+            { id: 'b-7dogs', title: '7Dogs', year: '2026', genre: 'أكشن', en: '7Dogs',
+              description: 'بطولة كريم عبد العزيز وأحمد عز.\nضابط يطارد عصابة دولية تحمل اسم 7Dogs، ينجح في القبض على أحد أبرز أعضائها ثم يضطر للتعاون معه لإحباط عملية تهريب ضخمة.\nعُرض في موسم عيد الأضحى 2026.' },
+            { id: 'b-asad', title: 'أسد', year: '2026', genre: '',
+              description: 'بطولة محمد رمضان ورزان جمال وعلي قاسم وكامل الباشا وعمرو القاضي.\nعُرض في موسم عيد الأضحى 2026، ثم طُرح رقمياً بعد عرضه السينمائي.' },
+            { id: 'b-saqr', title: 'صقر وكناريا', year: '2026', genre: 'أكشن • كوميدي',
+              description: 'بطولة محمد إمام وشيكو مع يسرا اللوزي وخالد الصاوي ويارا السكري وانتصار، تأليف أيمن وتار وإخراج حسين المنباوي.\n«صقر» مرتزق أسطوري يقرر الابتعاد عن عالم العصابات، فتنقلب حياته بعد تعارفه على «بلال» الكاتب المهووس بعالم الجاسوسية.\nذكرت الأهرام أنه سيُعرض على منصة يانغو بلاي بعد السينما.' },
+            { id: 'b-kalam', title: 'الكلام على إيه', year: '2026', genre: 'كوميدي • تشويق',
+              description: 'أربع قصص لأزواج من خلفيات وأعمار مختلفة، تتحول ليلة زفافهم إلى سلسلة مواقف كوميدية وأزمات مفاجئة.\nبطولة حاتم صلاح ومصطفى غريب وأحمد حاتم وجيهان الشماشرجي وآخرين، إخراج ساندرو كنعان.' },
+            { id: 'b-izma', title: 'إذما', year: '2026', genre: '',
+              description: 'بطولة أحمد داود، مأخوذ عن رواية الكاتب محمد صادق الصادرة عام 2020.\nإنتاج «ذا بروديسرز» برئاسة هاني أسامة.' },
+            { id: 'b-crush', title: 'الكراش', year: '2026', genre: '',
+              description: 'بطولة أحمد داود وباسم سمرة وميرنا جميل وشيرين رضا.' },
+            { id: 'b-shamshoon', title: 'شمشون ودليلة', year: '2026', genre: '',
+              description: 'يجمع أحمد العوضي ومي عمر لأول مرة سينمائياً.\nبدأ عرضه في 8 يوليو 2026.' },
+            { id: 'b-ibn', title: 'ابن مين فيهم', year: '2026', genre: 'كوميدي',
+              description: 'بطولة ليلى علوي وبيومي فؤاد، إخراج هشام فتحي.\nبدأ عرضه في 9 يوليو 2026.' },
+            { id: 'b-qesas', title: 'القصص', year: '2026', genre: '',
+              description: 'بطولة نيللي كريم وأمير المصري.\nبدأ عرضه في يونيو 2026.' },
+            { id: 'b-bigrami', title: 'بيج رامي', year: '2026', genre: '',
+              description: 'بطولة رامز جلال بمشاركة محمد أنور ونسرين أمين وعدد من ضيوف الشرف، ضمن أفلام صيف 2026.' },
+            { id: 'b-barshama', title: 'برشامة', year: '2026', genre: '',
+              description: 'تصدّر إيرادات أفلام عيد الفطر 2026 في مصر.\nأعلن صناعه عرضه على منصة يانغو بلاي (الأهرام).' },
+            { id: 'b-dashash', title: 'الدشاش', year: '2025', genre: '',
+              description: 'بطولة محمد سعد، عُرض في يناير 2025.' },
+            { id: 'b-mostarieha', title: 'المستريحة', year: '2025', genre: 'كوميدي',
+              description: 'بطولة ليلى علوي وبيومي فؤاد، عُرض في يناير 2025.' }
+        ].map(b => ({
+            ...b,
+            watchLabel: 'الإعلان الرسمي',
+            watchUrl: 'https://www.youtube.com/results?search_query=' + encodeURIComponent('فيلم ' + b.title + ' ' + b.year + ' الإعلان الرسمي'),
+            builtin: true
+        }));
+
+        // غلاف بديل أنيق إلى أن يُجلب الغلاف الحقيقي (أو إن لم يوجد)
+        function moviePlaceholder(title) {
+            const t = String(title).replace(/[<>&"']/g, '');
+            const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='400' height='600' viewBox='0 0 400 600'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#2e1065'/><stop offset='1' stop-color='#7c3aed'/></linearGradient></defs><rect width='400' height='600' fill='url(#g)'/><text x='200' y='305' font-size='40' font-family='Cairo,Arial,sans-serif' font-weight='700' fill='#fff' text-anchor='middle'>" + t + "</text></svg>";
+            return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        }
+
+        const POSTER_CACHE_KEY = 'moviePosterCache.v1';
+        let posterCache = {};
+        try { posterCache = JSON.parse(localStorage.getItem(POSTER_CACHE_KEY) || '{}') || {}; } catch (e) { posterCache = {}; }
+        function savePosterCache() { try { localStorage.setItem(POSTER_CACHE_KEY, JSON.stringify(posterCache)); } catch (e) {} }
+
+        // يبحث في ويكيبيديا عن صفحة الفيلم ويأخذ صورتها الرئيسية (بوستر الفيلم)، ولا يقبل إلا صفحة عنوانها يحتوي اسم الفيلم
+        async function wikiPoster(host, query, mustHave) {
+            const url = 'https://' + host + '/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=6'
+                + '&gsrsearch=' + encodeURIComponent(query)
+                + '&prop=pageimages&piprop=thumbnail&pithumbsize=500&pilicense=any';
+            const r = await fetch(url);
+            if (!r.ok) return null;
+            const j = await r.json();
+            const norm = s => String(s).toLowerCase().replace(/[\s\-_:؟?!"'«»()]/g, '');
+            const need = norm(mustHave);
+            const pages = Object.values((j.query && j.query.pages) || {}).sort((a, b) => a.index - b.index);
+            for (const p of pages) {
+                if (p.thumbnail && p.thumbnail.source && norm(p.title).includes(need)) return p.thumbnail.source;
+            }
+            return null;
+        }
+        function ensurePoster(m, img) {
+            if (m.poster) return;
+            const apply = src => { m.poster = src; if (img && img.isConnected) img.src = src; };
+            if (posterCache[m.id]) { apply(posterCache[m.id]); return; }
+            if (!m._posterJob) {
+                m._posterJob = (async () => {
+                    try {
+                        let src = await wikiPoster('ar.wikipedia.org', 'فيلم ' + m.title + ' ' + m.year, m.title);
+                        if (!src && m.en) src = await wikiPoster('en.wikipedia.org', m.en + ' film ' + m.year, m.en);
+                        if (src) { posterCache[m.id] = src; savePosterCache(); }
+                        return src;
+                    } catch (e) { console.error(e); return null; }
+                })();
+            }
+            m._posterJob.then(src => { if (src) apply(src); });
+        }
+
         async function loadMovies() {
+            let remote = [];
             try {
                 const snap = await getDocs(query(collection(db, 'movies'), orderBy('createdAt', 'desc')));
-                movieData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            } catch (err) { console.error(err); movieData = []; }
+                remote = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            } catch (err) { console.error(err); }
+            const have = new Set(remote.map(x => String(x.title || '').trim()));
+            movieData = remote.concat(BUILTIN_MOVIES.filter(b => !have.has(b.title)));
             renderMovies();
         }
 
@@ -2738,11 +2823,11 @@
                 card.className = 'game-card';
                 card.innerHTML = `
                     <div class="face face-front">
-                        <button type="button" class="cover-wrap block w-full cursor-pointer" style="aspect-ratio:2/3" aria-label="${t}"><img src="${escapeHtml(m.poster || '')}" alt="${t}" class="game-cover" loading="lazy"></button>
+                        <button type="button" class="cover-wrap block w-full cursor-pointer" style="aspect-ratio:2/3" aria-label="${t}"><img src="${escapeHtml(m.poster || moviePlaceholder(m.title))}" alt="${t}" class="game-cover" loading="lazy"></button>
                         <h3 class="game-title text-sm font-bold ui-ink" style="min-height:0">${t}</h3>
                         ${meta ? `<p class="text-xs ui-muted">${meta}</p>` : ''}
                         <div class="flex gap-2">
-                            ${m.watchUrl ? `<button type="button" class="m-watch btn-primary flex-1 py-2 rounded-xl font-bold flex items-center justify-center gap-1 text-xs cursor-pointer"><i class="fa-solid fa-play"></i><span>${tr.movieWatch}</span></button>` : ''}
+                            ${m.watchUrl ? `<button type="button" class="m-watch btn-primary flex-1 py-2 rounded-xl font-bold flex items-center justify-center gap-1 text-xs cursor-pointer"><i class="fa-solid fa-play"></i><span>${escapeHtml(m.watchLabel || tr.movieWatch)}</span></button>` : ''}
                             ${m.downloadUrl ? `<a href="${escapeHtml(safeUrl(m.downloadUrl))}" target="_blank" rel="noopener noreferrer" download class="btn-primary flex-1 py-2 rounded-xl font-bold flex items-center justify-center gap-1 text-xs cursor-pointer"><i class="fa-solid fa-download"></i><span>${tr.movieDownload}</span></a>` : ''}
                         </div>
                     </div>`;
@@ -2752,6 +2837,7 @@
                 const dlA = card.querySelector('a[download]');
                 if (dlA) dlA.addEventListener('click', () => logDownload('movie', m.title, m.id));
                 c.appendChild(card);
+                ensurePoster(m, card.querySelector('.game-cover'));
             });
         }
 
@@ -2794,7 +2880,7 @@
         function showMoviePoster(m) {
             const box = document.getElementById('moviePlayer');
             stopMoviePlayer();
-            box.innerHTML = `<img src="${escapeHtml(m.poster || '')}" alt="${escapeHtml(m.title)}" style="width:100%;height:100%;object-fit:contain">`;
+            box.innerHTML = `<img src="${escapeHtml(m.poster || moviePlaceholder(m.title))}" alt="${escapeHtml(m.title)}" style="width:100%;height:100%;object-fit:contain">`;
         }
         function playMovie(m) {
             const tr = translations[currentLang];
@@ -2810,6 +2896,7 @@
             document.getElementById('movieModalDesc').textContent = m.description || '';
             const wb = document.getElementById('movieWatchBtn'), db_ = document.getElementById('movieDlBtn');
             wb.classList.toggle('hidden', !m.watchUrl);
+            { const sp = wb.querySelector('span'); if (sp) sp.textContent = m.watchLabel || translations[currentLang].movieWatch; }
             db_.classList.toggle('hidden', !m.downloadUrl);
             db_.href = safeUrl(m.downloadUrl);
             showMoviePoster(m);
