@@ -12,7 +12,7 @@
     <script>
         (function () {
             try { if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark'); } catch (e) {}
-            try { if (localStorage.getItem('username')) document.documentElement.classList.add('has-user'); } catch (e) {}
+            try { if (localStorage.getItem('username') && localStorage.getItem('nameV2')) document.documentElement.classList.add('has-user'); } catch (e) {}
             var st = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
             if (st) document.documentElement.classList.add('is-standalone');
             window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); window.__deferredInstall = e; });
@@ -194,10 +194,118 @@
         .app-ico{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;box-shadow:0 10px 24px -10px rgba(109,40,217,.8)}
         .step-n{width:1.5rem;height:1.5rem;flex:none;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;display:grid;place-items:center;font-size:.75rem;font-weight:700}
         .is-standalone [data-install]{display:none!important}
-        #loginGate{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;background:radial-gradient(900px 520px at 90% -8%,var(--blob),transparent 62%),radial-gradient(700px 480px at 0% 100%,var(--blob),transparent 62%),var(--bg-gate,#f5f2ff)}
-        html.dark #loginGate{--bg-gate:#0f0a22}
+        /* ===== بوابة التسجيل الفخمة ===== */
+        @property --gang{syntax:'<angle>';initial-value:0deg;inherits:false}
+        #loginGate{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:4.4rem 1.25rem 1.5rem;overflow-y:auto;isolation:isolate;color:#f4f0ff;font-family:'Cairo','Inter',sans-serif;
+            background:radial-gradient(1200px 700px at 85% -10%,rgba(124,58,237,.55),transparent 60%),radial-gradient(900px 600px at -10% 110%,rgba(245,179,1,.16),transparent 60%),radial-gradient(700px 500px at 50% 50%,rgba(76,29,149,.35),transparent 70%),#07040f}
         html.has-user #loginGate{display:none}
         html:not(.has-user){overflow:hidden}
+        #loginGate [hidden]{display:none!important}
+        .gate-stars{position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.7;animation:gateTwinkle 6s ease-in-out infinite alternate;background-size:260px 200px;
+            background-image:radial-gradient(1.5px 1.5px at 20px 30px,rgba(255,255,255,.85),transparent),radial-gradient(1px 1px at 90px 120px,rgba(255,255,255,.6),transparent),radial-gradient(1.5px 1.5px at 160px 60px,rgba(233,213,255,.75),transparent),radial-gradient(1px 1px at 230px 170px,rgba(245,179,1,.8),transparent),radial-gradient(1px 1px at 60px 180px,rgba(196,181,253,.7),transparent)}
+        @keyframes gateTwinkle{from{opacity:.3}to{opacity:.85}}
+        .gate-orb{position:absolute;border-radius:50%;filter:blur(70px);z-index:-1;pointer-events:none;animation:gateFloat 14s ease-in-out infinite alternate}
+        .gate-orb.o1{width:340px;height:340px;top:-90px;inset-inline-end:-80px;background:rgba(139,92,246,.45)}
+        .gate-orb.o2{width:300px;height:300px;bottom:-100px;inset-inline-start:-90px;background:rgba(245,179,1,.2);animation-delay:-5s}
+        .gate-orb.o3{width:220px;height:220px;top:42%;inset-inline-start:58%;background:rgba(217,70,239,.22);animation-delay:-9s}
+        @keyframes gateFloat{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(30px,-40px,0) scale(1.15)}}
+        .gate-ico{position:absolute;z-index:-1;color:rgba(196,181,253,.13);font-size:2.1rem;pointer-events:none;animation:gateDrift 9s ease-in-out infinite alternate}
+        @keyframes gateDrift{from{transform:translateY(0) rotate(-8deg)}to{transform:translateY(-22px) rotate(10deg)}}
+        .gate-lang{position:absolute;top:max(1rem,env(safe-area-inset-top));inset-inline-start:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .85rem;border-radius:999px;font-size:.78rem;font-weight:700;color:#e9d5ff;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);cursor:pointer;backdrop-filter:blur(8px);transition:background .25s,transform .25s}
+        .gate-lang:hover{background:rgba(255,255,255,.14);transform:translateY(-1px)}
+        .gate-wrap{width:min(100%,25.5rem);margin:auto;animation:gateIn .9s cubic-bezier(.2,.8,.2,1) both}
+        @keyframes gateIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
+        .gate-card{position:relative;border-radius:1.9rem;padding:3.1rem 1.5rem 1.5rem;text-align:center;
+            background:linear-gradient(165deg,rgba(46,26,98,.78),rgba(16,9,38,.86));-webkit-backdrop-filter:blur(26px) saturate(1.5);backdrop-filter:blur(26px) saturate(1.5);
+            box-shadow:0 50px 100px -35px rgba(0,0,0,.9),0 0 80px -30px rgba(139,92,246,.7),inset 0 1px 0 rgba(255,255,255,.12)}
+        .gate-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;
+            background:conic-gradient(from var(--gang),#f5b301,#a855f7 25%,#6d28d9 50%,#f5b301 75%,#fde68a);
+            -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;animation:gateSpin 7s linear infinite}
+        @keyframes gateSpin{to{--gang:360deg}}
+        .gate-crest{position:absolute;top:-2.1rem;inset-inline:0;margin-inline:auto;width:4.2rem;height:4.2rem;border-radius:50%;display:grid;place-items:center;font-size:1.65rem;color:#2a1600;
+            background:linear-gradient(145deg,#fff3b8,#f5b301 55%,#b97a00);box-shadow:0 0 0 5px rgba(7,4,15,.9),0 0 0 6.5px rgba(245,179,1,.55),0 18px 40px -8px rgba(245,179,1,.65);animation:crestGlow 3.2s ease-in-out infinite}
+        @keyframes crestGlow{0%,100%{box-shadow:0 0 0 5px rgba(7,4,15,.9),0 0 0 6.5px rgba(245,179,1,.55),0 18px 40px -8px rgba(245,179,1,.55)}50%{box-shadow:0 0 0 5px rgba(7,4,15,.9),0 0 0 6.5px rgba(253,224,71,.9),0 18px 54px -4px rgba(245,179,1,.95)}}
+        .gate-crest i{filter:drop-shadow(0 2px 2px rgba(255,255,255,.45))}
+        .gate-logo{justify-content:center;font-size:1.55rem}
+        .gate-logo .logo-shine{background-image:linear-gradient(100deg,#f4f0ff 0%,#f4f0ff 38%,#f5b301 45%,#fff3b8 50%,#f5b301 55%,#f4f0ff 62%,#f4f0ff 100%);background-size:300% 100%}
+        .gate-logo .logo-7{color:#f5b301;text-shadow:0 0 22px rgba(245,179,1,.55)}
+        .gate-sep{display:flex;align-items:center;gap:.7rem;margin:.9rem 0 .8rem;color:#f5b301;font-size:.7rem}
+        .gate-sep::before,.gate-sep::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(245,179,1,.55),transparent)}
+        .gate-title{font-weight:900;font-size:1.4rem;line-height:1.35;background:linear-gradient(100deg,#fff 10%,#e9d5ff 45%,#fde68a 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+        .gate-sub{margin:.35rem 0 1.15rem;font-size:.86rem;line-height:1.75;color:rgba(221,214,254,.78)}
+        .gate-note{margin:-.4rem 0 .9rem;padding:.5rem .8rem;border-radius:.8rem;font-size:.78rem;color:#fde68a;background:rgba(245,179,1,.1);border:1px solid rgba(245,179,1,.3)}
+        .gate-field{position:relative;display:flex;align-items:center;border-radius:1.05rem;background:rgba(9,5,22,.7);border:1px solid rgba(167,139,250,.3);transition:border-color .25s,box-shadow .25s}
+        .gate-field:focus-within{border-color:#f5b301;box-shadow:0 0 0 4px rgba(245,179,1,.14),0 12px 30px -14px rgba(245,179,1,.4)}
+        .gate-field.is-ok{border-color:rgba(34,197,94,.7)} .gate-field.is-bad{border-color:rgba(244,63,94,.7)}
+        .gate-field .lead{padding-inline:1rem .3rem;color:#a78bfa;font-size:1.05rem}
+        html .gate-field input,html .gate-field input:focus{flex:1;min-width:0;width:100%;background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;color:#fff;font-size:1rem;font-weight:600;padding:.95rem .35rem;text-align:start;font-family:inherit}
+        html .gate-field input::placeholder{color:rgba(196,181,253,.45);font-weight:500}
+        .gate-state{padding-inline:.4rem .95rem;font-size:1.05rem;width:2.2rem;text-align:center}
+        .gate-field.is-ok .gate-state{color:#4ade80} .gate-field.is-bad .gate-state{color:#fb7185}
+        .gate-rules{list-style:none;margin:.9rem 0 0;padding:0;display:grid;gap:.5rem;text-align:start}
+        .gate-rules li{display:flex;align-items:center;gap:.6rem;font-size:.79rem;color:rgba(221,214,254,.6);transition:color .25s}
+        .gate-rules .dot{width:1.25rem;height:1.25rem;flex:none;border-radius:50%;display:grid;place-items:center;font-size:.6rem;border:1px solid rgba(167,139,250,.45);transition:background .25s,border-color .25s,color .25s,transform .25s}
+        .gate-rules .dot i{display:none}
+        .gate-rules li.ok{color:#86efac} .gate-rules li.ok .dot{background:#22c55e;border-color:#22c55e;color:#052e16;transform:scale(1.08)} .gate-rules li.ok .d-ok{display:block}
+        .gate-rules li.bad{color:#fda4af} .gate-rules li.bad .dot{background:#f43f5e;border-color:#f43f5e;color:#fff} .gate-rules li.bad .d-bad{display:block}
+        .gate-err{margin:.9rem 0 0;padding:.6rem .8rem;border-radius:.85rem;font-size:.82rem;line-height:1.7;font-weight:600;color:#fecdd3;background:rgba(244,63,94,.12);border:1px solid rgba(244,63,94,.4);animation:gateShake .45s}
+        @keyframes gateShake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+        .gate-btn{position:relative;overflow:hidden;isolation:isolate;display:flex;align-items:center;justify-content:center;gap:.55rem;width:100%;margin-top:1.1rem;padding:.95rem 1rem;border-radius:1.05rem;font-weight:800;font-size:1.02rem;font-family:inherit;color:#2a1600;cursor:pointer;border:0;
+            background:linear-gradient(135deg,#fff0a8 0%,#f5b301 48%,#d99a00 100%);box-shadow:0 16px 36px -14px rgba(245,179,1,.75),inset 0 1px 0 rgba(255,255,255,.65);transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,filter .3s,opacity .3s}
+        .gate-btn::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.65) 50%,transparent 70%);transform:translateX(-120%);animation:gateShine 3.4s ease-in-out infinite}
+        @keyframes gateShine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+        .gate-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 22px 44px -14px rgba(245,179,1,.9),0 0 0 4px rgba(245,179,1,.18),inset 0 1px 0 rgba(255,255,255,.7)}
+        .gate-btn:active:not(:disabled){transform:scale(.98)}
+        .gate-btn:disabled{opacity:.42;cursor:not-allowed;filter:grayscale(.45)}
+        .gate-btn.ghost{background:rgba(255,255,255,.08);color:#f4f0ff;box-shadow:none;border:1px solid rgba(255,255,255,.18);margin-top:.7rem;font-size:.9rem;padding:.75rem 1rem}
+        .gate-btn.ghost::before{display:none}
+        .gate-link{margin-top:.8rem;background:none;border:0;color:#c4b5fd;font-size:.82rem;font-weight:700;font-family:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+        .gate-recover{margin-top:.9rem;padding:.9rem;border-radius:1rem;text-align:start;background:rgba(245,179,1,.07);border:1px dashed rgba(245,179,1,.45)}
+        .gate-recover p{font-size:.78rem;line-height:1.7;color:#fde68a;margin-bottom:.6rem}
+        .gate-recover input{width:100%;direction:ltr;text-align:center;letter-spacing:.18em;font-weight:800;text-transform:uppercase;color:#fff;font-size:1rem;padding:.75rem;border-radius:.85rem;background:rgba(9,5,22,.75);border:1px solid rgba(245,179,1,.45);outline:0;font-family:'Outfit','Inter',sans-serif}
+        .gate-recover input:focus{border-color:#f5b301;box-shadow:0 0 0 3px rgba(245,179,1,.18)}
+        .gate-foot{margin-top:1.1rem;text-align:center;font-size:.74rem;color:rgba(196,181,253,.6)}
+        .gate-foot i{color:#f5b301;margin-inline-end:.35rem}
+        .gate-done{position:relative}
+        .gate-check{width:4.6rem;height:4.6rem;margin:.2rem auto .9rem;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%,#86efac,#16a34a);box-shadow:0 0 0 8px rgba(34,197,94,.14),0 18px 40px -10px rgba(34,197,94,.7);animation:gatePop .7s cubic-bezier(.2,1.4,.4,1) both}
+        .gate-check svg{width:2.3rem;height:2.3rem;stroke:#052e16;stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30;animation:gateDraw .55s .35s ease forwards}
+        @keyframes gatePop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+        @keyframes gateDraw{to{stroke-dashoffset:0}}
+        .gate-name{margin:.2rem 0 .3rem;font-size:1.5rem;font-weight:900;color:#fff;overflow-wrap:anywhere}
+        .gate-code{margin-top:1rem;padding:.95rem;border-radius:1.1rem;background:rgba(245,179,1,.08);border:1px solid rgba(245,179,1,.4)}
+        .gate-code small{display:block;font-size:.75rem;color:#fde68a;margin-bottom:.45rem}
+        .gate-code strong{display:block;direction:ltr;font-family:'Outfit','Inter',sans-serif;font-size:1.7rem;letter-spacing:.22em;color:#fff3b8;text-shadow:0 0 22px rgba(245,179,1,.5)}
+        .gate-code p{margin-top:.5rem;font-size:.74rem;line-height:1.65;color:rgba(221,214,254,.7)}
+        .gate-copy{margin-top:.6rem;display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .9rem;border-radius:999px;border:1px solid rgba(245,179,1,.5);background:rgba(245,179,1,.12);color:#fde68a;font-size:.78rem;font-weight:700;font-family:inherit;cursor:pointer}
+        .gate-burst{position:absolute;top:2.6rem;inset-inline:0;margin-inline:auto;width:0;height:0;pointer-events:none}
+        .gate-burst i{position:absolute;width:7px;height:7px;border-radius:2px;background:var(--c);opacity:0;animation:gateSpark 1.3s .25s ease-out forwards}
+        @keyframes gateSpark{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(540deg)}}
+        /* حسابي في القائمة */
+        .my-acc-code{font-family:'Outfit','Inter',sans-serif;letter-spacing:.18em;font-weight:800;direction:ltr;color:var(--gold-text)}
+        /* زوار جدد + عملاء مميزون (لوحة المدير) */
+        .adm-pill{display:inline-flex;align-items:center;gap:.3rem;padding:.12rem .6rem;border-radius:999px;font-size:.7rem;font-weight:800}
+        .adm-new{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;box-shadow:0 0 14px -2px rgba(34,197,94,.7);animation:newPulse 2s ease-in-out infinite}
+        @keyframes newPulse{50%{box-shadow:0 0 0 5px rgba(34,197,94,.12)}}
+        .adm-avatar{width:2.5rem;height:2.5rem;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(145deg,#a78bfa,#6d28d9);box-shadow:0 6px 16px -6px rgba(109,40,217,.8)}
+        .vip-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem}
+        .vip-stat{padding:.75rem .6rem;border-radius:1rem;text-align:center;background:var(--soft);border:1px solid var(--line)}
+        .vip-stat b{display:block;font-size:1.25rem;font-weight:900;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .vip-stat span{font-size:.72rem;color:var(--muted)}
+        .vip-stat.gold{background:linear-gradient(145deg,rgba(245,179,1,.2),var(--soft));border-color:rgba(245,179,1,.5)} .vip-stat.gold i{color:var(--gold)}
+        .vip-row{position:relative;display:flex;align-items:center;gap:.75rem;padding:.75rem .9rem;border-radius:1.1rem;background:var(--soft);border:1px solid var(--line);overflow:hidden;transition:transform .25s,box-shadow .25s}
+        .vip-row:hover{transform:translateY(-2px);box-shadow:0 14px 30px -18px rgba(109,40,217,.6)}
+        .vip-row.r1{background:linear-gradient(100deg,rgba(245,179,1,.24),var(--soft) 70%);border-color:rgba(245,179,1,.65);box-shadow:0 14px 34px -18px rgba(245,179,1,.7)}
+        .vip-row.r2{background:linear-gradient(100deg,rgba(148,163,184,.25),var(--soft) 70%);border-color:rgba(148,163,184,.6)}
+        .vip-row.r3{background:linear-gradient(100deg,rgba(205,127,50,.24),var(--soft) 70%);border-color:rgba(205,127,50,.6)}
+        .vip-rank{width:2.5rem;height:2.5rem;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:.95rem;color:var(--accent);background:var(--soft-hover)}
+        .r1 .vip-rank{background:linear-gradient(145deg,#fff3b8,#f5b301);color:#3b2400;font-size:1.15rem} .r2 .vip-rank{background:linear-gradient(145deg,#f1f5f9,#94a3b8);color:#1e293b;font-size:1.1rem} .r3 .vip-rank{background:linear-gradient(145deg,#fcd9b0,#cd7f32);color:#3a1f06;font-size:1.1rem}
+        .vip-bar{height:5px;border-radius:99px;background:var(--soft-hover);overflow:hidden;margin-top:.4rem} .vip-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#a855f7,#f5b301)}
+        .vip-tier{display:inline-flex;align-items:center;gap:.3rem;padding:.1rem .55rem;border-radius:999px;font-size:.68rem;font-weight:800;border:1px solid transparent}
+        .t-diamond{color:#0e7490;background:rgba(34,211,238,.16);border-color:rgba(34,211,238,.5)} html.dark .t-diamond{color:#67e8f9}
+        .t-gold{color:var(--gold-text);background:rgba(245,179,1,.16);border-color:rgba(245,179,1,.5)}
+        .t-silver{color:#475569;background:rgba(148,163,184,.2);border-color:rgba(148,163,184,.55)} html.dark .t-silver{color:#cbd5e1}
+        .t-bronze{color:#9a3412;background:rgba(205,127,50,.16);border-color:rgba(205,127,50,.5)} html.dark .t-bronze{color:#fdba74}
+        html[dir=ltr] .gate-btn .fa-arrow-left-long{transform:scaleX(-1)}
+        #loginGate .gate-field,#loginGate .gate-btn,#loginGate .gate-recover input,#loginGate .gate-copy{box-sizing:border-box}
         .visitor-badge{display:flex;width:max-content;max-width:100%;align-items:center;gap:.5rem;margin:.9rem auto 0;padding:.4rem .95rem;border-radius:999px;font-size:.8rem;font-weight:600;color:rgba(237,233,254,.95);background:rgba(15,10,30,.45);border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);text-shadow:0 1px 8px rgba(0,0,0,.4)}
         .visitor-badge strong{font-size:.95rem;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
         /* footer */
@@ -211,16 +319,70 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
-    <!-- تسجيل الدخول: اسم المستخدم فقط -->
+    <!-- بوابة التسجيل: الاسم الحقيقي الكامل (اسم فريد لكل شخص) -->
     <div id="loginGate" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-        <form id="loginForm" class="glass-strong rounded-xl p-7 max-w-sm w-full border ui-line text-center shadow-2xl" autocomplete="off">
-            <h1 class="logo mb-1" dir="ltr" style="font-size:1.6rem"><span class="logo-7">7</span><span class="logo-shine">ASSON GAMING</span></h1>
-            <h2 id="loginTitle" class="text-lg font-bold ui-ink mt-4 mb-1" data-translate="loginTitle">تسجيل الدخول</h2>
-            <p class="text-sm ui-muted mb-4" data-translate="loginHint">اكتب اسم المستخدم للدخول إلى الموقع</p>
-            <input type="text" id="loginName" maxlength="30" required placeholder="اسم المستخدم" data-translate-ph="loginPlaceholder" class="w-full ui-soft border ui-line rounded-lg px-3 py-2.5 text-center text-base mb-3 focus:outline-none focus:border-violet-500 ui-ink">
-            <p id="loginErr" class="text-xs mb-3 hidden" style="color:#e11d48"></p>
-            <button type="submit" class="btn-primary w-full py-2.5 rounded-xl font-bold cursor-pointer" data-translate="loginBtn">دخول</button>
-        </form>
+        <div class="gate-stars" aria-hidden="true"></div>
+        <div class="gate-orb o1" aria-hidden="true"></div><div class="gate-orb o2" aria-hidden="true"></div><div class="gate-orb o3" aria-hidden="true"></div>
+        <i class="fa-solid fa-gamepad gate-ico" style="top:12%;inset-inline-start:8%" aria-hidden="true"></i>
+        <i class="fa-solid fa-ghost gate-ico" style="top:24%;inset-inline-end:9%;animation-delay:-3s" aria-hidden="true"></i>
+        <i class="fa-solid fa-dice-d20 gate-ico" style="bottom:16%;inset-inline-start:12%;animation-delay:-5s" aria-hidden="true"></i>
+        <i class="fa-solid fa-trophy gate-ico" style="bottom:10%;inset-inline-end:14%;animation-delay:-2s" aria-hidden="true"></i>
+        <i class="fa-solid fa-puzzle-piece gate-ico" style="top:58%;inset-inline-end:4%;animation-delay:-6s;font-size:1.5rem" aria-hidden="true"></i>
+        <button type="button" id="gateLang" class="gate-lang" aria-label="Language"><i class="fa-solid fa-globe"></i><span>English</span></button>
+
+        <div class="gate-wrap">
+            <div class="gate-card">
+                <div class="gate-crest" aria-hidden="true"><i class="fa-solid fa-crown"></i></div>
+
+                <!-- الخطوة 1: كتابة الاسم -->
+                <div id="gateStepForm">
+                    <h1 class="logo gate-logo" dir="ltr"><span class="logo-7">7</span><span class="logo-shine">ASSON GAMING</span></h1>
+                    <div class="gate-sep" aria-hidden="true"><i class="fa-solid fa-diamond"></i></div>
+                    <h2 id="loginTitle" class="gate-title" data-translate="loginTitle">بوابة الدخول الحصرية</h2>
+                    <p class="gate-sub" data-translate="loginHint">سجّل اسمك الحقيقي الكامل لتدخل مكتبتنا الحصرية</p>
+                    <p id="gateNote" class="gate-note" hidden data-translate="migrateNote">حدّثنا اسمك: اكتب اسمك الحقيقي الكامل لمتابعة التصفح.</p>
+
+                    <form id="loginForm" novalidate autocomplete="off">
+                        <label class="gate-field" id="gateField">
+                            <i class="fa-regular fa-id-card lead" aria-hidden="true"></i>
+                            <input type="text" id="loginName" dir="auto" maxlength="40" required autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="go" placeholder="الاسم الكامل" data-translate-ph="loginPlaceholder">
+                            <span class="gate-state" id="gateState" aria-hidden="true"></span>
+                        </label>
+                        <ul class="gate-rules" id="gateRules">
+                            <li data-rule="words"><span class="dot"><i class="fa-solid fa-check d-ok"></i><i class="fa-solid fa-xmark d-bad"></i></span><span data-translate="ruleWords">اسمان على الأقل (الاسم الأول واسم الأب)</span></li>
+                            <li data-rule="letters"><span class="dot"><i class="fa-solid fa-check d-ok"></i><i class="fa-solid fa-xmark d-bad"></i></span><span data-translate="ruleLetters">حروف فقط — بدون أرقام أو رموز</span></li>
+                            <li data-rule="real"><span class="dot"><i class="fa-solid fa-check d-ok"></i><i class="fa-solid fa-xmark d-bad"></i></span><span data-translate="ruleReal">اسم حقيقي — بدون حروف عشوائية أو مكررة</span></li>
+                        </ul>
+
+                        <p id="loginErr" class="gate-err" role="alert" aria-live="assertive" hidden></p>
+
+                        <div id="gateRecover" class="gate-recover" hidden>
+                            <p data-translate="recoverHint">هل هذا اسمك فعلاً؟ أدخل رمز الاستعادة الذي ظهر لك عند أول تسجيل لتدخل بنفس الاسم.</p>
+                            <input type="text" id="recoverCode" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX">
+                            <button type="button" id="recoverBtn" class="gate-btn ghost"><i class="fa-solid fa-key"></i><span data-translate="recoverBtn">أنا صاحب هذا الاسم</span></button>
+                        </div>
+
+                        <button type="submit" id="loginSubmit" class="gate-btn" disabled><span data-translate="loginBtn">دخول</span><i class="fa-solid fa-arrow-left-long" id="loginArrow"></i></button>
+                    </form>
+                </div>
+
+                <!-- الخطوة 2: تم التسجيل -->
+                <div id="gateStepDone" class="gate-done" hidden>
+                    <div class="gate-burst" id="gateBurst" aria-hidden="true"></div>
+                    <div class="gate-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+                    <h2 class="gate-title" id="doneTitle" data-translate="doneTitle">تم تسجيل اسمك بنجاح</h2>
+                    <p class="gate-name" id="doneName"></p>
+                    <div class="gate-code" id="doneCodeBox" hidden>
+                        <small data-translate="doneCodeLbl">رمز الاستعادة الخاص بك</small>
+                        <strong id="doneCode"></strong>
+                        <p data-translate="doneCodeHint">احتفظ به في مكان آمن — يعيد لك اسمك إذا فتحت الموقع من جهاز آخر أو مسحت بيانات المتصفح.</p>
+                        <button type="button" id="copyCodeBtn" class="gate-copy"><i class="fa-regular fa-copy"></i><span data-translate="copyBtn">نسخ الرمز</span></button>
+                    </div>
+                    <button type="button" id="enterSiteBtn" class="gate-btn"><span data-translate="enterSite">ادخل الموقع</span><i class="fa-solid fa-arrow-left-long"></i></button>
+                </div>
+            </div>
+            <p class="gate-foot"><i class="fa-solid fa-shield-halved"></i><span data-translate="gateFoot">كل اسم يُسجَّل لشخص واحد فقط — لا يمكن لأحد استخدام اسمك.</span></p>
+        </div>
     </div>
     <div class="orb" style="width:380px;height:380px;top:-120px;right:-100px"></div>
     <div class="orb" style="width:320px;height:320px;top:45%;left:-140px"></div>
@@ -420,6 +582,17 @@
                 </div>
             </section>
 
+            <section id="myAccount" class="ui-soft border ui-line rounded-xl p-3 text-sm hidden">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <div class="text-xs ui-muted" data-translate="myAccount">حسابي</div>
+                        <div id="myAccountName" class="font-bold ui-ink truncate"></div>
+                    </div>
+                    <button id="showCodeBtn" type="button" class="cs-topic"><i class="fa-solid fa-key"></i><span data-translate="showCode">رمز الاستعادة</span></button>
+                </div>
+                <p id="myCodeVal" class="my-acc-code mt-2 text-center text-lg hidden"></p>
+            </section>
+
             <div class="grid grid-cols-1 gap-2">
                 <button id="contactAdminBtn" type="button" class="btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-envelope"></i><span data-translate="menuContact">مراسلة المدير</span></button>
                 <button id="menuFilesBtn" type="button" class="btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-folder-open"></i><span data-translate="menuFiles">الملفات المهمة</span></button>
@@ -484,6 +657,8 @@
                 <button onclick="switchAdminTab('files')" id="tabBtnFile" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">الملفات</button>
                 <button onclick="switchAdminTab('logs')" id="tabBtnLog" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabLogs">سجل التنزيلات</button>
                 <button onclick="switchAdminTab('customers')" id="tabBtnCust" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-users"></i> <span data-translate="tabCustomers">العملاء</span></button>
+                <button onclick="switchAdminTab('newvisitors')" id="tabBtnNew" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-user-plus"></i> <span>زوار جدد</span><span id="newBadge" class="hidden" style="background:#22c55e;color:#fff;border-radius:9999px;padding:0 .45rem;font-size:.7rem;margin-inline-start:.35rem">0</span></button>
+                <button onclick="switchAdminTab('vip')" id="tabBtnVip" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-crown" style="color:#f5b301"></i> <span>عملاء مميزون</span></button>
             </div>
 
             <!-- تبويب: إضافة لعبة -->
@@ -541,6 +716,30 @@
                         <tbody id="custTableBody" class="divide-y ui-divide"></tbody>
                     </table>
                 </div>
+            </div>
+
+            <!-- تبويب: زوار جدد -->
+            <div id="tabContentNew" class="hidden space-y-3">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <p id="newSummary" class="text-sm font-bold ui-accent"></p>
+                    <div class="flex gap-2">
+                        <button type="button" id="refreshNewBtn" class="text-xs font-bold px-3 py-2 rounded-lg transition cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line"><i class="fa-solid fa-rotate"></i> تحديث</button>
+                        <button type="button" id="markSeenBtn" class="text-xs font-bold px-3 py-2 rounded-lg transition cursor-pointer btn-primary"><i class="fa-solid fa-check-double"></i> تعليم الكل كمقروء</button>
+                    </div>
+                </div>
+                <p class="text-xs ui-muted">كل من يسجّل اسماً جديداً في الموقع يظهر هنا فوراً (آخر 7 أيام).</p>
+                <div id="newList" class="space-y-2"></div>
+            </div>
+
+            <!-- تبويب: عملاء مميزون -->
+            <div id="tabContentVip" class="hidden space-y-4">
+                <div class="flex items-center justify-between gap-2">
+                    <h4 class="font-bold ui-ink text-sm"><i class="fa-solid fa-crown" style="color:#f5b301"></i> الأكثر زيارة للموقع</h4>
+                    <button type="button" id="refreshVipBtn" class="text-xs font-bold px-3 py-2 rounded-lg transition cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line"><i class="fa-solid fa-rotate"></i> تحديث</button>
+                </div>
+                <div id="vipStats" class="vip-stats"></div>
+                <div id="vipList" class="space-y-2"></div>
+                <p class="text-xs ui-faint text-center">الرتب: ماسي ٣٠+ زيارة · ذهبي ١٥+ · فضي ٧+ · برونزي ٣+ (تُحتسب زيارة واحدة لكل جلسة).</p>
             </div>
 
             <!-- تبويب: الطلبات -->
@@ -669,15 +868,20 @@
                 <div id="fileManageList" class="space-y-3 pt-4 border-t ui-line"></div>
             </div>
 
-            <!-- تبويب: السجلات -->
+            <!-- تبويب: سجل التنزيلات (من نزّل ماذا) -->
             <div id="tabContentLog" class="hidden space-y-4">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <input type="search" id="logSearch" placeholder="ابحث باسم الشخص أو اسم اللعبة/التطبيق/الخلفية/الفيلم..." class="flex-1 min-w-[12rem] ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
+                    <button type="button" id="refreshLogBtn" class="text-xs font-bold px-3 py-2 rounded-lg transition cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line"><i class="fa-solid fa-rotate"></i> تحديث</button>
+                </div>
+                <p id="logTotal" class="text-xs ui-muted"></p>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right text-sm">
                         <thead class="ui-soft ui-muted">
                             <tr>
-                                <th class="p-3" data-translate="thGame">اسم اللعبة</th>
-                                <th class="p-3" data-translate="thDate">وقت الطلب</th>
-                                <th class="p-3" data-translate="thStatus">الحالة</th>
+                                <th class="p-3" data-translate="thGame">التنزيل</th>
+                                <th class="p-3" data-translate="thStatus">النوع</th>
+                                <th class="p-3" data-translate="thDate">الوقت</th>
                             </tr>
                         </thead>
                         <tbody id="logsTableBody" class="divide-y ui-divide">
@@ -721,7 +925,7 @@
     <!-- Firebase SDKs (Firestore only - No Storage cost!) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, getDoc, deleteDoc, serverTimestamp, query, orderBy, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, getDoc, deleteDoc, serverTimestamp, query, orderBy, limit, increment, setDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAMAZFJXGE_7zg1nHGyiPmsqp_8Y3n02SE",
@@ -760,9 +964,9 @@
                 publishGameBtn: "نشر اللعبة",
                 publishing: "جاري حفظ بيانات اللعبة...",
                 noRequests: "لا توجد طلبات تنزيل معلقة حالياً.",
-                thGame: "اسم اللعبة",
-                thDate: "وقت الطلب",
-                thStatus: "الحالة",
+                thGame: "التنزيل",
+                thDate: "الوقت",
+                thStatus: "النوع",
                 noLogs: "لا يوجد سجل تنزيلات حتى الآن.",
                 enterPassTitle: "أدخل كلمة مرور الإدارة",
                 confirmBtn: "دخول",
@@ -786,7 +990,7 @@
                 installApp: "ثبّت التطبيق",
                 installHero: "ثبّت التطبيق على هاتفك",
                 visitorsLabel: "عدد الزوار",
-                tabCustomers: "العملاء", loginTitle: "تسجيل الدخول", loginHint: "اكتب اسم المستخدم للدخول إلى الموقع", loginBtn: "دخول", loginPlaceholder: "اسم المستخدم", loginShort: "اكتب اسماً من حرفين على الأقل", welcomeName: "مرحبا ",
+                tabCustomers: "العملاء", loginTitle: "بوابة الدخول الحصرية", loginHint: "سجّل اسمك الحقيقي الكامل لتدخل مكتبتنا الحصرية", loginBtn: "دخول", loginPlaceholder: "الاسم الكامل (مثال: محمد أحمد علي)", loginShort: "اكتب اسمك الحقيقي الكامل (اسمان على الأقل)", welcomeName: "مرحبا ",
                 footerAbout: "مكتبة ألعاب حصرية بتنزيل مباشر وخدمة دعم عبر واتساب.",
                 footerLinks: "روابط سريعة",
                 footerContact: "تواصل معنا",
@@ -794,7 +998,17 @@
                 backBtn: "رجوع",
                 greet: "مرحبا بك", tabGamesBtn: "الألعاب", tabWallsBtn: "الخلفيات", tabProjBtn: "المشاريع", projOpen: "معاينة المشروع", noProj: "لا توجد مشاريع حالياً.", tabMoviesBtn: "الأفلام", movieWatch: "مشاهدة", movieDownload: "تنزيل", noMovies: "لا توجد أفلام حالياً.", movieNoWatch: "رابط المشاهدة غير متوفر.", tabFilesBtn: "الملفات", noFiles: "لا توجد ملفات حالياً.", fileDownload: "تنزيل الملف", menuContact: "مراسلة المدير", menuFiles: "الملفات المهمة", contactTitle: "مراسلة المدير", contactSub: "اكتب رسالتك وستصل مباشرة إلى المدير.", contactName: "اسمك", contactInfo: "رقم واتساب أو بريد للرد عليك (اختياري)", contactMsg: "اكتب رسالتك هنا...", contactSend: "إرسال الرسالة", contactSent: "تم إرسال رسالتك إلى المدير، شكراً لك!", contactWait: "انتظر قليلاً قبل إرسال رسالة أخرى.", contactErr: "تعذر إرسال الرسالة، حاول مرة أخرى.", subPhone: "خلفيات الهاتف", subPc: "خلفيات PC", noWalls: "لا توجد خلفيات في هذا القسم حالياً.",
                 kindLabel: "نوع المنشور", kindGame: "لعبة", kindApp: "تطبيق",
-                notifOn: "فعّل إشعارات الألعاب الجديدة", notifDone: "الإشعارات مفعّلة ✓", notifBlocked: "الإشعارات محظورة — فعّلها من إعدادات المتصفح"
+                notifOn: "فعّل إشعارات الألعاب الجديدة", notifDone: "الإشعارات مفعّلة ✓", notifBlocked: "الإشعارات محظورة — فعّلها من إعدادات المتصفح",
+                gateWelcome: "أهلاً بك", migrateNote: "حدّثنا اسمك: اكتب اسمك الحقيقي الكامل لمتابعة التصفح.",
+                ruleWords: "اسمان على الأقل (الاسم الأول واسم الأب)", ruleLetters: "حروف فقط — بدون أرقام أو رموز", ruleReal: "اسم حقيقي — بدون حروف عشوائية أو مكررة",
+                errLetters: "الاسم يجب أن يحتوي على حروف فقط، بدون أرقام أو رموز أو علامات.", errReal: "اكتب اسمك الحقيقي. الأسماء العشوائية أو المكررة الحروف غير مقبولة.",
+                errTaken: "هذا الاسم مستخدم من قِبل شخص آخر. اختر اسماً آخر، وإن كان الاسم لك فأدخل رمز الاستعادة بالأسفل.",
+                errNet: "تعذّر التحقق من الاسم الآن. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.", errCode: "رمز الاستعادة غير صحيح.",
+                recoverHint: "هل هذا اسمك فعلاً؟ أدخل رمز الاستعادة الذي ظهر لك عند أول تسجيل لتدخل بنفس الاسم.", recoverBtn: "أنا صاحب هذا الاسم",
+                checking: "جاري التحقق...", doneTitle: "تم تسجيل اسمك بنجاح", doneBack: "مرحباً بعودتك",
+                doneCodeLbl: "رمز الاستعادة الخاص بك", doneCodeHint: "احتفظ به في مكان آمن — يعيد لك اسمك إذا فتحت الموقع من جهاز آخر أو مسحت بيانات المتصفح.",
+                copyBtn: "نسخ الرمز", copied: "تم النسخ ✓", enterSite: "ادخل الموقع", gateFoot: "كل اسم يُسجَّل لشخص واحد فقط — لا يمكن لأحد استخدام اسمك.",
+                myAccount: "حسابي", showCode: "رمز الاستعادة", noCode: "غير متوفر على هذا الجهاز"
             },
             en: {
                 developerTitle: "Developer: Hassan M.",
@@ -819,9 +1033,9 @@
                 publishGameBtn: "Publish Game",
                 publishing: "Saving game data...",
                 noRequests: "No pending download requests.",
-                thGame: "Game Name",
-                thDate: "Request Time",
-                thStatus: "Status",
+                thGame: "Download",
+                thDate: "Time",
+                thStatus: "Type",
                 noLogs: "No download logs yet.",
                 enterPassTitle: "Enter Admin Password",
                 confirmBtn: "Login",
@@ -845,7 +1059,7 @@
                 installApp: "Install app",
                 installHero: "Install the app on your phone",
                 visitorsLabel: "Visitors",
-                tabCustomers: "Customers", loginTitle: "Sign in", loginHint: "Enter a username to enter the site", loginBtn: "Enter", loginPlaceholder: "Username", loginShort: "Enter a name with at least 2 characters", welcomeName: "Welcome ",
+                tabCustomers: "Customers", loginTitle: "Exclusive Entry", loginHint: "Register your full real name to enter our exclusive library", loginBtn: "Enter", loginPlaceholder: "Full name (e.g. Mohamed Ahmed Ali)", loginShort: "Enter your full real name (at least two names)", welcomeName: "Welcome ",
                 footerAbout: "An exclusive game library with direct downloads and WhatsApp support.",
                 footerLinks: "Quick links",
                 footerContact: "Contact us",
@@ -853,7 +1067,17 @@
                 backBtn: "Back",
                 greet: "Welcome", tabGamesBtn: "Games", tabWallsBtn: "Wallpapers", tabProjBtn: "Projects", projOpen: "Preview project", noProj: "No projects yet.", tabMoviesBtn: "Movies", movieWatch: "Watch", movieDownload: "Download", noMovies: "No movies yet.", movieNoWatch: "No watch link available.", tabFilesBtn: "Files", noFiles: "No files yet.", fileDownload: "Download file", menuContact: "Message the admin", menuFiles: "Important files", contactTitle: "Message the admin", contactSub: "Write your message and it will reach the admin directly.", contactName: "Your name", contactInfo: "WhatsApp number or email for a reply (optional)", contactMsg: "Write your message here...", contactSend: "Send message", contactSent: "Your message was sent to the admin. Thank you!", contactWait: "Please wait a moment before sending another message.", contactErr: "Could not send the message, please try again.", subPhone: "Phone wallpapers", subPc: "PC wallpapers", noWalls: "No wallpapers in this section yet.",
                 kindLabel: "Post type", kindGame: "Game", kindApp: "App",
-                notifOn: "Enable new game notifications", notifDone: "Notifications enabled ✓", notifBlocked: "Notifications blocked — enable them in browser settings"
+                notifOn: "Enable new game notifications", notifDone: "Notifications enabled ✓", notifBlocked: "Notifications blocked — enable them in browser settings",
+                gateWelcome: "Welcome", migrateNote: "Please update your name: enter your full real name to keep browsing.",
+                ruleWords: "At least two names (first and father's name)", ruleLetters: "Letters only — no digits or symbols", ruleReal: "A real name — no random or repeated letters",
+                errLetters: "The name must contain letters only — no digits, symbols or punctuation.", errReal: "Please enter your real name. Random names or repeated letters are not accepted.",
+                errTaken: "This name is already used by someone else. Choose another name, or enter your recovery code below if this name is yours.",
+                errNet: "Could not verify the name right now. Check your connection and try again.", errCode: "The recovery code is incorrect.",
+                recoverHint: "Is this really your name? Enter the recovery code you received when you first registered.", recoverBtn: "This is my name",
+                checking: "Checking...", doneTitle: "Your name is registered", doneBack: "Welcome back",
+                doneCodeLbl: "Your recovery code", doneCodeHint: "Keep it safe — it restores your name if you open the site from another device or clear your browser data.",
+                copyBtn: "Copy code", copied: "Copied ✓", enterSite: "Enter the site", gateFoot: "Each name belongs to one person only — nobody else can use yours.",
+                myAccount: "My account", showCode: "Recovery code", noCode: "Not available on this device"
             }
         };
 
@@ -967,73 +1191,38 @@
                 loadRequests();
                 loadLogs();
                 refreshMsgBadge();
+                refreshNewBadge();
             } else {
                 alert('كلمة المرور غير صحيحة!');
             }
         });
 
         window.switchAdminTab = function(tab) {
-            document.getElementById('tabContentAdd').classList.add('hidden');
-            document.getElementById('tabContentReq').classList.add('hidden');
-            document.getElementById('tabContentLog').classList.add('hidden');
-            document.getElementById('tabContentManage').classList.add('hidden');
-            document.getElementById('tabContentWall').classList.add('hidden');
-            document.getElementById('tabContentProj').classList.add('hidden');
-            document.getElementById('tabBtnProj').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
-            document.getElementById('tabContentMovie').classList.add('hidden');
-            document.getElementById('tabBtnMovie').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
-            document.getElementById('tabContentMsg').classList.add('hidden');
-            document.getElementById('tabBtnMsg').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
-            document.getElementById('tabContentFile').classList.add('hidden');
-            document.getElementById('tabBtnFile').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
-            document.getElementById('tabContentCust').classList.add('hidden');
-            document.getElementById('tabBtnCust').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
-            document.getElementById('tabBtnManage').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
-            document.getElementById('tabBtnAdd').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
-            document.getElementById('tabBtnReq').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
-            document.getElementById('tabBtnLog').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
-            document.getElementById('tabBtnWall').className = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
-
-            if(tab === 'addGame') {
-                document.getElementById('tabContentAdd').classList.remove('hidden');
-                document.getElementById('tabBtnAdd').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
-            } else if(tab === 'manage') {
-                document.getElementById('tabContentManage').classList.remove('hidden');
-                document.getElementById('tabBtnManage').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
-                loadManage();
-            } else if(tab === 'requests') {
-                document.getElementById('tabContentReq').classList.remove('hidden');
-                document.getElementById('tabBtnReq').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
-                loadRequests();
-            } else if(tab === 'wall') {
-                document.getElementById('tabContentWall').classList.remove('hidden');
-                document.getElementById('tabBtnWall').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
-                loadWallManage();
-            } else if(tab === 'projects') {
-                document.getElementById('tabContentProj').classList.remove('hidden');
-                document.getElementById('tabBtnProj').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
-                loadProjManage();
-            } else if(tab === 'messages') {
-                document.getElementById('tabContentMsg').classList.remove('hidden');
-                document.getElementById('tabBtnMsg').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
-                loadMessages();
-            } else if(tab === 'files') {
-                document.getElementById('tabContentFile').classList.remove('hidden');
-                document.getElementById('tabBtnFile').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
-                loadFileManage();
-            } else if(tab === 'movies') {
-                document.getElementById('tabContentMovie').classList.remove('hidden');
-                document.getElementById('tabBtnMovie').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
-                loadMovieManage();
-            } else if(tab === 'customers') {
-                document.getElementById('tabContentCust').classList.remove('hidden');
-                document.getElementById('tabBtnCust').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
-                loadCustomers();
-            } else if(tab === 'logs') {
-                document.getElementById('tabContentLog').classList.remove('hidden');
-                document.getElementById('tabBtnLog').className = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
-                loadLogs();
-            }
+            const TABS = {
+                addGame:     ['tabContentAdd',    'tabBtnAdd'],
+                manage:      ['tabContentManage', 'tabBtnManage', () => loadManage()],
+                requests:    ['tabContentReq',    'tabBtnReq',    () => loadRequests()],
+                wall:        ['tabContentWall',   'tabBtnWall',   () => loadWallManage()],
+                projects:    ['tabContentProj',   'tabBtnProj',   () => loadProjManage()],
+                movies:      ['tabContentMovie',  'tabBtnMovie',  () => loadMovieManage()],
+                messages:    ['tabContentMsg',    'tabBtnMsg',    () => loadMessages()],
+                files:       ['tabContentFile',   'tabBtnFile',   () => loadFileManage()],
+                logs:        ['tabContentLog',    'tabBtnLog',    () => loadLogs()],
+                customers:   ['tabContentCust',   'tabBtnCust',   () => loadCustomers()],
+                newvisitors: ['tabContentNew',    'tabBtnNew',    () => loadNewVisitors()],
+                vip:         ['tabContentVip',    'tabBtnVip',    () => loadVip()]
+            };
+            const off = "px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer";
+            const on = "px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer btn-primary";
+            Object.values(TABS).forEach(([content, btn]) => {
+                document.getElementById(content).classList.add('hidden');
+                document.getElementById(btn).className = off;
+            });
+            const t = TABS[tab];
+            if (!t) return;
+            document.getElementById(t[0]).classList.remove('hidden');
+            document.getElementById(t[1]).className = on;
+            if (t[2]) t[2]();
         }
 
         // ===== أدوات مساعدة =====
@@ -1311,7 +1500,7 @@
                     `;
                     // ربط الزر عبر addEventListener حتى لا ينكسر الكود إذا احتوى اسم اللعبة على علامة ' مثل Assassin's Creed
                     card.querySelector('.download-btn').addEventListener('click', () => {
-                        window.requestDownload(docSnap.id, data.title, data.downloadUrl || data.driveLink || data.link || '');
+                        window.requestDownload(docSnap.id, data.title, data.downloadUrl || data.driveLink || data.link || '', data.kind);
                     });
                     setupCommentsBtn(card, docSnap.id, data);
                     setupFlip(card, data);
@@ -1337,7 +1526,32 @@
             return url;
         }
 
-        window.requestDownload = async function(gameId, gameTitle, downloadUrl) {
+        // ===== سجل التنزيلات: من نزّل ماذا =====
+        // كل تنزيل (لعبة / تطبيق / خلفية / فيلم / ملف) يُسجَّل في مجموعة logs مع اسم المستخدم المسجَّل،
+        // ويظهر للمدير في تبويب "سجل التنزيلات" بصيغة: قام فلان بتنزيل اللعبة «...».
+        const DL_TYPES = {
+            game:      { label: 'اللعبة',   icon: 'fa-gamepad' },
+            app:       { label: 'التطبيق',  icon: 'fa-mobile-screen-button' },
+            wallpaper: { label: 'الخلفية',  icon: 'fa-image' },
+            movie:     { label: 'الفيلم',   icon: 'fa-film' },
+            file:      { label: 'الملف',    icon: 'fa-folder-open' }
+        };
+        const _dlRecent = new Map();
+        async function logDownload(itemType, itemTitle, itemId) {
+            if (!DL_TYPES[itemType]) itemType = 'game';
+            const k = itemType + ':' + (itemId || itemTitle), now = Date.now();
+            if (now - (_dlRecent.get(k) || 0) < 15000) return;           // ضغطة مزدوجة لا تُسجَّل مرتين
+            _dlRecent.set(k, now);
+            try {
+                await addDoc(collection(db, 'logs'), {
+                    gameTitle: itemTitle, itemTitle, itemType, itemId: itemId || '',
+                    userName: getUser() || '', custId: getCustId(), timestamp: serverTimestamp()
+                });
+            } catch (e) { console.warn('download log skipped', e); }
+        }
+
+        window.requestDownload = async function(gameId, gameTitle, downloadUrl, kind) {
+            const itemType = kind === 'app' ? 'app' : 'game';
             // الحالة 1: توجد رابط تنزيل => تنزيل مباشر (يُفتح قبل أي await حتى لا يحجبه المتصفح)
             if (downloadUrl && downloadUrl.trim()) {
                 const a = document.createElement('a');
@@ -1347,22 +1561,25 @@
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
-                // تحديث العدّاد والسجل في الخلفية (إن سمحت قواعد Firestore، وإلا يُتجاهل بصمت)
-                try {
-                    await updateDoc(doc(db, "games", gameId), { downloadsCount: increment(1) });
-                    await addDoc(collection(db, "logs"), { gameTitle, timestamp: serverTimestamp() });
-                } catch (e) { console.warn('counter skipped', e); }
+                // التسجيل باسم المستخدم + تحديث العدّاد في الخلفية (إن سمحت قواعد Firestore، وإلا يُتجاهل بصمت)
+                logDownload(itemType, gameTitle, gameId);
+                try { await updateDoc(doc(db, "games", gameId), { downloadsCount: increment(1) }); }
+                catch (e) { console.warn('counter skipped', e); }
                 return;
             }
-            // الحالة 2: لا يوجد رابط => طلب عبر واتساب
+            // الحالة 2: لا يوجد رابط => طلب عبر واتساب (يُسجَّل باسم الطالب ويُحتسب تنزيلاً عند موافقة المدير)
             try {
+                const who = getUser();
                 await addDoc(collection(db, "requests"), {
                     gameId,
                     gameTitle,
+                    itemType,
+                    userName: who,
+                    custId: getCustId(),
                     status: 'pending',
                     createdAt: serverTimestamp()
                 });
-                const message = encodeURIComponent(`مرحباً حسن، أود تنزيل اللعبة التالية: ${gameTitle}`);
+                const message = encodeURIComponent(`مرحباً حسن، أنا ${who || 'زائر'} وأود تنزيل ${itemType === 'app' ? 'التطبيق' : 'اللعبة'} التالي: ${gameTitle}`);
                 window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${message}`, '_blank');
                 alert('تم إرسال طلب التنزيل إلى الإدارة، وجاري تحويلك إلى واتساب.');
             } catch (err) {
@@ -1447,18 +1664,21 @@
                     const req = docSnap.data();
                     if(req.status === 'approved') return;
                     const div = document.createElement('div');
-                    div.className = "ui-soft p-4 rounded-xl border ui-line flex justify-between items-center";
+                    div.className = "ui-soft p-4 rounded-xl border ui-line flex justify-between items-center gap-3";
+                    const typeLbl = (DL_TYPES[req.itemType] || DL_TYPES.game).label;
                     div.innerHTML = `
-                        <div>
-                            <h4 class="font-bold ui-ink text-sm">${escapeHtml(req.gameTitle)}</h4>
+                        <div class="min-w-0">
+                            <h4 class="font-bold ui-ink text-sm">${req.userName ? `<span class="ui-accent">${escapeHtml(req.userName)}</span> ` : ''}${req.userName ? 'يطلب ' + typeLbl + ': ' : ''}${escapeHtml(req.gameTitle)}</h4>
                             <span class="text-xs ui-warn">قيد الانتظار للموافقة</span>
                         </div>
-                        <button onclick="approveRequest('${docSnap.id}', '${req.gameId}')" class="text-xs font-bold px-4 py-2 rounded-lg transition cursor-pointer btn-primary">
+                        <button class="approve-btn text-xs font-bold px-4 py-2 rounded-lg transition cursor-pointer btn-primary flex-shrink-0">
                             موافقة وتحديث العداد
                         </button>
                     `;
+                    div.querySelector('.approve-btn').addEventListener('click', () => window.approveRequest(docSnap.id, req.gameId));
                     list.appendChild(div);
                 });
+                if (!list.children.length) list.innerHTML = `<p class="ui-muted text-center py-6">${translations[currentLang].noRequests}</p>`;
             } catch (err) {
                 console.error(err);
             }
@@ -1467,6 +1687,8 @@
         window.approveRequest = async function(reqId, gameId) {
             try {
                 const reqRef = doc(db, "requests", reqId);
+                const reqSnap = await getDoc(reqRef);
+                const req = reqSnap.exists() ? reqSnap.data() : {};
                 await updateDoc(reqRef, { status: 'approved' });
 
                 const gameRef = doc(db, "games", gameId);
@@ -1476,8 +1698,11 @@
                     await updateDoc(gameRef, { downloadsCount: currentCount + 1 });
                 }
 
+                const title = gameSnap.exists() ? gameSnap.data().title : (req.gameTitle || 'لعبة محذوفة');
+                const itemType = (gameSnap.exists() && gameSnap.data().kind === 'app') || req.itemType === 'app' ? 'app' : 'game';
                 await addDoc(collection(db, "logs"), {
-                    gameTitle: gameSnap.exists() ? gameSnap.data().title : 'لعبة محذوفة',
+                    gameTitle: title, itemTitle: title, itemType, itemId: gameId || '',
+                    userName: req.userName || '', custId: req.custId || '',
                     timestamp: serverTimestamp()
                 });
 
@@ -1490,33 +1715,155 @@
             }
         }
 
+        // ---- سجل التنزيلات: قام فلان بتنزيل اللعبة/التطبيق/الخلفية/الفيلم/الملف ----
+        let logRows = [];
+        const tsMs = v => (v && v.seconds) ? v.seconds * 1000 : 0;
+        function renderLogs() {
+            const tbody = document.getElementById('logsTableBody');
+            const total = document.getElementById('logTotal');
+            const term = (document.getElementById('logSearch').value || '').trim().toLowerCase();
+            const rows = !term ? logRows : logRows.filter(l => ((l.userName || '') + ' ' + (l.itemTitle || l.gameTitle || '')).toLowerCase().includes(term));
+            total.textContent = logRows.length ? `عدد التنزيلات: ${rows.length}${term ? ' من ' + logRows.length : ''}` : '';
+            if (!rows.length) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 ui-muted">${logRows.length ? 'لا توجد نتائج مطابقة.' : translations[currentLang].noLogs}</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = rows.map(l => {
+                const title = escapeHtml(l.itemTitle || l.gameTitle || '');
+                const ms = tsMs(l.timestamp);
+                const dateStr = ms ? new Date(ms).toLocaleString() : 'الآن';
+                if (l.userName) {
+                    const ty = DL_TYPES[l.itemType] || DL_TYPES.game;
+                    return `<tr class="row-hover">
+                        <td class="p-3 ui-ink leading-7">قام <strong class="ui-accent">${escapeHtml(l.userName)}</strong> بتنزيل ${ty.label} <strong>«${title}»</strong></td>
+                        <td class="p-3"><span class="pill text-xs px-2 py-0.5 rounded-full whitespace-nowrap"><i class="fa-solid ${ty.icon}"></i> ${ty.label}</span></td>
+                        <td class="p-3 ui-muted text-xs whitespace-nowrap">${dateStr}</td></tr>`;
+                }
+                return `<tr class="row-hover">
+                    <td class="p-3 ui-ink leading-7"><span class="ui-faint">شخص غير معروف</span> نزّل <strong>«${title}»</strong></td>
+                    <td class="p-3 ui-faint text-xs">قبل التحديث</td>
+                    <td class="p-3 ui-muted text-xs whitespace-nowrap">${dateStr}</td></tr>`;
+            }).join('');
+        }
         async function loadLogs() {
             const tbody = document.getElementById('logsTableBody');
             tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 ui-muted">جاري التحميل...</td></tr>`;
             try {
-                const q = query(collection(db, "logs"), orderBy("timestamp", "desc"));
+                const q = query(collection(db, "logs"), orderBy("timestamp", "desc"), limit(500));
                 const querySnapshot = await getDocs(q);
-                if(querySnapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 ui-muted">${translations[currentLang].noLogs}</td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = '';
-                querySnapshot.forEach((docSnap) => {
-                    const log = docSnap.data();
-                    const dateStr = log.timestamp ? new Date(log.timestamp.seconds * 1000).toLocaleString() : 'الآن';
-                    const tr = document.createElement('tr');
-                    tr.className = "row-hover";
-                    tr.innerHTML = `
-                        <td class="p-3 font-semibold ui-ink">${escapeHtml(log.gameTitle)}</td>
-                        <td class="p-3 ui-muted text-xs">${dateStr}</td>
-                        <td class="p-3 ui-ok font-medium">تم التنزيل بنجاح</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
+                logRows = querySnapshot.docs.map(d => d.data());
+                renderLogs();
             } catch (err) {
                 console.error(err);
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 ui-err">تعذّرت قراءة السجل.</td></tr>`;
             }
         }
+        document.getElementById('logSearch').addEventListener('input', renderLogs);
+        document.getElementById('refreshLogBtn').addEventListener('click', loadLogs);
+
+        // ---- العملاء: زوار جدد + عملاء مميزون ----
+        async function fetchCustomers() {
+            const snap = await getDocs(collection(db, 'customers'));
+            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        }
+        function relTime(ms) {
+            if (!ms) return '—';
+            const s = Math.max(0, (Date.now() - ms) / 1000);
+            if (s < 60) return 'الآن';
+            if (s < 3600) return 'قبل ' + Math.floor(s / 60) + ' دقيقة';
+            if (s < 86400) return 'قبل ' + Math.floor(s / 3600) + ' ساعة';
+            return 'قبل ' + Math.floor(s / 86400) + ' يوم';
+        }
+        const NEW_WINDOW_MS = 7 * 86400 * 1000;
+        const getSeenAt = () => { try { return Number(localStorage.getItem('adminSeenNewAt')) || 0; } catch (e) { return 0; } };
+        function newVisitorsOf(list) {
+            const cut = Date.now() - NEW_WINDOW_MS;
+            return list.filter(c => tsMs(c.createdAt) >= cut).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
+        }
+        function setNewBadge(n) {
+            const b = document.getElementById('newBadge');
+            b.textContent = n; b.classList.toggle('hidden', !n);
+        }
+        async function refreshNewBadge() {
+            try { const seen = getSeenAt(); setNewBadge(newVisitorsOf(await fetchCustomers()).filter(c => tsMs(c.createdAt) > seen).length); } catch (e) {}
+        }
+        async function loadNewVisitors() {
+            const list = document.getElementById('newList'), sum = document.getElementById('newSummary');
+            list.innerHTML = `<p class="ui-muted text-center py-4">جاري التحميل...</p>`;
+            try {
+                const all = await fetchCustomers(), news = newVisitorsOf(all), seen = getSeenAt();
+                const unseen = news.filter(c => tsMs(c.createdAt) > seen).length;
+                const dayAgo = Date.now() - 86400000;
+                sum.textContent = `زوار جدد: ${news.filter(c => tsMs(c.createdAt) >= dayAgo).length} اليوم · ${news.length} هذا الأسبوع` + (unseen ? ` · ${unseen} غير مقروء` : '');
+                setNewBadge(unseen);
+                if (!news.length) { list.innerHTML = `<p class="ui-muted text-center py-6">لا يوجد زوار جدد خلال آخر 7 أيام.</p>`; return; }
+                list.innerHTML = news.map(c => {
+                    const isNew = tsMs(c.createdAt) > seen;
+                    return `<div class="ui-soft p-3 rounded-xl border ui-line flex items-center gap-3">
+                        <div class="adm-avatar">${escapeHtml((c.name || '?').trim().charAt(0).toUpperCase())}</div>
+                        <div class="min-w-0 flex-grow">
+                            <h4 class="font-bold ui-ink text-sm truncate">${escapeHtml(c.name || '—')}</h4>
+                            <span class="text-xs ui-muted">سجّل ${relTime(tsMs(c.createdAt))} · ${new Date(tsMs(c.createdAt)).toLocaleString()}</span>
+                        </div>
+                        ${isNew ? '<span class="adm-pill adm-new"><i class="fa-solid fa-star"></i> جديد</span>' : ''}
+                    </div>`;
+                }).join('');
+            } catch (err) {
+                console.error(err);
+                sum.textContent = '';
+                list.innerHTML = `<p class="text-center py-4" style="color:#e11d48">تعذّرت القراءة. اسمح بالقراءة على مجموعة customers في قواعد Firestore.</p>`;
+            }
+        }
+        document.getElementById('refreshNewBtn').addEventListener('click', loadNewVisitors);
+        document.getElementById('markSeenBtn').addEventListener('click', async () => {
+            try { const news = newVisitorsOf(await fetchCustomers()); const top = news.reduce((m, c) => Math.max(m, tsMs(c.createdAt)), Date.now()); localStorage.setItem('adminSeenNewAt', String(top)); } catch (e) { try { localStorage.setItem('adminSeenNewAt', String(Date.now())); } catch (e2) {} }
+            loadNewVisitors();
+        });
+
+        const VIP_TIERS = [
+            { min: 30, cls: 't-diamond', icon: 'fa-gem',   label: 'ماسي' },
+            { min: 15, cls: 't-gold',    icon: 'fa-crown', label: 'ذهبي' },
+            { min: 7,  cls: 't-silver',  icon: 'fa-medal', label: 'فضي' },
+            { min: 3,  cls: 't-bronze',  icon: 'fa-award', label: 'برونزي' }
+        ];
+        async function loadVip() {
+            const list = document.getElementById('vipList'), stats = document.getElementById('vipStats');
+            list.innerHTML = `<p class="ui-muted text-center py-4">جاري التحميل...</p>`; stats.innerHTML = '';
+            try {
+                const [all, logsSnap] = await Promise.all([fetchCustomers(), getDocs(collection(db, 'logs')).catch(() => null)]);
+                const dls = {};
+                if (logsSnap) logsSnap.forEach(d => { const l = d.data(); if (l.custId) dls[l.custId] = (dls[l.custId] || 0) + 1; });
+                const vis = c => Number(c.visits) || 1;
+                const ranked = all.slice().sort((a, b) => vis(b) - vis(a) || tsMs(b.lastSeen) - tsMs(a.lastSeen)).slice(0, 20);
+                const totalVisits = all.reduce((s, c) => s + vis(c), 0);
+                stats.innerHTML = `
+                    <div class="vip-stat"><b>${all.length}</b><span>عدد العملاء</span></div>
+                    <div class="vip-stat"><b>${totalVisits}</b><span>إجمالي الزيارات</span></div>
+                    <div class="vip-stat gold"><b><i class="fa-solid fa-crown"></i> ${ranked[0] ? escapeHtml(ranked[0].name || '—') : '—'}</b><span>الأكثر زيارة</span></div>`;
+                if (!ranked.length) { list.innerHTML = `<p class="ui-muted text-center py-6">لا يوجد عملاء حتى الآن.</p>`; return; }
+                const max = vis(ranked[0]);
+                list.innerHTML = ranked.map((c, i) => {
+                    const v = vis(c), tier = VIP_TIERS.find(t => v >= t.min);
+                    const medal = i === 0 ? '<i class="fa-solid fa-crown"></i>' : (i + 1);
+                    return `<div class="vip-row ${i < 3 ? 'r' + (i + 1) : ''}">
+                        <div class="vip-rank">${medal}</div>
+                        <div class="min-w-0 flex-grow">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h4 class="font-bold ui-ink text-sm truncate">${escapeHtml(c.name || '—')}</h4>
+                                ${tier ? `<span class="vip-tier ${tier.cls}"><i class="fa-solid ${tier.icon}"></i> ${tier.label}</span>` : ''}
+                            </div>
+                            <div class="vip-bar"><i style="width:${Math.max(4, Math.round(v / max * 100))}%"></i></div>
+                            <span class="text-xs ui-muted">آخر زيارة: ${relTime(tsMs(c.lastSeen))}${dls[c.id] ? ' · ' + dls[c.id] + ' تنزيل' : ''}</span>
+                        </div>
+                        <div class="text-center flex-shrink-0"><div class="text-xl font-black ui-ink leading-none">${v}</div><span class="text-[11px] ui-muted">زيارة</span></div>
+                    </div>`;
+                }).join('');
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = `<p class="text-center py-4" style="color:#e11d48">تعذّرت القراءة. اسمح بالقراءة على مجموعة customers في قواعد Firestore.</p>`;
+            }
+        }
+        document.getElementById('refreshVipBtn').addEventListener('click', loadVip);
 
         async function loadCustomers() {
             const tbody = document.getElementById('custTableBody');
@@ -1595,7 +1942,7 @@
         // المتصفحات تمنع الصوت قبل أول لمسة، فنحاول عند التحميل وإن مُنع يُنطق عند أول لمسة.
         let greeted = false;
         const GESTURES = ['click', 'touchend', 'pointerup', 'keydown'];
-        function getUser() { try { return localStorage.getItem('username') || ''; } catch (e) { return ''; } }
+        function getUser() { try { return (localStorage.getItem('nameV2') && localStorage.getItem('username')) || ''; } catch (e) { return ''; } }
         function greetMsg() { const n = getUser(); return n ? translations[currentLang].welcomeName + n : translations[currentLang].greet; }
         function updateGreetText() { const b = document.getElementById('robotBubble'); if (b) b.textContent = greetMsg(); }
         function markGreeted() {
@@ -1651,8 +1998,82 @@
             setTimeout(() => menuBtn.classList.remove('greet'), 3200);
         }, 700);
 
-        // ===== تسجيل الدخول بالاسم + سجل العملاء (Firestore: customers) =====
-        // الاسم يُحفظ في المتصفح فلا يُطلب مرة أخرى، ويُسجَّل في مجموعة customers لتظهر في لوحة المدير.
+        // ===== بوابة التسجيل بالاسم الحقيقي (Firestore: usernames + customers) =====
+        // - الاسم يجب أن يكون اسماً حقيقياً كاملاً (حروف فقط، اسمان على الأقل، بلا عشوائية أو تكرار حروف).
+        // - كل اسم يُحجز لشخص واحد في usernames/{مفتاح الاسم}. إن حاول شخص آخر استخدامه تظهر له "الاسم مستخدم".
+        // - صاحب الاسم يمرّ: من نفس الجهاز تلقائياً، ومن جهاز آخر برمز الاستعادة الذي يُعطى له عند أول تسجيل.
+        const T = k => (translations[currentLang] && translations[currentLang][k]) || translations.ar[k] || k;
+        const $g = id => document.getElementById(id);
+
+        const NAME_MAX_WORDS = 6;
+        const NAME_MIN_WORDS = 2;   // غيّر الرقم إلى 3 إذا أردت الاسم الثلاثي إلزامياً
+        const FAKE_WORDS = new Set(['test', 'tester', 'testing', 'admin', 'administrator', 'user', 'username', 'name', 'fullname', 'guest', 'anonymous', 'anon', 'unknown', 'null', 'none', 'nobody', 'fake', 'hello', 'player', 'gamer', 'abc', 'xyz', 'asd', 'qwe',
+            'مجهول', 'مجهوله', 'اسم', 'اسمي', 'فلان', 'فلانه', 'علان', 'مستخدم', 'زائر', 'ضيف', 'تجربه', 'تجربة', 'بدون', 'لاشي', 'لاشيء', 'ماعندي', 'مدير', 'عميل', 'لاعب']);
+        const KB_ROWS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm', 'ضصثقفغعهخحجد', 'شسيبلاتنمكط', 'ئءؤرلاىةوزظ'];
+        const AR_L = '\\u0621-\\u064A\\u0671';
+        const WORD_RE = new RegExp(`^(?:[${AR_L}]+|[A-Za-z\\u00C0-\\u024F]+(?:['’\\-][A-Za-z\\u00C0-\\u024F]+)*)$`);
+
+        function cleanName(raw) {
+            return String(raw || '').normalize('NFKC').replace(/[ً-ٰٟـ​-‏‪-‮]/g, '').replace(/\s+/g, ' ').trim();
+        }
+        function wordLooksReal(w) {
+            const lw = w.toLowerCase();
+            const letters = lw.replace(/['’\-]/g, '');
+            if (letters.length < 2) return false;
+            if (FAKE_WORDS.has(lw)) return false;
+            if (/(.)\1\1/.test(letters)) return false;                                   // ااا / hhhh
+            if (letters.length >= 4 && new Set(letters).size < 3) return false;           // ابابا / asasas
+            for (const row of KB_ROWS) {                                                  // ضصثقف / qwert (طوله 5 فأكثر، اتجاهان)
+                const rev = [...row].reverse().join('');
+                for (let i = 0; i + 5 <= letters.length; i++) {
+                    const part = letters.slice(i, i + 5);
+                    if (row.includes(part) || rev.includes(part)) return false;
+                }
+            }
+            return true;
+        }
+        function analyzeName(raw) {
+            const name = cleanName(raw);
+            const words = name ? name.split(' ') : [];
+            const rules = { words: false, letters: false, real: false };
+            const plain = w => w.replace(/['’\-]/g, '');
+            rules.words = words.length >= NAME_MIN_WORDS && words.length <= NAME_MAX_WORDS && words.every(w => plain(w).length >= 2);
+            rules.letters = words.length > 0 && words.every(w => WORD_RE.test(w));
+            rules.real = rules.letters && words.every(wordLooksReal) && !(words.length > 1 && new Set(words.map(w => w.toLowerCase())).size === 1);
+            return { name, words, rules, ok: rules.words && rules.letters && rules.real };
+        }
+        function nameError(a) {
+            if (!a.rules.letters) return T('errLetters');
+            if (!a.rules.real) return T('errReal');
+            return T('loginShort');
+        }
+        // مفتاح الفرادة: يوحّد الهمزات والتاء المربوطة والياء حتى لا يُلتف على القاعدة بتغيير حرف مشابه
+        function nameKey(n) {
+            return cleanName(n).toLowerCase().replace(/[أإآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي')
+                .replace(/['’]/g, '').replace(/-/g, ' ').replace(/ /g, '_');
+        }
+        function genCode() {
+            const A = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ', r = new Uint32Array(8);
+            crypto.getRandomValues(r);
+            const s = Array.from(r, n => A[n % A.length]).join('');
+            return s.slice(0, 4) + '-' + s.slice(4);
+        }
+        function normCode(c) { return String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+        async function hashCode(code, key) {
+            const data = normCode(code) + '|' + key;
+            try {
+                if (window.crypto && crypto.subtle) {
+                    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
+                    return Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, '0')).join('');
+                }
+            } catch (e) {}
+            let h1 = 0xdeadbeef, h2 = 0x41c6ce57;                                         // بديل بسيط عند غياب crypto.subtle
+            for (let i = 0; i < data.length; i++) { const ch = data.charCodeAt(i); h1 = Math.imul(h1 ^ ch, 2654435761); h2 = Math.imul(h2 ^ ch, 1597334677); }
+            h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+            h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+            return 'f' + (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16);
+        }
+
         function getCustId() {
             let id = null;
             try { id = localStorage.getItem('custId'); } catch (e) {}
@@ -1662,39 +2083,187 @@
             }
             return id;
         }
-        async function registerCustomer(name) {
-            try {
-                await setDoc(doc(db, 'customers', getCustId()), { name, createdAt: serverTimestamp(), lastSeen: serverTimestamp(), visits: 1 }, { merge: true });
-                try { localStorage.setItem('custRegistered', '1'); } catch (e) {}
-            } catch (e) { console.warn('customer register skipped', e); }
+
+        // حجز الاسم بشكل ذرّي (transaction) حتى لا يسجّل شخصان نفس الاسم في اللحظة نفسها
+        async function claimName(name) {
+            const key = nameKey(name), id = getCustId();
+            const uRef = doc(db, 'usernames', key), cRef = doc(db, 'customers', id);
+            const code = genCode(), codeHash = await hashCode(code, key);
+            return runTransaction(db, async (tx) => {
+                const u = await tx.get(uRef);
+                const c = await tx.get(cRef);
+                if (u.exists() && u.data().custId !== id) return { status: 'taken' };
+                let oldRef = null;
+                const oldKey = c.exists() ? c.data().nameKey : null;
+                if (oldKey && oldKey !== key) {                                           // تغيير الاسم يحرّر الاسم القديم لصاحبه نفسه
+                    const oRef = doc(db, 'usernames', oldKey), o = await tx.get(oRef);
+                    if (o.exists() && o.data().custId === id) oldRef = oRef;
+                }
+                const first = !u.exists();
+                if (first) tx.set(uRef, { name, custId: id, codeHash, createdAt: serverTimestamp() });
+                if (oldRef) tx.delete(oldRef);
+                const base = { name, nameKey: key, lastSeen: serverTimestamp() };
+                if (c.exists()) tx.update(cRef, base);
+                else tx.set(cRef, { ...base, createdAt: serverTimestamp(), visits: 1 });
+                return { status: first ? 'new' : 'owner', code: first ? code : null };
+            });
+        }
+        async function recoverName(name, codeInput) {
+            const key = nameKey(name), snap = await getDoc(doc(db, 'usernames', key));
+            if (!snap.exists()) return { status: 'missing' };
+            if ((await hashCode(codeInput, key)) !== snap.data().codeHash) return { status: 'bad' };
+            const owner = snap.data().custId;
+            try { localStorage.setItem('custId', owner); } catch (e) {}                  // هذا الجهاز يصير جهاز صاحب الاسم (تتوحّد زياراته)
+            try { await updateDoc(doc(db, 'customers', owner), { lastSeen: serverTimestamp(), visits: increment(1) }); } catch (e) {}
+            return { status: 'ok', name: snap.data().name };
         }
         async function touchCustomer() {
             // زيارة عائدة: نحدّث آخر دخول وعدد الزيارات مرة واحدة لكل جلسة
-            let reg = null, done = null;
-            try { reg = localStorage.getItem('custRegistered'); done = sessionStorage.getItem('custTouched'); } catch (e) {}
-            if (!reg) { await registerCustomer(getUser()); return; }
+            let done = null;
+            try { done = sessionStorage.getItem('custTouched'); } catch (e) {}
             if (done) return;
             try {
                 await updateDoc(doc(db, 'customers', getCustId()), { lastSeen: serverTimestamp(), visits: increment(1) });
                 try { sessionStorage.setItem('custTouched', '1'); } catch (e) {}
             } catch (e) { console.warn('customer touch skipped', e); }
         }
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('loginName').value.trim().replace(/\s+/g, ' ');
-            const err = document.getElementById('loginErr');
-            if (name.length < 2) { err.textContent = translations[currentLang].loginShort; err.classList.remove('hidden'); return; }
-            try { localStorage.setItem('username', name); } catch (e2) {}
+
+        // ---- واجهة البوابة ----
+        const gName = $g('loginName'), gSubmit = $g('loginSubmit'), gErr = $g('loginErr'), gField = $g('gateField'), gState = $g('gateState');
+        let gateBusy = false, pendingTakenName = '';
+
+        function showGateErr(msg) { gErr.textContent = msg; gErr.hidden = false; gErr.style.animation = 'none'; void gErr.offsetWidth; gErr.style.animation = ''; }
+        function hideGateErr() { gErr.hidden = true; }
+        function paintRules() {
+            const raw = gName.value, has = raw.trim().length > 0, a = analyzeName(raw);
+            const st = {
+                words: a.rules.words ? 'ok' : '',
+                letters: !has ? '' : (a.rules.letters ? 'ok' : 'bad'),
+                real: !has ? '' : (!a.rules.letters ? '' : (a.rules.real ? 'ok' : 'bad'))
+            };
+            document.querySelectorAll('#gateRules li').forEach(li => { li.className = st[li.dataset.rule] || ''; });
+            const bad = st.letters === 'bad' || st.real === 'bad';
+            gField.classList.toggle('is-ok', a.ok);
+            gField.classList.toggle('is-bad', bad);
+            gState.innerHTML = a.ok ? '<i class="fa-solid fa-circle-check"></i>' : (bad ? '<i class="fa-solid fa-circle-xmark"></i>' : '');
+            gSubmit.disabled = gateBusy || !a.ok;
+            return a;
+        }
+        function setGateBusy(b) {
+            gateBusy = b;
+            gSubmit.disabled = b || !analyzeName(gName.value).ok;
+            gSubmit.querySelector('span').textContent = T(b ? 'checking' : 'loginBtn');
+        }
+        function hideRecover() { $g('gateRecover').hidden = true; $g('recoverCode').value = ''; pendingTakenName = ''; }
+        gName.addEventListener('input', () => { hideGateErr(); if (pendingTakenName && nameKey(gName.value) !== nameKey(pendingTakenName)) hideRecover(); paintRules(); });
+
+        function paintAccount() {
+            const verified = getUser();
+            $g('myAccount').classList.toggle('hidden', !verified);
+            $g('myAccountName').textContent = verified;
+            $g('myCodeVal').classList.add('hidden');
+        }
+        $g('showCodeBtn').addEventListener('click', () => {
+            const el = $g('myCodeVal');
+            let c = ''; try { c = localStorage.getItem('recoveryCode') || ''; } catch (e) {}
+            el.textContent = c || T('noCode');
+            if (!c) el.classList.remove('my-acc-code');
+            else el.classList.add('my-acc-code');
+            el.classList.toggle('hidden');
+        });
+
+        function burst() {
+            const box = $g('gateBurst'); box.innerHTML = '';
+            const colors = ['#f5b301', '#fde68a', '#a855f7', '#e9d5ff', '#22c55e'];
+            for (let i = 0; i < 22; i++) {
+                const p = document.createElement('i'), ang = Math.random() * Math.PI * 2, d = 70 + Math.random() * 90;
+                p.style.setProperty('--x', Math.cos(ang) * d + 'px'); p.style.setProperty('--y', Math.sin(ang) * d + 'px'); p.style.setProperty('--c', colors[i % colors.length]);
+                box.appendChild(p);
+            }
+        }
+        function finishLogin(name, code, returning) {
+            try {
+                localStorage.setItem('username', name); localStorage.setItem('nameV2', '1');
+                if (code) localStorage.setItem('recoveryCode', code);
+            } catch (e) {}
+            try { sessionStorage.setItem('custTouched', '1'); } catch (e) {}
+            let shownCode = code; if (!shownCode) { try { shownCode = localStorage.getItem('recoveryCode') || ''; } catch (e) {} }
+            $g('doneName').textContent = name;
+            $g('doneTitle').dataset.translate = returning ? 'doneBack' : 'doneTitle';
+            $g('doneTitle').textContent = T(returning ? 'doneBack' : 'doneTitle');
+            $g('doneCodeBox').hidden = !(code && shownCode);
+            if (code) $g('doneCode').textContent = shownCode;
+            $g('gateStepForm').hidden = true; $g('gateStepDone').hidden = false;
+            burst();
+            updateGreetText(); paintAccount();
+            setTimeout(() => $g('enterSiteBtn').focus({ preventScroll: true }), 50);
+        }
+        $g('enterSiteBtn').addEventListener('click', () => {
             document.documentElement.classList.add('has-user');
-            try { sessionStorage.setItem('custTouched', '1'); } catch (e2) {}
-            registerCustomer(name);
-            updateGreetText();
-            sayHello(true);
+            updateGreetText(); paintAccount(); sayHello(true);
             menuBtn.classList.add('greet');
             setTimeout(() => menuBtn.classList.remove('greet'), 3200);
         });
+        $g('copyCodeBtn').addEventListener('click', async () => {
+            const code = $g('doneCode').textContent, span = $g('copyCodeBtn').querySelector('span');
+            try { await navigator.clipboard.writeText(code); }
+            catch (e) { const t = document.createElement('textarea'); t.value = code; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (e2) {} t.remove(); }
+            span.textContent = T('copied'); setTimeout(() => { span.textContent = T('copyBtn'); }, 1800);
+        });
+
+        $g('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (gateBusy) return;
+            const a = analyzeName(gName.value);
+            if (!a.ok) { showGateErr(nameError(a)); return; }
+            hideGateErr(); hideRecover(); setGateBusy(true);
+            try {
+                const r = await claimName(a.name);
+                if (r.status === 'taken') {
+                    pendingTakenName = a.name;
+                    showGateErr(T('errTaken'));
+                    $g('gateRecover').hidden = false;
+                } else {
+                    finishLogin(a.name, r.code, r.status === 'owner');
+                }
+            } catch (err) {
+                console.error('claim name failed', err);
+                showGateErr(T('errNet'));
+            } finally { setGateBusy(false); }
+        });
+        $g('recoverBtn').addEventListener('click', async () => {
+            const code = $g('recoverCode').value;
+            if (normCode(code).length < 8) { showGateErr(T('errCode')); return; }
+            if (gateBusy) return;
+            hideGateErr(); setGateBusy(true);
+            try {
+                const r = await recoverName(pendingTakenName, code);
+                if (r.status === 'ok') {
+                    try { localStorage.setItem('recoveryCode', code.toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/^(.{4})(.{4}).*$/, '$1-$2')); } catch (e) {}
+                    finishLogin(r.name, null, true);
+                } else showGateErr(T('errCode'));
+            } catch (err) { console.error(err); showGateErr(T('errNet')); }
+            finally { setGateBusy(false); }
+        });
+        $g('recoverCode').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $g('recoverBtn').click(); } });
+
+        // زر اللغة داخل البوابة
+        function syncGateLang() { $g('gateLang').querySelector('span').textContent = currentLang === 'ar' ? 'English' : 'العربية'; hideGateErr(); }
+        $g('gateLang').addEventListener('click', () => {
+            const sel = $g('langSelect'); sel.value = currentLang === 'ar' ? 'en' : 'ar';
+            sel.dispatchEvent(new Event('change'));
+        });
+        $g('langSelect').addEventListener('change', syncGateLang);
+
+        // بدء التشغيل: مستخدم موثّق => زيارة عائدة، وإلا تظهر البوابة (مع تعبئة الاسم القديم للمستخدمين السابقين)
+        paintAccount();
         if (getUser()) touchCustomer();
-        else setTimeout(() => { const i = document.getElementById('loginName'); if (i) i.focus(); }, 100);
+        else {
+            let legacy = ''; try { legacy = localStorage.getItem('username') || ''; } catch (e) {}
+            if (legacy) { gName.value = legacy; $g('gateNote').hidden = false; }
+            paintRules();
+            setTimeout(() => { try { gName.focus({ preventScroll: true }); } catch (e) {} }, 400);
+        }
 
         loadGames();
         // ===== إشعارات الألعاب والتطبيقات الجديدة (Firebase Cloud Messaging) =====
@@ -1905,6 +2474,7 @@
                 a.href = await getWallFull(w);
                 a.download = (w.title || 'wallpaper').replace(/[\\/:*?"<>|]+/g, '').trim() + '.jpg';
                 document.body.appendChild(a); a.click(); a.remove();
+                logDownload('wallpaper', w.title || 'خلفية', w.id);
                 countWallDownload(w);
             } catch (err) {
                 console.error(err);
@@ -2179,6 +2749,8 @@
                 card.querySelector('.cover-wrap').addEventListener('click', () => openMovie(m, false));
                 const wb = card.querySelector('.m-watch');
                 if (wb) wb.addEventListener('click', () => openMovie(m, true));
+                const dlA = card.querySelector('a[download]');
+                if (dlA) dlA.addEventListener('click', () => logDownload('movie', m.title, m.id));
                 c.appendChild(card);
             });
         }
@@ -2252,6 +2824,7 @@
         document.getElementById('closeMovieModal').addEventListener('click', closeMovie);
         document.getElementById('movieModal').addEventListener('click', (e) => { if (e.target.id === 'movieModal') closeMovie(); });
         document.getElementById('movieWatchBtn').addEventListener('click', () => { if (curMovie) playMovie(curMovie); });
+        document.getElementById('movieDlBtn').addEventListener('click', () => { if (curMovie) logDownload('movie', curMovie.title, curMovie.id); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMovie(); });
         document.getElementById('langSelect').addEventListener('change', () => renderMovies());
 
@@ -2465,6 +3038,7 @@
                         ${f.description ? `<p class="text-sm ui-muted" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(f.description)}</p>` : ''}
                         <a href="${escapeHtml(safeUrl(f.url))}" target="_blank" rel="noopener noreferrer" download class="btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-download"></i><span>${tr.fileDownload}</span></a>
                     </div>`;
+                card.querySelector('a[download]').addEventListener('click', () => logDownload('file', f.title, f.id));
                 c.appendChild(card);
             });
         }
