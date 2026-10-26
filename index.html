@@ -418,6 +418,9 @@
             <button type="button" data-install class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm cursor-pointer">
                 <i class="fa-solid fa-mobile-screen-button text-lg"></i><span data-translate="installHero">ثبّت التطبيق على هاتفك</span>
             </button>
+            <button type="button" id="tutorialBtn" class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm cursor-pointer mt-3 sm:mt-0 sm:ms-2" style="background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.4);backdrop-filter:blur(8px)">
+                <i class="fa-solid fa-circle-play text-lg"></i><span data-translate="tutorialBtn">شاهد شرح الاستخدام</span>
+            </button>
             <div id="visitorBadge" class="visitor-badge" aria-live="polite">
                 <i class="fa-solid fa-eye"></i>
                 <span data-translate="visitorsLabel">عدد الزوار</span>
@@ -523,6 +526,22 @@
                     <span class="flex items-center gap-2 text-sm font-bold ui-muted"><i class="fa-solid fa-download"></i><span class="wall-dl-count"></span></span>
                 </div>
                 <button id="wallPreviewDl" type="button" class="btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-download"></i><span data-translate="downloadBtn">Download</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial video -->
+    <div id="tutorialModal" class="fixed inset-0 overlay z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-strong border ui-line max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl">
+            <div class="flex justify-between items-center p-3 border-b ui-line">
+                <h3 class="text-base font-bold ui-accent truncate" data-translate="tutorialTitle">شرح طريقة الاستخدام</h3>
+                <button id="closeTutorial" type="button" class="ui-muted hover-ink text-xl cursor-pointer" aria-label="close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-3">
+                <div id="tutorialBox" class="w-full rounded-xl overflow-hidden border ui-line relative" style="aspect-ratio:16/9;background:#000">
+                    <video id="tutorialVideo" controls playsinline preload="none" class="w-full h-full" style="background:#000"></video>
+                    <p id="tutorialMissing" class="hidden absolute inset-0 grid place-items-center text-center text-sm p-4" style="color:#ddd6fe" data-translate="tutorialMissing">الفيديو غير متوفر حالياً.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -1003,7 +1022,7 @@
                 csSuggest: "اقتراح لعبة",
                 csGeneral: "استفسار عام",
                 installApp: "ثبّت التطبيق",
-                installHero: "ثبّت التطبيق على هاتفك",
+                installHero: "ثبّت التطبيق على هاتفك", tutorialBtn: "شاهد شرح الاستخدام", tutorialTitle: "شرح طريقة الاستخدام", tutorialMissing: "الفيديو غير متوفر حالياً.",
                 visitorsLabel: "عدد الزوار",
                 tabCustomers: "العملاء", loginTitle: "بوابة الدخول الحصرية", loginHint: "سجّل اسمك الحقيقي الكامل لتدخل مكتبتنا الحصرية", loginBtn: "دخول", loginPlaceholder: "الاسم الكامل (مثال: محمد أحمد علي)", loginShort: "اكتب اسمك الحقيقي الكامل (اسمان على الأقل)", welcomeName: "مرحبا ",
                 footerAbout: "مكتبة ألعاب حصرية بتنزيل مباشر وخدمة دعم عبر واتساب.",
@@ -1072,7 +1091,7 @@
                 csSuggest: "Suggest a game",
                 csGeneral: "General question",
                 installApp: "Install app",
-                installHero: "Install the app on your phone",
+                installHero: "Install the app on your phone", tutorialBtn: "Watch how-to video", tutorialTitle: "How to use the site", tutorialMissing: "Video not available yet.",
                 visitorsLabel: "Visitors",
                 tabCustomers: "Customers", loginTitle: "Exclusive Entry", loginHint: "Register your full real name to enter our exclusive library", loginBtn: "Enter", loginPlaceholder: "Full name (e.g. Mohamed Ahmed Ali)", loginShort: "Enter your full real name (at least two names)", welcomeName: "Welcome ",
                 footerAbout: "An exclusive game library with direct downloads and WhatsApp support.",
@@ -3546,6 +3565,19 @@
     sync();
 })();
     </script>
+<script>
+(function () {
+    var VIDEO_FILE = 'tutorial.mp4'; // ضع ملف الفيديو بهذا الاسم بجانب index.html
+    var m = document.getElementById('tutorialModal'), v = document.getElementById('tutorialVideo'), miss = document.getElementById('tutorialMissing');
+    function open() { m.classList.remove('hidden'); miss.classList.add('hidden'); if (!v.getAttribute('src')) v.src = VIDEO_FILE; v.play().catch(function () {}); }
+    function close() { m.classList.add('hidden'); v.pause(); }
+    v.addEventListener('error', function () { miss.classList.remove('hidden'); });
+    document.getElementById('tutorialBtn').addEventListener('click', open);
+    document.getElementById('closeTutorial').addEventListener('click', close);
+    m.addEventListener('click', function (e) { if (e.target === m) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
 </body>
 </html>
 </html>
