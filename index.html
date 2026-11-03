@@ -9,8 +9,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="7ASSON">
-    <link rel="preload" as="image" href="splash-portrait.jpg" media="(max-aspect-ratio: 1/1)">
-    <link rel="preload" as="image" href="splash.jpg" media="(min-aspect-ratio: 101/100)">
     <script>
             document.documentElement.classList.add('splash-on');
         (function () {
@@ -197,24 +195,84 @@
         .app-ico{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;box-shadow:0 10px 24px -10px rgba(109,40,217,.8)}
         .step-n{width:1.5rem;height:1.5rem;flex:none;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;display:grid;place-items:center;font-size:.75rem;font-weight:700}
         .is-standalone [data-install]{display:none!important}
-        /* ===== شاشة البداية (START) ===== */
+        /* ===== صفحة الترحيب (خلفية بيضاء فخمة) ===== */
         html.splash-on{overflow:hidden}
-        #splash{position:fixed;top:0;left:0;width:100%;height:100vh;height:100dvh;z-index:300;overflow:hidden;background:#fff;transition:opacity .6s ease,visibility .6s,transform .7s cubic-bezier(.4,.2,.2,1)}
-        html.splash-done #splash{opacity:0;visibility:hidden;transform:scale(1.07);pointer-events:none}
-        .splash-stage{position:absolute;inset:0;width:100%;height:100%;animation:splashIn 1s cubic-bezier(.2,.8,.2,1) both}
-        .splash-stage{animation:splashIn 1s cubic-bezier(.2,.8,.2,1) both,splashBreath 12s ease-in-out 1s infinite alternate}
-        @keyframes splashBreath{from{scale:1}to{scale:1.045}}
-        #splashFx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-        .splash-stage picture{display:block;width:100%;height:100%}
-        .splash-img{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
-        .splash-start{position:absolute;left:37%;top:74%;width:26%;height:14%;display:flex;align-items:center;justify-content:center;gap:.45em;padding:0;margin:0;border:0;border-radius:999px;cursor:pointer;direction:ltr;color:#fff;font-family:'Orbitron','Inter',system-ui,sans-serif;font-weight:900;letter-spacing:.14em;line-height:1;font-size:28px;text-shadow:0 2px 4px rgba(90,0,0,.45);background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.55) 50%,transparent 62%) -150% 0/250% 100% no-repeat,linear-gradient(180deg,#ff4a4a 0%,#e10d0d 45%,#b80000 100%);box-shadow:inset 0 3px 0 rgba(255,255,255,.45),inset 0 -5px 0 rgba(0,0,0,.22),0 8px 22px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent;animation:startPulse 1.9s ease-out infinite,startShine 3.2s ease-in-out infinite;transition:transform .2s,filter .2s}
-        @keyframes startShine{0%,35%{background-position:-150% 0,0 0}75%,100%{background-position:250% 0,0 0}}
-        .splash-start svg{width:1.05em;height:1.05em;flex:none;filter:drop-shadow(0 2px 3px rgba(90,0,0,.45))}
-        .splash-start::after{content:"";position:absolute;inset:-10px -8px}
-        .splash-start:hover{transform:scale(1.04);filter:brightness(1.08)} .splash-start:active{transform:scale(.97)}
-        .splash-start:focus-visible{outline:3px solid #7c3aed;outline-offset:4px}
-        @keyframes startPulse{0%{box-shadow:inset 0 3px 0 rgba(255,255,255,.45),inset 0 -5px 0 rgba(0,0,0,.22),0 8px 22px rgba(0,0,0,.35),0 0 0 0 rgba(239,68,68,.65)}70%,100%{box-shadow:inset 0 3px 0 rgba(255,255,255,.45),inset 0 -5px 0 rgba(0,0,0,.22),0 8px 22px rgba(0,0,0,.35),0 0 0 22px rgba(239,68,68,0)}}
-        @keyframes splashIn{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
+        #splash *,#splash *::before,#splash *::after{box-sizing:border-box}
+        #splash{--ink:#1a1333;--muted:#5f5a78;--faint:#8f8aa8;--line:rgba(124,58,237,.16);--accent:#7c3aed;--gold:#b8892b;position:fixed;inset:0;z-index:300;overflow-y:auto;overflow-x:hidden;background:#fff;color:var(--ink);font-family:'Cairo','Inter',sans-serif;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;transition:opacity .6s ease,visibility .6s,transform .7s cubic-bezier(.4,.2,.2,1)}
+        html.splash-done #splash{opacity:0;visibility:hidden;transform:scale(1.04);pointer-events:none}
+        .ld-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(900px 520px at 85% -10%,rgba(139,92,246,.17),transparent 65%),radial-gradient(700px 460px at -5% 32%,rgba(217,70,239,.08),transparent 65%),radial-gradient(800px 500px at 60% 112%,rgba(124,58,237,.12),transparent 65%),#fff}
+        .ld-grid{position:absolute;inset:0;opacity:.55;background-image:linear-gradient(rgba(124,58,237,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,.07) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at 50% 18%,#000 4%,transparent 68%);mask-image:radial-gradient(ellipse at 50% 18%,#000 4%,transparent 68%)}
+        .ld-blob{position:absolute;border-radius:50%;filter:blur(70px);animation:gateFloat 14s ease-in-out infinite alternate}
+        .ld-blob.b1{width:300px;height:300px;top:-90px;inset-inline-end:-70px;background:rgba(139,92,246,.22)}
+        .ld-blob.b2{width:260px;height:260px;bottom:-80px;inset-inline-start:-80px;background:rgba(217,70,239,.14);animation-delay:-6s}
+        .ld-wrap{position:relative;z-index:1;width:min(100%,66rem);margin:0 auto;padding:max(1rem,env(safe-area-inset-top)) 1.25rem 2.5rem}
+        .ld-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.4rem 0 1rem}
+        .ld-mini{display:flex;align-items:center;gap:.6rem;font-family:'Outfit','Inter',sans-serif;font-weight:800;letter-spacing:.08em;font-size:1rem}
+        .ld-mini-mark{width:2.3rem;height:2.3rem;border-radius:.8rem;display:grid;place-items:center;color:#fff;font-size:.95rem;background:linear-gradient(145deg,#a78bfa,#6d28d9);box-shadow:0 10px 22px -10px rgba(109,40,217,.8)}
+        .ld-mini b{color:var(--accent)}
+        .ld-lang{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .95rem;border-radius:999px;font:inherit;font-size:.8rem;font-weight:700;color:var(--accent);background:#fff;border:1px solid var(--line);cursor:pointer;box-shadow:0 6px 18px -10px rgba(109,40,217,.45);transition:background .25s,transform .25s}
+        .ld-lang:hover{background:rgba(124,58,237,.07);transform:translateY(-1px)}
+        .ld-rise{animation:ldRise .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0s)}
+        @keyframes ldRise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+        .ld-hero{text-align:center;padding:1.6rem 0 2.6rem}
+        .ld-eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-size:.9rem;font-weight:700;color:var(--muted);letter-spacing:.04em}
+        .ld-eyebrow::before,.ld-eyebrow::after{content:"";width:2.2rem;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
+        .ld-eyebrow::after{transform:scaleX(-1)}
+        .ld-title{margin:.7rem 0 0;font-family:'Outfit','Inter',sans-serif;font-weight:800;line-height:.98;display:flex;flex-direction:column;align-items:center;direction:ltr}
+        .ld-t1{display:flex;align-items:baseline;font-size:clamp(3.2rem,15vw,7.4rem);letter-spacing:.04em}
+        .ld-t1 .n7{background:linear-gradient(160deg,#a78bfa,#7c3aed 55%,#4c1d95);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:1.12em;margin-inline-end:.04em;filter:drop-shadow(0 8px 18px rgba(124,58,237,.35))}
+        .ld-t1 .rest{background:linear-gradient(100deg,#1a1333 0%,#1a1333 38%,#7c3aed 47%,#c4b5fd 50%,#7c3aed 53%,#1a1333 62%,#1a1333 100%) 100% 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:logoSweep 5s ease-in-out 1s infinite alternate}
+        .ld-t2{margin-top:.2rem;font-size:clamp(1.05rem,4.6vw,2.1rem);letter-spacing:.62em;padding-inline-start:.62em;color:var(--gold);font-weight:700}
+        .ld-orn{display:flex;align-items:center;justify-content:center;gap:.7rem;margin:1.3rem auto 1.1rem;width:min(16rem,70%)}
+        .ld-orn i{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(184,137,43,.7))}
+        .ld-orn i:last-child{transform:scaleX(-1)}
+        .ld-orn em{width:.55rem;height:.55rem;transform:rotate(45deg);background:linear-gradient(135deg,#d4a63a,#b8892b);box-shadow:0 0 0 4px rgba(184,137,43,.15)}
+        .ld-kicker{margin:0;font-weight:900;font-size:clamp(1.15rem,3.6vw,1.6rem);color:var(--ink)}
+        .ld-tag{margin:.55rem auto 0;max-width:34rem;font-size:.96rem;line-height:1.9;color:var(--muted)}
+        .ld-dev{display:inline-flex;align-items:center;gap:.8rem;margin-top:1.5rem;padding:.5rem 1.2rem .5rem .6rem;border-radius:999px;background:#fff;border:1px solid var(--line);box-shadow:0 14px 34px -18px rgba(109,40,217,.55);text-align:start}
+        html[dir=rtl] .ld-dev{padding:.5rem .6rem .5rem 1.2rem}
+        .ld-dev img{width:2.9rem;height:2.9rem;border-radius:50%;object-fit:cover;border:2px solid #8b5cf6;flex:none}
+        .ld-dev small{display:block;font-size:.7rem;font-weight:700;color:var(--gold);letter-spacing:.08em;line-height:1.2}
+        .ld-dev b{display:block;font-size:1rem;font-weight:900;color:var(--ink);line-height:1.4}
+        .ld-cta{display:flex;flex-direction:column;align-items:center;gap:.8rem;margin-top:1.7rem}
+        .ld-cta [hidden]{display:none!important}
+        .ld-cta>div{display:flex;flex-direction:column;align-items:center;gap:.8rem}
+        .ld-btn{position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:.7rem;min-width:min(100%,17rem);padding:1rem 2.2rem;border-radius:1.1rem;border:1px solid rgba(255,255,255,.25);font:inherit;font-weight:900;font-size:1.08rem;color:#fff;cursor:pointer;background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 45%,#5b21b6 100%);box-shadow:0 18px 36px -14px rgba(109,40,217,.8),inset 0 1px 0 rgba(255,255,255,.32);transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,filter .3s;-webkit-tap-highlight-color:transparent}
+        .ld-btn::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:gateShine 3.4s ease-in-out infinite}
+        .ld-btn:hover{transform:translateY(-3px);filter:saturate(1.1) brightness(1.06);box-shadow:0 24px 44px -14px rgba(109,40,217,.85),0 0 0 5px rgba(139,92,246,.18),inset 0 1px 0 rgba(255,255,255,.4)}
+        .ld-btn:active{transform:scale(.98)}
+        .ld-btn:focus-visible,.ld-link:focus-visible,.ld-lang:focus-visible{outline:3px solid #c4b5fd;outline-offset:3px}
+        .ld-btn b{font-weight:900;max-width:12rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .ld-link{background:none;border:0;padding:.2rem .4rem;font:inherit;font-size:.9rem;font-weight:800;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:5px}
+        .ld-link:hover{color:#5b21b6}
+        .ld-grid2{display:grid;grid-template-columns:1fr;gap:1.2rem}
+        @media (min-width:860px){.ld-grid2{grid-template-columns:1fr 1fr;gap:1.5rem}}
+        .ld-card{position:relative;border-radius:1.6rem;padding:1.5rem 1.35rem;background:#fff;border:1px solid var(--line);box-shadow:0 26px 60px -34px rgba(76,29,149,.45)}
+        .ld-card::before{content:"";position:absolute;top:-1px;inset-inline:12%;height:2px;background:linear-gradient(90deg,transparent,#8b5cf6,#d4a63a,transparent)}
+        .ld-h{display:flex;align-items:center;gap:.7rem;margin:0 0 .35rem;font-weight:900;font-size:1.25rem;color:var(--ink)}
+        .ld-h .ic{width:2.5rem;height:2.5rem;flex:none;border-radius:.85rem;display:grid;place-items:center;color:#fff;font-size:1rem;background:linear-gradient(145deg,#a78bfa,#6d28d9);box-shadow:0 10px 22px -10px rgba(109,40,217,.8)}
+        .ld-sub{margin:0 0 1.1rem;font-size:.86rem;line-height:1.8;color:var(--muted)}
+        .ld-steps{list-style:none;margin:0;padding:0;display:grid;gap:1rem}
+        .ld-steps li{position:relative;display:flex;gap:.85rem;align-items:flex-start}
+        .ld-n{position:relative;flex:none;width:2rem;height:2rem;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:.85rem;color:#fff;background:linear-gradient(135deg,#8b5cf6,#6d28d9);box-shadow:0 6px 14px -6px rgba(109,40,217,.8)}
+        .ld-steps li:not(:last-child) .ld-n::after{content:"";position:absolute;top:calc(100% + 4px);left:50%;width:1px;height:calc(100% + 1.1rem);transform:translateX(-50%);background:linear-gradient(180deg,rgba(124,58,237,.4),transparent)}
+        .ld-steps strong{display:block;font-size:.98rem;font-weight:800;color:var(--ink);line-height:1.5}
+        .ld-steps span.d{display:block;font-size:.84rem;line-height:1.75;color:var(--muted)}
+        .ld-feat-title{text-align:center;margin:2.6rem 0 1.2rem;font-weight:900;font-size:clamp(1.25rem,4vw,1.7rem)}
+        .ld-feat-title small{display:block;margin-bottom:.3rem;font-size:.75rem;font-weight:800;letter-spacing:.2em;color:var(--gold)}
+        .ld-feats{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+        @media (min-width:760px){.ld-feats{grid-template-columns:repeat(3,1fr);gap:1rem}}
+        .ld-feat{padding:1.1rem .9rem;border-radius:1.25rem;background:#fff;border:1px solid var(--line);text-align:center;transition:transform .3s,box-shadow .3s,border-color .3s}
+        .ld-feat:hover{transform:translateY(-4px);border-color:rgba(124,58,237,.4);box-shadow:0 22px 44px -24px rgba(109,40,217,.55)}
+        .ld-feat i{display:grid;place-items:center;width:2.8rem;height:2.8rem;margin:0 auto .65rem;border-radius:1rem;font-size:1.05rem;color:var(--accent);background:rgba(124,58,237,.08);border:1px solid var(--line)}
+        .ld-feat b{display:block;font-size:.92rem;font-weight:800;line-height:1.5}
+        .ld-feat span{display:block;margin-top:.2rem;font-size:.78rem;line-height:1.7;color:var(--muted)}
+        .ld-bottom{text-align:center;margin-top:2.4rem}
+        .ld-priv{margin:1rem 0 0;font-size:.78rem;line-height:1.8;color:var(--faint)}
+        .ld-priv i{color:var(--accent);margin-inline-end:.35rem}
+        .ld-foot{margin-top:2.2rem;padding-top:1.2rem;border-top:1px solid var(--line);text-align:center;font-size:.82rem;color:var(--muted)}
+        .ld-foot b{color:var(--accent);font-weight:900}
+        .ld-foot small{display:block;margin-top:.3rem;color:var(--faint);font-family:'Outfit','Inter',sans-serif;letter-spacing:.1em;font-size:.72rem}
         /* ===== نظام المطورين ===== */
         .dev-tag{display:inline-flex;align-items:center;gap:.25rem;font-size:.68rem;font-weight:700;padding:.08rem .5rem;border-radius:999px;background:rgba(124,58,237,.14);color:#7c3aed;vertical-align:middle;margin-inline-start:.35rem;white-space:nowrap}
         .dark .dev-tag{background:rgba(167,139,250,.2);color:#c4b5fd}
@@ -226,10 +284,13 @@
         .dv-field{width:100%;border-radius:.5rem;padding:.5rem .75rem;font-size:.875rem;outline:none}
         /* ===== بوابة التسجيل (بنفس ألوان الموقع البنفسجية، تتبع الوضع الفاتح/الداكن) ===== */
         @property --gang{syntax:'<angle>';initial-value:0deg;inherits:false}
-        #loginGate{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:1.25rem;padding-top:max(1.25rem,env(safe-area-inset-top));overflow-y:auto;overflow-x:hidden;isolation:isolate;color:var(--ink);font-family:'Cairo','Inter',sans-serif;
-            background:radial-gradient(900px 520px at 90% -8%,var(--blob),transparent 62%),radial-gradient(700px 480px at -5% 55%,var(--blob),transparent 62%),radial-gradient(800px 560px at 70% 108%,var(--blob),transparent 62%),var(--bg)}
-        html.has-user #loginGate{display:none}
-        html:not(.has-user){overflow:hidden}
+        #loginGate{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;padding:1.25rem;padding-top:max(1.25rem,env(safe-area-inset-top));overflow-y:auto;overflow-x:hidden;isolation:isolate;color:var(--ink);font-family:'Cairo','Inter',sans-serif;
+            background:rgba(26,19,51,.42);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+        html.gate-open #loginGate{display:flex}
+        #loginGate .gate-card{background:var(--bg)}
+        .gate-close{position:absolute;top:.85rem;inset-inline-end:.85rem;z-index:2;width:2.1rem;height:2.1rem;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:.9rem;cursor:pointer;transition:background .25s,color .25s,transform .25s}
+        .gate-close:hover{background:var(--soft-hover);color:var(--ink);transform:rotate(90deg)}
+        .gate-brand{padding-inline-end:2.4rem}
         #loginGate [hidden]{display:none!important}
         .gate-deco{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
         .gate-grid{position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.55;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(ellipse at 50% 42%,#000 10%,transparent 72%);mask-image:radial-gradient(ellipse at 50% 42%,#000 10%,transparent 72%)}
@@ -242,7 +303,7 @@
         @keyframes gateDrift{from{transform:translateY(0) rotate(-8deg)}to{transform:translateY(-22px) rotate(10deg)}}
         .gate-lang{position:absolute;top:max(1rem,env(safe-area-inset-top));inset-inline-start:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .85rem;border-radius:999px;font-size:.78rem;font-weight:700;color:var(--accent);background:var(--glass);border:1px solid var(--glass-line);cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .25s,transform .25s}
         .gate-lang:hover{background:var(--soft-hover);transform:translateY(-1px)}
-        .gate-wrap{width:min(100%,26rem);margin:auto;padding-top:2.2rem;animation:gateIn .8s cubic-bezier(.2,.8,.2,1) both}
+        .gate-wrap{width:min(100%,26rem);margin:auto;animation:gateIn .8s cubic-bezier(.2,.8,.2,1) both}
         @keyframes gateIn{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
         .gate-card{position:relative;border-radius:1.75rem;padding:1.35rem 1.2rem 1.25rem;background:var(--glass-strong);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);box-shadow:0 30px 80px -30px rgba(76,29,149,.55),inset 0 1px 0 rgba(255,255,255,.35)}
         .gate-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;
@@ -349,73 +410,122 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
-    <!-- شاشة البداية: الصورة + زر START -->
+    <!-- صفحة الترحيب: خلفية بيضاء + تعريف بالموقع + زر تسجيل الدخول -->
     <div id="splash" role="dialog" aria-label="7ASSON GAMING">
-        <div class="splash-stage">
-            <picture><source media="(max-aspect-ratio: 1/1)" srcset="splash-portrait.jpg" data-w="941" data-h="1672" data-bx="258" data-by="1206" data-bw="473" data-bh="175"><img class="splash-img" id="splashImg" src="splash.jpg" alt="7ASSON GAMING" decoding="async" fetchpriority="high" draggable="false" data-w="1672" data-h="941" data-bx="631" data-by="703" data-bw="413" data-bh="133"></picture>
-            <canvas id="splashFx" aria-hidden="true"></canvas>
-            <button type="button" id="splashStart" class="splash-start" aria-label="START"><span>START</span></button>
+        <div class="ld-bg" aria-hidden="true"><div class="ld-grid"></div><i class="ld-blob b1"></i><i class="ld-blob b2"></i></div>
+        <div class="ld-wrap">
+            <header class="ld-top ld-rise">
+                <div class="ld-mini" dir="ltr"><span class="ld-mini-mark"><i class="fa-solid fa-gamepad"></i></span><span><b>7</b>ASSON</span></div>
+                <button type="button" id="gateLang" class="ld-lang" aria-label="Language"><i class="fa-solid fa-globe"></i><span>English</span></button>
+            </header>
+
+            <section class="ld-hero">
+                <p class="ld-eyebrow ld-rise" style="--d:.05s" data-translate="ld_welcome">أهلاً بك في</p>
+                <h1 class="ld-title ld-rise" style="--d:.12s" aria-label="7ASSON GAMING">
+                    <span class="ld-t1"><span class="n7">7</span><span class="rest">ASSON</span></span>
+                    <span class="ld-t2">GAMING</span>
+                </h1>
+                <div class="ld-orn ld-rise" style="--d:.2s" aria-hidden="true"><i></i><em></em><i></i></div>
+                <p class="ld-kicker ld-rise" style="--d:.26s" data-translate="ld_kicker">مكتبة الألعاب والتطبيقات الحصرية</p>
+                <p class="ld-tag ld-rise" style="--d:.32s" data-translate="ld_tag">ألعاب وتطبيقات وملفات منتقاة، بتنزيل آمن وتجربة راقية في مكان واحد.</p>
+
+                <div class="ld-dev ld-rise" style="--d:.4s">
+                    <img src="1.jpg" alt="" onerror="this.style.display='none'">
+                    <div><small data-translate="ld_devLbl">المطور</small><b data-translate="ld_devName">حسن مصطفى حسن طه</b></div>
+                </div>
+
+                <div class="ld-cta ld-rise" style="--d:.48s">
+                    <div id="ldGuest">
+                        <button type="button" id="ldLogin" class="ld-btn"><i class="fa-solid fa-right-to-bracket"></i><span data-translate="ld_login">تسجيل الدخول</span></button>
+                        <button type="button" id="ldHave" class="ld-link" data-translate="ld_have">لدي حساب مسبق</button>
+                    </div>
+                    <div id="ldUser" hidden>
+                        <button type="button" id="ldEnter" class="ld-btn"><i class="fa-solid fa-gamepad"></i><span data-translate="ld_enterAs">الدخول باسم</span><b id="ldUserName"></b></button>
+                    </div>
+                </div>
+            </section>
+
+            <div class="ld-grid2">
+                <section class="ld-card ld-rise" style="--d:.55s" aria-labelledby="ldJoinT">
+                    <h2 class="ld-h" id="ldJoinT"><span class="ic"><i class="fa-solid fa-user-plus"></i></span><span data-translate="ld_joinT">كيف تنضم إلى الموقع؟</span></h2>
+                    <p class="ld-sub" data-translate="ld_joinSub">تسجيل واحد بسيط، وبعدها تدخل في كل مرة بضغطة.</p>
+                    <ol class="ld-steps">
+                        <li><span class="ld-n">1</span><div><strong data-translate="ld_j1t">اضغط «تسجيل الدخول»</strong><span class="d" data-translate="ld_j1d">تظهر لك بطاقة التسجيل في نفس هذه الصفحة.</span></div></li>
+                        <li><span class="ld-n">2</span><div><strong data-translate="ld_j2t">اكتب اسمك ورقم هاتفك</strong><span class="d" data-translate="ld_j2d">اسمك الحقيقي الكامل ورقم هاتفك فقط — بلا كلمات مرور ولا بريد إلكتروني.</span></div></li>
+                        <li><span class="ld-n">3</span><div><strong data-translate="ld_j3t">ادخل المكتبة</strong><span class="d" data-translate="ld_j3d">في كل زيارة بعدها تدخل باسمك مباشرة بضغطة واحدة.</span></div></li>
+                        <li><span class="ld-n">4</span><div><strong data-translate="ld_j4t">طُلب منك التسجيل من جديد؟</strong><span class="d" data-translate="ld_j4d">اختر «لدي حساب مسبق» واكتب رقم هاتفك فقط، وسنجد حسابك فوراً.</span></div></li>
+                    </ol>
+                </section>
+
+                <section class="ld-card ld-rise" style="--d:.62s" aria-labelledby="ldDevT">
+                    <h2 class="ld-h" id="ldDevT"><span class="ic"><i class="fa-solid fa-code"></i></span><span data-translate="ld_devT">كيف تصبح مطوراً؟</span></h2>
+                    <p class="ld-sub" data-translate="ld_devSub">انشر ألعابك وتطبيقاتك وملفاتك باسمك أمام جمهور الموقع.</p>
+                    <ol class="ld-steps">
+                        <li><span class="ld-n">1</span><div><strong data-translate="ld_d1t">سجّل دخولك أولاً</strong><span class="d" data-translate="ld_d1d">أنشئ حسابك كزائر ثم ادخل الموقع.</span></div></li>
+                        <li><span class="ld-n">2</span><div><strong data-translate="ld_d2t">افتح القائمة واختر «إضافة مطور»</strong><span class="d" data-translate="ld_d2d">زر القائمة (الروبوت) في أعلى الموقع.</span></div></li>
+                        <li><span class="ld-n">3</span><div><strong data-translate="ld_d3t">قدّم طلب الانضمام</strong><span class="d" data-translate="ld_d3d">اكتب اسمك ورقم واتساب لإنشاء حساب مطور.</span></div></li>
+                        <li><span class="ld-n">4</span><div><strong data-translate="ld_d4t">ارفع عملك للمراجعة</strong><span class="d" data-translate="ld_d4d">لعبة أو تطبيق أو ملف؛ يجرّبه المدير ويفحص رابطه.</span></div></li>
+                        <li><span class="ld-n">5</span><div><strong data-translate="ld_d5t">انشر واستلم الإشعارات</strong><span class="d" data-translate="ld_d5d">عند الموافقة يُنشر عملك ويُعتمد حسابك، ويصلك إشعار مع كل تنزيل.</span></div></li>
+                    </ol>
+                </section>
+            </div>
+
+            <h2 class="ld-feat-title ld-rise" style="--d:.7s"><small>PREMIUM</small><span data-translate="ld_featT">لماذا 7ASSON GAMING؟</span></h2>
+            <div class="ld-feats ld-rise" style="--d:.75s">
+                <div class="ld-feat"><i class="fa-solid fa-gem"></i><b data-translate="ld_f1t">ألعاب وتطبيقات حصرية</b><span data-translate="ld_f1d">مكتبة منتقاة تُحدَّث باستمرار.</span></div>
+                <div class="ld-feat"><i class="fa-solid fa-shield-halved"></i><b data-translate="ld_f2t">تنزيل آمن</b><span data-translate="ld_f2d">روابط المطورين تُفحص من الفيروسات.</span></div>
+                <div class="ld-feat"><i class="fa-solid fa-star"></i><b data-translate="ld_f3t">تقييمات وتعليقات</b><span data-translate="ld_f3d">شارك رأيك وشاهد تقييم الآخرين.</span></div>
+                <div class="ld-feat"><i class="fa-solid fa-headset"></i><b data-translate="ld_f4t">دعم العملاء</b><span data-translate="ld_f4d">مساعد ذكي وقنوات تواصل جاهزة.</span></div>
+                <div class="ld-feat"><i class="fa-solid fa-mobile-screen-button"></i><b data-translate="ld_f5t">ثبّته كتطبيق</b><span data-translate="ld_f5d">أضفه لشاشتك الرئيسية ليعمل كتطبيق.</span></div>
+                <div class="ld-feat"><i class="fa-solid fa-language"></i><b data-translate="ld_f6t">عربي وإنجليزي</b><span data-translate="ld_f6d">بدّل اللغة في أي وقت بضغطة.</span></div>
+            </div>
+
+            <div class="ld-bottom">
+                <div id="ldGuest2"><button type="button" id="ldLogin2" class="ld-btn"><i class="fa-solid fa-right-to-bracket"></i><span data-translate="ld_login">تسجيل الدخول</span></button></div>
+                <p class="ld-priv"><i class="fa-solid fa-lock"></i><span data-translate="ld_priv">رقم هاتفك يُحفظ كبصمة مشفّرة ولا يظهر لأحد.</span></p>
+            </div>
+
+            <footer class="ld-foot">
+                <span data-translate="ld_foot">تم التطوير بواسطة المطور</span> <b data-translate="ld_devName">حسن مصطفى حسن طه</b>
+                <small dir="ltr">© 7ASSON GAMING</small>
+            </footer>
         </div>
     </div>
     <script>
         (function () {
-            var h = document.documentElement, b = document.getElementById('splashStart'), img = document.getElementById('splashImg'), sp = document.getElementById('splash');
-            if (!b || !img) return;
-            // الصورة تملأ الشاشة دائماً (cover). نحسب مكان زر START فوق زر الصورة بنفس معادلة cover.
-            function place() {
-                var vw = sp.clientWidth || innerWidth, vh = sp.clientHeight || innerHeight;
-                var portrait = vw / vh <= 1;
-                var d = portrait ? { w: 941, h: 1672, bx: 258, by: 1206, bw: 473, bh: 175 } : { w: 1672, h: 941, bx: 631, by: 703, bw: 413, bh: 133 };
-                var want = portrait ? 'splash-portrait.jpg' : 'splash.jpg';
-                if (img.getAttribute('src') !== want) img.setAttribute('src', want);
-                var sc = Math.max(vw / d.w, vh / d.h);
-                var fy = portrait ? 0.5 : 0.7;
-                img.style.objectPosition = '50% ' + (fy * 100) + '%';
-                var ox = (vw - d.w * sc) / 2, oy = (vh - d.h * sc) * fy;
-                b.style.left = (ox + d.bx * sc) + 'px'; b.style.top = (oy + d.by * sc) + 'px';
-                b.style.width = (d.bw * sc) + 'px'; b.style.height = (d.bh * sc) + 'px';
-                b.style.fontSize = (d.bh * sc * 0.34) + 'px';
+            var h = document.documentElement, sp = document.getElementById('splash');
+            function user() { try { return (localStorage.getItem('nameV2') && localStorage.getItem('username')) || ''; } catch (e) { return ''; } }
+            function $(id) { return document.getElementById(id); }
+            function paint() {
+                var n = user();
+                $('ldGuest').hidden = !!n; $('ldUser').hidden = !n; $('ldGuest2').hidden = !!n;
+                $('ldUserName').textContent = n;
             }
-            // جزيئات متحركة: مكعبات وشرارات حمراء/سوداء تطفو فوق الصورة
-            var cv = document.getElementById('splashFx'), cx = cv.getContext('2d'), P = [], raf = 0, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-            function fit() { var r = Math.min(devicePixelRatio || 1, 2); cv.width = sp.clientWidth * r; cv.height = sp.clientHeight * r; cx.setTransform(r, 0, 0, r, 0, 0); }
-            function mk(init) { var w = sp.clientWidth, hh = sp.clientHeight, red = Math.random() < .65; return { x: Math.random() * w, y: init ? Math.random() * hh : hh + 20, s: 4 + Math.random() * 11, vy: .25 + Math.random() * .8, vx: (Math.random() - .5) * .4, a: Math.random() * 6.28, va: (Math.random() - .5) * .04, c: red ? '#e11' : '#161616', o: .35 + Math.random() * .5, sq: Math.random() < .6 }; }
-            function loop() {
-                var w = sp.clientWidth, hh = sp.clientHeight; cx.clearRect(0, 0, w, hh);
-                for (var i = 0; i < P.length; i++) {
-                    var p = P[i]; p.y -= p.vy; p.x += p.vx + Math.sin((p.y + i * 40) / 60) * .25; p.a += p.va;
-                    if (p.y < -30) P[i] = mk(false);
-                    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.a); cx.globalAlpha = p.o * Math.min(1, (hh - p.y + 40) / 120) * Math.min(1, (p.y + 30) / 120);
-                    cx.fillStyle = p.c; cx.shadowColor = p.c === '#e11' ? 'rgba(255,40,40,.8)' : 'rgba(0,0,0,.4)'; cx.shadowBlur = 8;
-                    if (p.sq) cx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s); else { cx.beginPath(); cx.arc(0, 0, p.s / 3, 0, 6.28); cx.fill(); }
-                    cx.restore();
-                }
-                raf = requestAnimationFrame(loop);
+            function openGate(tab) {
+                window.__gateTab = tab || 'new';
+                h.classList.add('gate-open');
+                document.dispatchEvent(new CustomEvent('gate:open', { detail: { tab: window.__gateTab } }));
             }
-            if (!reduce) { fit(); var n = Math.round(Math.min(40, Math.max(18, sp.clientWidth * sp.clientHeight / 28000))); for (var k = 0; k < n; k++) P.push(mk(true)); loop(); }
-            place();
-            addEventListener('resize', function () { place(); if (!reduce) fit(); }); addEventListener('orientationchange', function () { setTimeout(place, 150); });
-            b.addEventListener('click', function () {
-                if (h.classList.contains('splash-done')) return;
-                h.classList.add('splash-done'); h.classList.remove('splash-on');
-                setTimeout(function () { sp.style.display = 'none'; cancelAnimationFrame(raf); }, 800);
-            });
+            function closeGate() { h.classList.remove('gate-open'); paint(); }
+            function enter() {
+                if (!user()) { openGate('new'); return; }
+                h.classList.add('has-user', 'splash-done'); h.classList.remove('splash-on', 'gate-open');
+                setTimeout(function () { sp.style.display = 'none'; }, 800);
+            }
+            window.__landing = { paint: paint, openGate: openGate, closeGate: closeGate, enter: enter };
+            $('ldLogin').addEventListener('click', function () { openGate('new'); });
+            $('ldLogin2').addEventListener('click', function () { openGate('new'); });
+            $('ldHave').addEventListener('click', function () { openGate('rec'); });
+            $('ldEnter').addEventListener('click', enter);
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && h.classList.contains('gate-open')) closeGate(); });
+            paint();
         })();
     </script>
     <!-- بوابة الحساب: اسم حقيقي + رقم هاتف للاسترجاع -->
     <div id="loginGate" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-        <div class="gate-deco" aria-hidden="true">
-            <div class="gate-grid"></div>
-        <div class="gate-orb o1" aria-hidden="true"></div><div class="gate-orb o2" aria-hidden="true"></div><div class="gate-orb o3" aria-hidden="true"></div>
-        <i class="fa-solid fa-gamepad gate-ico" style="top:12%;inset-inline-start:8%" aria-hidden="true"></i>
-        <i class="fa-solid fa-ghost gate-ico" style="top:24%;inset-inline-end:9%;animation-delay:-3s" aria-hidden="true"></i>
-        <i class="fa-solid fa-dice-d20 gate-ico" style="bottom:16%;inset-inline-start:12%;animation-delay:-5s" aria-hidden="true"></i>
-        <i class="fa-solid fa-trophy gate-ico" style="bottom:10%;inset-inline-end:14%;animation-delay:-2s" aria-hidden="true"></i>
-        </div>
-        <button type="button" id="gateLang" class="gate-lang" aria-label="Language"><i class="fa-solid fa-globe"></i><span>English</span></button>
-
         <div class="gate-wrap">
             <div class="gate-card">
+                <button type="button" id="gateClose" class="gate-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                 <div id="gateStepForm">
                     <div class="gate-brand">
                         <div class="gate-mark" aria-hidden="true"><i class="fa-solid fa-gamepad"></i></div>
@@ -427,7 +537,7 @@
 
                     <div class="gate-tabs" role="tablist">
                         <button type="button" class="gate-tab on" id="tabNew" role="tab" aria-selected="true"><i class="fa-solid fa-user-plus"></i><span data-translate="gTabNew">حساب جديد</span></button>
-                        <button type="button" class="gate-tab" id="tabRec" role="tab" aria-selected="false"><i class="fa-solid fa-mobile-screen-button"></i><span data-translate="gTabRec">استرجاع حساب</span></button>
+                        <button type="button" class="gate-tab" id="tabRec" role="tab" aria-selected="false"><i class="fa-solid fa-mobile-screen-button"></i><span data-translate="gTabRec">لدي حساب مسبق</span></button>
                     </div>
 
                     <!-- تبويب: حساب جديد -->
@@ -462,15 +572,18 @@
                         <button type="submit" id="loginSubmit" class="gate-btn" disabled><span data-translate="regBtn">إنشاء الحساب</span><i class="fa-solid fa-arrow-left-long"></i></button>
                     </form>
 
-                    <!-- تبويب: استرجاع حساب بالهاتف -->
+                    <!-- تبويب: لدي حساب مسبق (الهاتف فقط) -->
                     <form id="recoverForm" hidden novalidate autocomplete="off">
-                        <h2 class="gate-title" data-translate="recTitle">استرجع حسابك</h2>
-                        <p class="gate-sub" data-translate="recHint">اكتب اسمك المسجَّل ورقم الهاتف الذي ربطته بحسابك.</p>
+                        <h2 class="gate-title" data-translate="recTitle">أهلاً بعودتك</h2>
+                        <p class="gate-sub" data-translate="recHint">اكتب رقم الهاتف الذي سجّلت به فقط، وسنعثر على حسابك فوراً.</p>
 
+                        <div id="recNameGroup" hidden>
+                        <p class="gate-note" data-translate="recNameNote">هذا حساب قديم؟ اكتب اسمك المسجَّل أيضاً للعثور عليه.</p>
                         <label class="gate-lbl" for="recName" data-translate="nameLbl">الاسم الكامل</label>
                         <div class="gate-field" id="recNameField">
                             <i class="fa-regular fa-id-card lead" aria-hidden="true"></i>
                             <input type="text" id="recName" dir="auto" maxlength="40" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" placeholder="محمد أحمد علي" data-translate-ph="loginPlaceholder">
+                        </div>
                         </div>
 
                         <div id="recPhoneGroup">
@@ -504,12 +617,12 @@
                     <p class="gate-name" id="doneName"></p>
                     <div id="donePhoneBox" hidden>
                         <div class="gate-phone-pill"><i class="fa-solid fa-mobile-screen-button"></i><span data-translate="donePhoneLbl">رقم الاستعادة</span><b id="donePhone"></b></div>
-                        <p class="gate-hint"><i class="fa-solid fa-circle-info"></i><span data-translate="donePhoneHint">إن فتحت الموقع من جهاز آخر أو مسحت بيانات المتصفح، استرجع حسابك بالاسم ورقم الهاتف.</span></p>
+                        <p class="gate-hint"><i class="fa-solid fa-circle-info"></i><span data-translate="donePhoneHint">إن فتحت الموقع من جهاز آخر أو مسحت بيانات المتصفح، اختر «لدي حساب مسبق» واكتب رقم هاتفك فقط.</span></p>
                     </div>
                     <button type="button" id="enterSiteBtn" class="gate-btn"><span data-translate="enterSite">ادخل الموقع</span><i class="fa-solid fa-arrow-left-long"></i></button>
                 </div>
             </div>
-            <p class="gate-foot"><i class="fa-solid fa-shield-halved"></i><span data-translate="gateFoot">كل اسم يُسجَّل لشخص واحد فقط — ورقم هاتفك هو مفتاح استرجاع حسابك.</span></p>
+            <p class="gate-foot"><i class="fa-solid fa-shield-halved"></i><span data-translate="gateFoot">كل اسم ورقم هاتف يُسجَّلان لحساب واحد فقط — ورقم هاتفك هو مفتاح العودة لحسابك.</span></p>
         </div>
     </div>
     <div class="orb" style="width:380px;height:380px;top:-120px;right:-100px"></div>
@@ -1300,6 +1413,59 @@
             gateFoot: "Each name belongs to one person only — your phone number is the key to getting your account back.",
             showCode: "Recovery phone", noCode: "Not added to this account"
         });
+
+        // ===== نصوص صفحة الترحيب + "لدي حساب مسبق" بالهاتف فقط =====
+        Object.assign(translations.ar, {
+            ld_welcome: "أهلاً بك في", ld_kicker: "مكتبة الألعاب والتطبيقات الحصرية", ld_tag: "ألعاب وتطبيقات وملفات منتقاة، بتنزيل آمن وتجربة راقية في مكان واحد.",
+            ld_devLbl: "المطور", ld_devName: "حسن مصطفى حسن طه", ld_login: "تسجيل الدخول", ld_have: "لدي حساب مسبق", ld_enterAs: "الدخول باسم",
+            ld_joinT: "كيف تنضم إلى الموقع؟", ld_joinSub: "تسجيل واحد بسيط، وبعدها تدخل في كل مرة بضغطة.",
+            ld_j1t: "اضغط «تسجيل الدخول»", ld_j1d: "تظهر لك بطاقة التسجيل في نفس هذه الصفحة.",
+            ld_j2t: "اكتب اسمك ورقم هاتفك", ld_j2d: "اسمك الحقيقي الكامل ورقم هاتفك فقط — بلا كلمات مرور ولا بريد إلكتروني.",
+            ld_j3t: "ادخل المكتبة", ld_j3d: "في كل زيارة بعدها تدخل باسمك مباشرة بضغطة واحدة.",
+            ld_j4t: "طُلب منك التسجيل من جديد؟", ld_j4d: "اختر «لدي حساب مسبق» واكتب رقم هاتفك فقط، وسنجد حسابك فوراً.",
+            ld_devT: "كيف تصبح مطوراً؟", ld_devSub: "انشر ألعابك وتطبيقاتك وملفاتك باسمك أمام جمهور الموقع.",
+            ld_d1t: "سجّل دخولك أولاً", ld_d1d: "أنشئ حسابك كزائر ثم ادخل الموقع.",
+            ld_d2t: "افتح القائمة واختر «إضافة مطور»", ld_d2d: "زر القائمة (الروبوت) في أعلى الموقع.",
+            ld_d3t: "قدّم طلب الانضمام", ld_d3d: "اكتب اسمك ورقم واتساب لإنشاء حساب مطور.",
+            ld_d4t: "ارفع عملك للمراجعة", ld_d4d: "لعبة أو تطبيق أو ملف؛ يجرّبه المدير ويفحص رابطه.",
+            ld_d5t: "انشر واستلم الإشعارات", ld_d5d: "عند الموافقة يُنشر عملك ويُعتمد حسابك، ويصلك إشعار مع كل تنزيل.",
+            ld_featT: "لماذا 7ASSON GAMING؟",
+            ld_f1t: "ألعاب وتطبيقات حصرية", ld_f1d: "مكتبة منتقاة تُحدَّث باستمرار.", ld_f2t: "تنزيل آمن", ld_f2d: "روابط المطورين تُفحص من الفيروسات.",
+            ld_f3t: "تقييمات وتعليقات", ld_f3d: "شارك رأيك وشاهد تقييم الآخرين.", ld_f4t: "دعم العملاء", ld_f4d: "مساعد ذكي وقنوات تواصل جاهزة.",
+            ld_f5t: "ثبّته كتطبيق", ld_f5d: "أضفه لشاشتك الرئيسية ليعمل كتطبيق.", ld_f6t: "عربي وإنجليزي", ld_f6d: "بدّل اللغة في أي وقت بضغطة.",
+            ld_priv: "رقم هاتفك يُحفظ كبصمة مشفّرة ولا يظهر لأحد.", ld_foot: "تم التطوير بواسطة المطور",
+            gTabRec: "لدي حساب مسبق", recTitle: "أهلاً بعودتك", recHint: "اكتب رقم الهاتف الذي سجّلت به فقط، وسنعثر على حسابك فوراً.", recBtn: "دخول إلى حسابي",
+            recNotFound: "لم نجد حساباً مرتبطاً بهذا الرقم. إن كان حسابك قديماً فاكتب اسمك المسجَّل أيضاً ثم أعد المحاولة.", recNameNote: "هذا حساب قديم؟ اكتب اسمك المسجَّل أيضاً للعثور عليه.",
+            errRecover: "لا يوجد حساب مطابق لهذه البيانات.", errPhoneTaken: "هذا الرقم مرتبط بحساب آخر. إن كان حسابك فاختر «لدي حساب مسبق».",
+            donePhoneHint: "إن فتحت الموقع من جهاز آخر أو مسحت بيانات المتصفح، اختر «لدي حساب مسبق» واكتب رقم هاتفك فقط.",
+            gateFoot: "كل اسم ورقم هاتف يُسجَّلان لحساب واحد فقط — ورقم هاتفك هو مفتاح العودة لحسابك."
+        });
+        Object.assign(translations.en, {
+            ld_welcome: "Welcome to", ld_kicker: "The exclusive games & apps library", ld_tag: "Curated games, apps and files — safe downloads and a refined experience in one place.",
+            ld_devLbl: "DEVELOPER", ld_devName: "Hassan Mustafa Hassan Taha", ld_login: "Sign in", ld_have: "I already have an account", ld_enterAs: "Continue as",
+            ld_joinT: "How to join", ld_joinSub: "One simple sign-up, then you're in with a single tap every time.",
+            ld_j1t: "Tap “Sign in”", ld_j1d: "A registration card opens right on this page.",
+            ld_j2t: "Enter your name and phone", ld_j2d: "Just your real full name and phone number — no passwords, no email.",
+            ld_j3t: "Enter the library", ld_j3d: "On every later visit you go straight in under your name.",
+            ld_j4t: "Asked to register again?", ld_j4d: "Choose “I already have an account” and type only your phone number — we'll find you.",
+            ld_devT: "How to become a developer", ld_devSub: "Publish your games, apps and files under your own name.",
+            ld_d1t: "Sign in first", ld_d1d: "Create your visitor account, then enter the site.",
+            ld_d2t: "Open the menu → “Add developer”", ld_d2d: "The robot menu button at the top of the site.",
+            ld_d3t: "Apply to join", ld_d3d: "Enter your name and WhatsApp number to create a developer account.",
+            ld_d4t: "Upload your work for review", ld_d4d: "A game, app or file — the admin tests it and scans its link.",
+            ld_d5t: "Get published & notified", ld_d5d: "Once approved your work goes live, your account is verified, and you're notified on every download.",
+            ld_featT: "Why 7ASSON GAMING?",
+            ld_f1t: "Exclusive games & apps", ld_f1d: "A curated library, always growing.", ld_f2t: "Safe downloads", ld_f2d: "Developer links are virus-scanned.",
+            ld_f3t: "Ratings & comments", ld_f3d: "Share your view and see others'.", ld_f4t: "Customer support", ld_f4d: "A smart assistant and contact channels.",
+            ld_f5t: "Install as an app", ld_f5d: "Add it to your home screen like an app.", ld_f6t: "Arabic & English", ld_f6d: "Switch language anytime in a tap.",
+            ld_priv: "Your phone number is stored as an encrypted fingerprint and is never shown to anyone.", ld_foot: "Developed by",
+            gTabRec: "I have an account", recTitle: "Welcome back", recHint: "Type only the phone number you registered with and we'll find your account.", recBtn: "Sign in to my account",
+            recNotFound: "No account is linked to this number. If your account is older, also type your registered name and try again.", recNameNote: "Older account? Also type your registered name to find it.",
+            errRecover: "No account matches these details.", errPhoneTaken: "This number is linked to another account. If it's yours, choose “I already have an account”.",
+            donePhoneHint: "If you open the site on another device or clear your browser data, choose “I already have an account” and type only your phone number.",
+            gateFoot: "Each name and phone number belongs to one account only — your phone number is the key back to it."
+        });
+
 
         let currentLang = 'ar';
         const ADMIN_WHATSAPP = '249118944652'; // 0118944652 بالصيغة الدولية (السودان)
@@ -2413,6 +2579,11 @@
             const key = nameKey(name), id = getCustId();
             const uRef = doc(db, 'usernames', key), cRef = doc(db, 'customers', id);
             const pHash = await phoneHash(ph.full, key);
+            const idx = await phoneHash(ph.full, 'idx');                                 // بصمة ثابتة للرقم: تُستخدم للعثور على الحساب بالهاتف فقط
+            try {                                                                        // الرقم الواحد لحساب واحد
+                const dup = await getDocs(query(collection(db, 'usernames'), where('phoneIdx', '==', idx)));
+                if (dup.docs.some(x => x.id !== key)) return { status: 'phoneTaken' };
+            } catch (e) { console.warn('phone check skipped', e); }
             const res = await runTransaction(db, async (tx) => {
                 const u = await tx.get(uRef);
                 const c = await tx.get(cRef);
@@ -2424,15 +2595,19 @@
                     if (o.exists() && o.data().custId === id) oldRef = oRef;
                 }
                 const first = !u.exists();
-                if (first) tx.set(uRef, { name, custId: id, phoneHash: pHash, createdAt: serverTimestamp() });
+                if (first) tx.set(uRef, { name, custId: id, phoneHash: pHash, phoneIdx: idx, createdAt: serverTimestamp() });
                 if (oldRef) tx.delete(oldRef);
                 const base = { name, nameKey: key, lastSeen: serverTimestamp() };
                 if (c.exists()) tx.update(cRef, base);
                 else tx.set(cRef, { ...base, createdAt: serverTimestamp(), visits: 1 });
-                return { status: first ? 'new' : 'owner', needPhone: !first && !u.data().phoneHash };
+                const d = u.exists() ? u.data() : {};
+                return { status: first ? 'new' : 'owner', needPhone: !first && !d.phoneHash, stored: d.phoneHash || null, hadIdx: !!d.phoneIdx };
             });
-            if (res.status === 'owner' && res.needPhone) {                                // حساب قديم من نفس الجهاز: نربطه برقمه الآن
-                try { await updateDoc(uRef, { phoneHash: pHash }); res.phoneSaved = true; } catch (e) {}
+            if (res.status === 'owner') {                                                 // حساب قديم من نفس الجهاز: نربطه برقمه الآن
+                const patch = {};
+                if (res.needPhone) { patch.phoneHash = pHash; patch.phoneIdx = idx; }
+                else if (!res.hadIdx && res.stored === pHash) patch.phoneIdx = idx;
+                if (Object.keys(patch).length) { try { await updateDoc(uRef, patch); if (res.needPhone) res.phoneSaved = true; } catch (e) {} }
             }
             return res;
         }
@@ -2446,6 +2621,14 @@
             const d = snap.data();
             if (!d.phoneHash) return { status: 'legacy' };
             if ((await phoneHash(ph.full, key)) !== d.phoneHash) return { status: 'bad' };
+            await adoptOwner(d.custId);
+            return { status: 'ok', name: d.name };
+        }
+        async function recoverByPhoneOnly(ph) {                                          // "لدي حساب مسبق": الهاتف وحده يكفي
+            const idx = await phoneHash(ph.full, 'idx');
+            const snap = await getDocs(query(collection(db, 'usernames'), where('phoneIdx', '==', idx)));
+            if (snap.empty) return { status: 'missing' };
+            const d = snap.docs[0].data();
             await adoptOwner(d.custId);
             return { status: 'ok', name: d.name };
         }
@@ -2519,10 +2702,10 @@
             gSubmit.disabled = gateBusy || !a.ok || !p.ok;
         }
         function paintRec() {
-            const a = analyzeName(recName.value);
+            const nameShown = !$g('recNameGroup').hidden;
             let ok;
-            if (recMode === 'code') ok = a.ok && normCode(recCode.value).length >= 8;
-            else ok = a.ok && phoneState(recPhField, recPhState, recPhone, recCc).ok;
+            if (recMode === 'code') ok = analyzeName(recName.value).ok && normCode(recCode.value).length >= 8;
+            else { ok = phoneState(recPhField, recPhState, recPhone, recCc).ok; if (ok && nameShown) ok = analyzeName(recName.value).ok; }
             recBtn.disabled = gateBusy || !ok;
         }
         function setGateBusy(b) {
@@ -2531,25 +2714,24 @@
             recBtn.querySelector('span').textContent = T(b ? 'checking' : 'recBtn');
             paintReg(); paintRec();
         }
-        function resetRecMode() { recMode = 'phone'; $g('recPhoneGroup').hidden = false; $g('recCodeGroup').hidden = true; recCode.value = ''; }
+        function resetRecMode(full) { recMode = 'phone'; $g('recPhoneGroup').hidden = false; $g('recCodeGroup').hidden = true; recCode.value = ''; if (full) { $g('recNameGroup').hidden = true; recName.value = ''; } }
         function setTab(t) {
             const isNew = t === 'new';
             $g('loginForm').hidden = !isNew; $g('recoverForm').hidden = isNew;
             $g('tabNew').classList.toggle('on', isNew); $g('tabRec').classList.toggle('on', !isNew);
             $g('tabNew').setAttribute('aria-selected', String(isNew)); $g('tabRec').setAttribute('aria-selected', String(!isNew));
             hideGateErr();
-            if (!isNew && !recName.value && gName.value) recName.value = gName.value;
             paintReg(); paintRec();
         }
         $g('tabNew').addEventListener('click', () => setTab('new'));
         $g('tabRec').addEventListener('click', () => setTab('rec'));
         gotoRecover.addEventListener('click', () => {
-            recName.value = gName.value; recPhone.value = regPhone.value; recCc.value = regCc.value;
-            resetRecMode(); setTab('rec');
+            recPhone.value = regPhone.value; recCc.value = regCc.value;
+            resetRecMode(true); setTab('rec');
         });
         gName.addEventListener('input', () => { hideGateErr(); paintReg(); });
         regPhone.addEventListener('input', () => { hideGateErr(); paintReg(); });
-        recName.addEventListener('input', () => { recErr.hidden = true; if (recMode === 'code') resetRecMode(); paintRec(); });
+        recName.addEventListener('input', () => { recErr.hidden = true; paintRec(); });
         recPhone.addEventListener('input', () => { recErr.hidden = true; paintRec(); });
         recCode.addEventListener('input', () => { recErr.hidden = true; paintRec(); });
 
@@ -2583,6 +2765,7 @@
                 if (ph && phoneKnown) localStorage.setItem('recoveryPhone', maskPhone(ph));
             } catch (e) {}
             try { sessionStorage.setItem('custTouched', '1'); sessionStorage.setItem('gateFails', '0'); } catch (e) {}
+            if (window.__landing) window.__landing.paint();
             $g('doneName').textContent = name;
             $g('doneTitle').dataset.translate = returning ? 'doneBack' : 'doneTitle';
             $g('doneTitle').textContent = T(returning ? 'doneBack' : 'doneTitle');
@@ -2595,11 +2778,13 @@
             setTimeout(() => $g('enterSiteBtn').focus({ preventScroll: true }), 50);
         }
         $g('enterSiteBtn').addEventListener('click', () => {
-            document.documentElement.classList.add('has-user');
+            window.__landing.enter();
             updateGreetText(); paintAccount(); sayHello(true);
             menuBtn.classList.add('greet');
             setTimeout(() => menuBtn.classList.remove('greet'), 3200);
         });
+        $g('gateClose').addEventListener('click', () => window.__landing.closeGate());
+        $g('loginGate').addEventListener('click', (e) => { if (e.target === $g('loginGate') || e.target.classList.contains('gate-wrap')) window.__landing.closeGate(); });
 
         $g('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -2614,6 +2799,9 @@
                 if (r.status === 'taken') {
                     showErr(gErr, T('errTaken'));
                     gotoRecover.hidden = false;
+                } else if (r.status === 'phoneTaken') {
+                    showErr(gErr, T('errPhoneTaken'));
+                    gotoRecover.hidden = false;
                 } else {
                     finishLogin(a.name, p, r.status === 'owner', r.status === 'new' || !!r.phoneSaved);
                 }
@@ -2625,12 +2813,13 @@
         $g('recoverForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (gateBusy) return;
-            const a = analyzeName(recName.value);
-            if (!a.ok) { showErr(recErr, nameError(a)); return; }
             if (!rlOk(recErr)) return;
             recErr.hidden = true;
+            const nameShown = !$g('recNameGroup').hidden;
             try {
                 if (recMode === 'code') {
+                    const a = analyzeName(recName.value);
+                    if (!a.ok) { showErr(recErr, nameError(a)); return; }
                     if (normCode(recCode.value).length < 8) { showErr(recErr, T('errCode')); return; }
                     setGateBusy(true);
                     const r = await recoverByCode(a.name, recCode.value);
@@ -2641,9 +2830,20 @@
                 const p = parsePhone(recPhone.value, recCc.value);
                 if (!p.ok) { showErr(recErr, T('errPhone')); return; }
                 setGateBusy(true);
-                const r = await recoverByPhone(a.name, p);
-                if (r.status === 'ok') finishLogin(r.name, p, true, true);
-                else if (r.status === 'legacy') {                                         // حساب قديم بلا هاتف => رمز الاستعادة القديم
+                let r = await recoverByPhoneOnly(p);                                      // الهاتف وحده
+                if (r.status === 'ok') { finishLogin(r.name, p, true, true); return; }
+                if (!nameShown) {                                                         // لم نجد: قد يكون حساباً قديماً => نطلب الاسم أيضاً
+                    rlFail(); $g('recNameGroup').hidden = false;
+                    showErr(recErr, T('recNotFound'));
+                    return;
+                }
+                const a = analyzeName(recName.value);
+                if (!a.ok) { showErr(recErr, nameError(a)); return; }
+                r = await recoverByPhone(a.name, p);
+                if (r.status === 'ok') {
+                    try { await updateDoc(doc(db, 'usernames', nameKey(a.name)), { phoneIdx: await phoneHash(p.full, 'idx') }); } catch (e2) {}
+                    finishLogin(r.name, p, true, true);
+                } else if (r.status === 'legacy') {                                       // حساب قديم بلا هاتف => رمز الاستعادة القديم
                     recMode = 'code'; $g('recPhoneGroup').hidden = true; $g('recCodeGroup').hidden = false;
                     setTimeout(() => { try { recCode.focus({ preventScroll: true }); } catch (e2) {} }, 50);
                 } else { rlFail(); showErr(recErr, T('errRecover')); }
@@ -2660,19 +2860,20 @@
         });
         $g('langSelect').addEventListener('change', syncGateLang);
 
-        // بدء التشغيل: مستخدم موثّق => زيارة عائدة، وإلا تظهر البوابة (مع تعبئة الاسم القديم للمستخدمين السابقين)
+        // بدء التشغيل: مستخدم موثّق => الصفحة تعرض "الدخول باسمك"، وإلا يفتح زر تسجيل الدخول البطاقة (مع تعبئة الاسم القديم للمستخدمين السابقين)
         paintAccount();
         if (getUser()) touchCustomer();
         else {
             let legacy = ''; try { legacy = localStorage.getItem('username') || ''; } catch (e) {}
             if (legacy) { gName.value = legacy; $g('gateNote').hidden = false; }
             paintReg(); paintRec();
-            // التركيز على خانة الاسم بعد الضغط على START (للحاسوب فقط حتى لا تقفز لوحة المفاتيح في الهاتف)
-            const sb = $g('splashStart');
-            if (sb) sb.addEventListener('click', () => {
-                if (window.matchMedia && matchMedia('(pointer:fine)').matches) setTimeout(() => { try { gName.focus({ preventScroll: true }); } catch (e) {} }, 650);
-            });
         }
+        function onGateOpen(tab) {
+            resetRecMode(true); setTab(tab === 'rec' ? 'rec' : 'new');
+            if (window.matchMedia && matchMedia('(pointer:fine)').matches) setTimeout(() => { try { (tab === 'rec' ? recPhone : gName).focus({ preventScroll: true }); } catch (e) {} }, 350);
+        }
+        document.addEventListener('gate:open', (e) => onGateOpen(e.detail && e.detail.tab));
+        if (document.documentElement.classList.contains('gate-open')) onGateOpen(window.__gateTab);
 
         loadGames();
         // ===== إشعارات الألعاب والتطبيقات الجديدة (Firebase Cloud Messaging) =====
