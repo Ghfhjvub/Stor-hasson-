@@ -40,7 +40,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&family=Outfit:wght@700;800&family=Orbitron:wght@800;900&display=swap" rel="stylesheet">
     <style>
         :root{--ink:#1a1333;--muted:#5f5a78;--faint:#8f8aa8;--glass:rgba(255,255,255,.58);--glass-strong:rgba(255,255,255,.82);--glass-line:rgba(124,58,237,.18);--soft:rgba(124,58,237,.07);--soft-hover:rgba(124,58,237,.15);--field:rgba(255,255,255,.92);--line:rgba(124,58,237,.18);--accent:#7c3aed;--accent-2:#6d28d9;--gold:#f5b301;--gold-text:#a16207;--header:rgba(255,255,255,.72);--shadow:0 14px 44px -18px rgba(109,40,217,.4);--bg:#fff;--blob:rgba(139,92,246,.2)}
         html.dark{--ink:#f4f0ff;--muted:#b9b1d6;--faint:#8c83ad;--glass:rgba(38,26,74,.55);--glass-strong:rgba(28,18,58,.88);--glass-line:rgba(167,139,250,.22);--soft:rgba(167,139,250,.1);--soft-hover:rgba(167,139,250,.2);--field:rgba(15,10,34,.7);--line:rgba(167,139,250,.22);--accent:#a78bfa;--accent-2:#ddd6fe;--gold-text:#fbbf24;--header:rgba(14,9,30,.74);--shadow:0 14px 44px -18px rgba(0,0,0,.7);--bg:#0d0919;--blob:rgba(124,58,237,.3)}
@@ -202,9 +202,13 @@
         #splash{position:fixed;top:0;left:0;width:100%;height:100vh;height:100dvh;z-index:300;overflow:hidden;background:#fff;transition:opacity .6s ease,visibility .6s,transform .7s cubic-bezier(.4,.2,.2,1)}
         html.splash-done #splash{opacity:0;visibility:hidden;transform:scale(1.07);pointer-events:none}
         .splash-stage{position:absolute;inset:0;width:100%;height:100%;animation:splashIn 1s cubic-bezier(.2,.8,.2,1) both}
+        .splash-stage{animation:splashIn 1s cubic-bezier(.2,.8,.2,1) both,splashBreath 12s ease-in-out 1s infinite alternate}
+        @keyframes splashBreath{from{scale:1}to{scale:1.045}}
+        #splashFx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
         .splash-stage picture{display:block;width:100%;height:100%}
         .splash-img{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
-        .splash-start{position:absolute;left:37%;top:74%;width:26%;height:14%;display:flex;align-items:center;justify-content:center;gap:.45em;padding:0;margin:0;border:0;border-radius:999px;cursor:pointer;direction:ltr;color:#fff;font-family:'Inter','Cairo',system-ui,sans-serif;font-weight:900;letter-spacing:.08em;line-height:1;font-size:28px;text-shadow:0 2px 4px rgba(90,0,0,.45);background:linear-gradient(180deg,#ff4a4a 0%,#e10d0d 45%,#b80000 100%);box-shadow:inset 0 3px 0 rgba(255,255,255,.45),inset 0 -5px 0 rgba(0,0,0,.22),0 8px 22px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent;animation:startPulse 1.9s ease-out infinite;transition:transform .2s,filter .2s}
+        .splash-start{position:absolute;left:37%;top:74%;width:26%;height:14%;display:flex;align-items:center;justify-content:center;gap:.45em;padding:0;margin:0;border:0;border-radius:999px;cursor:pointer;direction:ltr;color:#fff;font-family:'Orbitron','Inter',system-ui,sans-serif;font-weight:900;letter-spacing:.14em;line-height:1;font-size:28px;text-shadow:0 2px 4px rgba(90,0,0,.45);background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.55) 50%,transparent 62%) -150% 0/250% 100% no-repeat,linear-gradient(180deg,#ff4a4a 0%,#e10d0d 45%,#b80000 100%);box-shadow:inset 0 3px 0 rgba(255,255,255,.45),inset 0 -5px 0 rgba(0,0,0,.22),0 8px 22px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent;animation:startPulse 1.9s ease-out infinite,startShine 3.2s ease-in-out infinite;transition:transform .2s,filter .2s}
+        @keyframes startShine{0%,35%{background-position:-150% 0,0 0}75%,100%{background-position:250% 0,0 0}}
         .splash-start svg{width:1.05em;height:1.05em;flex:none;filter:drop-shadow(0 2px 3px rgba(90,0,0,.45))}
         .splash-start::after{content:"";position:absolute;inset:-10px -8px}
         .splash-start:hover{transform:scale(1.04);filter:brightness(1.08)} .splash-start:active{transform:scale(.97)}
@@ -340,7 +344,8 @@
     <div id="splash" role="dialog" aria-label="7ASSON GAMING">
         <div class="splash-stage">
             <picture><source media="(max-aspect-ratio: 1/1)" srcset="splash-portrait.jpg" data-w="941" data-h="1672" data-bx="258" data-by="1206" data-bw="473" data-bh="175"><img class="splash-img" id="splashImg" src="splash.jpg" alt="7ASSON GAMING" decoding="async" fetchpriority="high" draggable="false" data-w="1672" data-h="941" data-bx="631" data-by="703" data-bw="413" data-bh="133"></picture>
-            <button type="button" id="splashStart" class="splash-start" aria-label="START"><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 22a2.4 2.4 0 0 0 2.4-2.4h-4.8A2.4 2.4 0 0 0 12 22zm7-6.6V11a7 7 0 0 0-5.2-6.8V3.5a1.8 1.8 0 0 0-3.6 0v.7A7 7 0 0 0 5 11v4.4l-2 2V19h18v-1.6l-2-2z"/></svg><span>START</span></button>
+            <canvas id="splashFx" aria-hidden="true"></canvas>
+            <button type="button" id="splashStart" class="splash-start" aria-label="START"><span>START</span></button>
         </div>
     </div>
     <script>
@@ -360,14 +365,31 @@
                 var ox = (vw - d.w * sc) / 2, oy = (vh - d.h * sc) * fy;
                 b.style.left = (ox + d.bx * sc) + 'px'; b.style.top = (oy + d.by * sc) + 'px';
                 b.style.width = (d.bw * sc) + 'px'; b.style.height = (d.bh * sc) + 'px';
-                b.style.fontSize = (d.bh * sc * 0.36) + 'px';
+                b.style.fontSize = (d.bh * sc * 0.34) + 'px';
             }
+            // جزيئات متحركة: مكعبات وشرارات حمراء/سوداء تطفو فوق الصورة
+            var cv = document.getElementById('splashFx'), cx = cv.getContext('2d'), P = [], raf = 0, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            function fit() { var r = Math.min(devicePixelRatio || 1, 2); cv.width = sp.clientWidth * r; cv.height = sp.clientHeight * r; cx.setTransform(r, 0, 0, r, 0, 0); }
+            function mk(init) { var w = sp.clientWidth, hh = sp.clientHeight, red = Math.random() < .65; return { x: Math.random() * w, y: init ? Math.random() * hh : hh + 20, s: 4 + Math.random() * 11, vy: .25 + Math.random() * .8, vx: (Math.random() - .5) * .4, a: Math.random() * 6.28, va: (Math.random() - .5) * .04, c: red ? '#e11' : '#161616', o: .35 + Math.random() * .5, sq: Math.random() < .6 }; }
+            function loop() {
+                var w = sp.clientWidth, hh = sp.clientHeight; cx.clearRect(0, 0, w, hh);
+                for (var i = 0; i < P.length; i++) {
+                    var p = P[i]; p.y -= p.vy; p.x += p.vx + Math.sin((p.y + i * 40) / 60) * .25; p.a += p.va;
+                    if (p.y < -30) P[i] = mk(false);
+                    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.a); cx.globalAlpha = p.o * Math.min(1, (hh - p.y + 40) / 120) * Math.min(1, (p.y + 30) / 120);
+                    cx.fillStyle = p.c; cx.shadowColor = p.c === '#e11' ? 'rgba(255,40,40,.8)' : 'rgba(0,0,0,.4)'; cx.shadowBlur = 8;
+                    if (p.sq) cx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s); else { cx.beginPath(); cx.arc(0, 0, p.s / 3, 0, 6.28); cx.fill(); }
+                    cx.restore();
+                }
+                raf = requestAnimationFrame(loop);
+            }
+            if (!reduce) { fit(); var n = Math.round(Math.min(40, Math.max(18, sp.clientWidth * sp.clientHeight / 28000))); for (var k = 0; k < n; k++) P.push(mk(true)); loop(); }
             place();
-            addEventListener('resize', place); addEventListener('orientationchange', function () { setTimeout(place, 150); });
+            addEventListener('resize', function () { place(); if (!reduce) fit(); }); addEventListener('orientationchange', function () { setTimeout(place, 150); });
             b.addEventListener('click', function () {
                 if (h.classList.contains('splash-done')) return;
                 h.classList.add('splash-done'); h.classList.remove('splash-on');
-                setTimeout(function () { sp.style.display = 'none'; }, 800);
+                setTimeout(function () { sp.style.display = 'none'; cancelAnimationFrame(raf); }, 800);
             });
         })();
     </script>
@@ -2054,6 +2076,7 @@
         function getUser() { try { return (localStorage.getItem('nameV2') && localStorage.getItem('username')) || ''; } catch (e) { return ''; } }
         function greetMsg() { const n = getUser(); return n ? translations[currentLang].welcomeName + n : translations[currentLang].greet; }
         function updateGreetText() { const b = document.getElementById('robotBubble'); if (b) b.textContent = greetMsg(); }
+        function greetReady() { const c = document.documentElement.classList; return !c.contains('splash-on') && c.contains('has-user'); }
         function markGreeted() {
             greeted = true;
             GESTURES.forEach(e => window.removeEventListener(e, onGesture));
@@ -2079,7 +2102,7 @@
             } catch (e) {}
         }
         function sayHello(fromGesture) {
-            if (greeted || !getUser()) return;
+            if (greeted || !getUser() || !greetReady()) return;
             const ar = currentLang === 'ar';
             const hasTTS = 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
             const voices = hasTTS ? speechSynthesis.getVoices() : [];
@@ -2096,13 +2119,13 @@
             speechSynthesis.cancel();
             speechSynthesis.speak(u);
         }
-        function onGesture() { sayHello(true); }
+        function onGesture() { if (!greetReady()) return; setTimeout(() => sayHello(true), 900); }
         GESTURES.forEach(e => window.addEventListener(e, onGesture, { passive: true }));
         sayHello(false);
         // الفقاعة تظهر حتى لو مُنع الصوت، ثم تتكرر مع الصوت عند أول لمسة
         updateGreetText();
         setTimeout(() => {
-            if (greeted || !getUser()) return;
+            if (greeted || !getUser() || !greetReady()) return;
             menuBtn.classList.add('greet');
             setTimeout(() => menuBtn.classList.remove('greet'), 3200);
         }, 700);
