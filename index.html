@@ -273,6 +273,33 @@
         .ld-foot{margin-top:2.2rem;padding-top:1.2rem;border-top:1px solid var(--line);text-align:center;font-size:.82rem;color:var(--muted)}
         .ld-foot b{color:var(--accent);font-weight:900}
         .ld-foot small{display:block;margin-top:.3rem;color:var(--faint);font-family:'Outfit','Inter',sans-serif;letter-spacing:.1em;font-size:.72rem}
+        /* ===== صفحة واحدة بلا تمرير ===== */
+        #splash{overflow:hidden}
+        .ld-wrap{height:100%;min-height:0;display:flex;flex-direction:column;padding-bottom:max(.8rem,env(safe-area-inset-bottom))}
+        .ld-top{padding:.2rem 0 0;flex:none}
+        .ld-tools{display:flex;gap:.5rem}
+        .ld-hero{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0}
+        .ld-t1{font-size:clamp(2.6rem,min(14vw,15vh),6.4rem)}
+        .ld-t2{font-size:clamp(.9rem,min(4vw,3.6vh),1.8rem)}
+        .ld-orn{margin:min(1.2vh,.8rem) auto}
+        .ld-kicker{font-size:clamp(1rem,min(3.4vw,3vh),1.45rem)}
+        .ld-tag{font-size:clamp(.8rem,1.9vh,.95rem);line-height:1.7;margin-top:.3rem}
+        .ld-dev{margin-top:min(2vh,1.1rem);padding-block:.35rem}
+        .ld-dev img{width:2.4rem;height:2.4rem}
+        .ld-cta{margin-top:min(2.2vh,1.2rem);gap:.4rem}
+        .ld-btn{padding:.85rem 2rem}
+        .ld-feat-title{margin:min(3vh,1.6rem) 0 .6rem;font-size:clamp(.95rem,2.6vh,1.25rem)}
+        .ld-feat-title small{margin-bottom:.1rem;font-size:.65rem}
+        .ld-feats{width:min(100%,46rem);grid-template-columns:repeat(6,1fr);gap:.4rem}
+        .ld-feat{padding:.6rem .15rem;border-radius:1rem}
+        .ld-feat i{width:2.2rem;height:2.2rem;margin-bottom:.35rem;font-size:.9rem;border-radius:.8rem}
+        .ld-feat b{font-size:clamp(.58rem,2.3vw,.8rem);line-height:1.35}
+        .ld-feat span{display:none}
+        .ld-modal{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:1rem;background:rgba(26,19,51,.42);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+        .ld-modal[hidden]{display:none}
+        .ld-modal-box{position:relative;width:min(100%,60rem);max-height:100%;overflow-y:auto;border-radius:1.8rem;padding:2.8rem 1rem 1rem;background:#fff;animation:gateIn .5s cubic-bezier(.2,.8,.2,1) both}
+        .ld-modal-box .ld-card{box-shadow:none;margin-bottom:.9rem}
+        .ld-modal-box .ld-grid2{margin:0}
         /* ===== نظام المطورين ===== */
         .dev-tag{display:inline-flex;align-items:center;gap:.25rem;font-size:.68rem;font-weight:700;padding:.08rem .5rem;border-radius:999px;background:rgba(124,58,237,.14);color:#7c3aed;vertical-align:middle;margin-inline-start:.35rem;white-space:nowrap}
         .dark .dev-tag{background:rgba(167,139,250,.2);color:#c4b5fd}
@@ -416,7 +443,7 @@
         <div class="ld-wrap">
             <header class="ld-top ld-rise">
                 <div class="ld-mini" dir="ltr"><span class="ld-mini-mark"><i class="fa-solid fa-gamepad"></i></span><span><b>7</b>ASSON</span></div>
-                <button type="button" id="gateLang" class="ld-lang" aria-label="Language"><i class="fa-solid fa-globe"></i><span>English</span></button>
+                <div class="ld-tools"><button type="button" id="ldHelpBtn" class="ld-lang"><i class="fa-solid fa-circle-question"></i><span>Help</span></button><button type="button" id="gateLang" class="ld-lang" aria-label="Language"><i class="fa-solid fa-globe"></i><span>English</span></button></div>
             </header>
 
             <section class="ld-hero">
@@ -443,8 +470,22 @@
                         <button type="button" id="ldEnter" class="ld-btn"><i class="fa-solid fa-gamepad"></i><span data-translate="ld_enterAs">الدخول باسم</span><b id="ldUserName"></b></button>
                     </div>
                 </div>
+            <h2 class="ld-feat-title ld-rise" style="--d:.56s"><small>PREMIUM</small><span data-translate="ld_featT">لماذا 7ASSON GAMING؟</span></h2>
+            <div class="ld-feats ld-rise" style="--d:.62s">
+                <div class="ld-feat"><i class="fa-solid fa-gem"></i><b data-translate="ld_f1t">ألعاب وتطبيقات حصرية</b><span data-translate="ld_f1d">مكتبة منتقاة تُحدَّث باستمرار.</span></div>
+                <div class="ld-feat"><i class="fa-solid fa-shield-halved"></i><b data-translate="ld_f2t">تنزيل آمن</b><span data-translate="ld_f2d">روابط المطورين تُفحص من الفيروسات.</span></div>
+                <div class="ld-feat"><i class="fa-solid fa-star"></i><b data-translate="ld_f3t">تقييمات وتعليقات</b><span data-translate="ld_f3d">شارك رأيك وشاهد تقييم الآخرين.</span></div>
+                <div class="ld-feat"><i class="fa-solid fa-headset"></i><b data-translate="ld_f4t">دعم العملاء</b><span data-translate="ld_f4d">مساعد ذكي وقنوات تواصل جاهزة.</span></div>
+                <div class="ld-feat"><i class="fa-solid fa-mobile-screen-button"></i><b data-translate="ld_f5t">ثبّته كتطبيق</b><span data-translate="ld_f5d">أضفه لشاشتك الرئيسية ليعمل كتطبيق.</span></div>
+                <div class="ld-feat"><i class="fa-solid fa-language"></i><b data-translate="ld_f6t">عربي وإنجليزي</b><span data-translate="ld_f6d">بدّل اللغة في أي وقت بضغطة.</span></div>
+            </div>
+
             </section>
 
+        </div>
+        <div id="ldHelp" class="ld-modal" hidden role="dialog" aria-modal="true" aria-label="Help">
+            <div class="ld-modal-box">
+                <button type="button" id="ldHelpClose" class="gate-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
             <div class="ld-grid2">
                 <section class="ld-card ld-rise" style="--d:.55s" aria-labelledby="ldJoinT">
                     <h2 class="ld-h" id="ldJoinT"><span class="ic"><i class="fa-solid fa-user-plus"></i></span><span data-translate="ld_joinT">كيف تنضم إلى الموقع؟</span></h2>
@@ -470,25 +511,7 @@
                 </section>
             </div>
 
-            <h2 class="ld-feat-title ld-rise" style="--d:.7s"><small>PREMIUM</small><span data-translate="ld_featT">لماذا 7ASSON GAMING؟</span></h2>
-            <div class="ld-feats ld-rise" style="--d:.75s">
-                <div class="ld-feat"><i class="fa-solid fa-gem"></i><b data-translate="ld_f1t">ألعاب وتطبيقات حصرية</b><span data-translate="ld_f1d">مكتبة منتقاة تُحدَّث باستمرار.</span></div>
-                <div class="ld-feat"><i class="fa-solid fa-shield-halved"></i><b data-translate="ld_f2t">تنزيل آمن</b><span data-translate="ld_f2d">روابط المطورين تُفحص من الفيروسات.</span></div>
-                <div class="ld-feat"><i class="fa-solid fa-star"></i><b data-translate="ld_f3t">تقييمات وتعليقات</b><span data-translate="ld_f3d">شارك رأيك وشاهد تقييم الآخرين.</span></div>
-                <div class="ld-feat"><i class="fa-solid fa-headset"></i><b data-translate="ld_f4t">دعم العملاء</b><span data-translate="ld_f4d">مساعد ذكي وقنوات تواصل جاهزة.</span></div>
-                <div class="ld-feat"><i class="fa-solid fa-mobile-screen-button"></i><b data-translate="ld_f5t">ثبّته كتطبيق</b><span data-translate="ld_f5d">أضفه لشاشتك الرئيسية ليعمل كتطبيق.</span></div>
-                <div class="ld-feat"><i class="fa-solid fa-language"></i><b data-translate="ld_f6t">عربي وإنجليزي</b><span data-translate="ld_f6d">بدّل اللغة في أي وقت بضغطة.</span></div>
             </div>
-
-            <div class="ld-bottom">
-                <div id="ldGuest2"><button type="button" id="ldLogin2" class="ld-btn"><i class="fa-solid fa-right-to-bracket"></i><span data-translate="ld_login">تسجيل الدخول</span></button></div>
-                <p class="ld-priv"><i class="fa-solid fa-lock"></i><span data-translate="ld_priv">رقم هاتفك يُحفظ كبصمة مشفّرة ولا يظهر لأحد.</span></p>
-            </div>
-
-            <footer class="ld-foot">
-                <span data-translate="ld_foot">تم التطوير بواسطة المطور</span> <b data-translate="ld_devName">حسن مصطفى حسن طه</b>
-                <small dir="ltr">© 7ASSON GAMING</small>
-            </footer>
         </div>
     </div>
     <script>
@@ -498,7 +521,7 @@
             function $(id) { return document.getElementById(id); }
             function paint() {
                 var n = user();
-                $('ldGuest').hidden = !!n; $('ldUser').hidden = !n; $('ldGuest2').hidden = !!n;
+                $('ldGuest').hidden = !!n; $('ldUser').hidden = !n;
                 $('ldUserName').textContent = n;
             }
             function openGate(tab) {
@@ -514,10 +537,12 @@
             }
             window.__landing = { paint: paint, openGate: openGate, closeGate: closeGate, enter: enter };
             $('ldLogin').addEventListener('click', function () { openGate('new'); });
-            $('ldLogin2').addEventListener('click', function () { openGate('new'); });
+            $('ldHelpBtn').addEventListener('click', function () { $('ldHelp').hidden = false; });
+            $('ldHelpClose').addEventListener('click', function () { $('ldHelp').hidden = true; });
+            $('ldHelp').addEventListener('click', function (e) { if (e.target === this) this.hidden = true; });
             $('ldHave').addEventListener('click', function () { openGate('rec'); });
             $('ldEnter').addEventListener('click', enter);
-            document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && h.classList.contains('gate-open')) closeGate(); });
+            document.addEventListener('keydown', function (e) { if (e.key !== 'Escape') return; if (!$('ldHelp').hidden) $('ldHelp').hidden = true; else if (h.classList.contains('gate-open')) closeGate(); });
             paint();
         })();
     </script>
