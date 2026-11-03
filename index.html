@@ -9,8 +9,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="7ASSON">
-    <link rel="preload" as="image" href="splash-portrait.jpg" media="(orientation: portrait)">
-    <link rel="preload" as="image" href="splash.jpg" media="(orientation: landscape)">
+    <link rel="preload" as="image" href="splash-portrait.jpg" media="(max-aspect-ratio: 1/1)">
+    <link rel="preload" as="image" href="splash.jpg" media="(min-aspect-ratio: 101/100)">
     <script>
             document.documentElement.classList.add('splash-on');
         (function () {
@@ -199,17 +199,18 @@
         .is-standalone [data-install]{display:none!important}
         /* ===== شاشة البداية (START) ===== */
         html.splash-on{overflow:hidden}
-        #splash{position:fixed;inset:0;z-index:300;display:grid;place-items:center;overflow:hidden;background:#fff;transition:opacity .6s ease,visibility .6s,transform .7s cubic-bezier(.4,.2,.2,1)}
+        #splash{position:fixed;top:0;left:0;width:100%;height:100vh;height:100dvh;z-index:300;overflow:hidden;background:#fff;transition:opacity .6s ease,visibility .6s,transform .7s cubic-bezier(.4,.2,.2,1)}
         html.splash-done #splash{opacity:0;visibility:hidden;transform:scale(1.07);pointer-events:none}
-        .splash-stage{position:relative;width:min(100vw,calc(100vh*1672/941));width:min(100vw,calc(100dvh*1672/941));aspect-ratio:1672/941;animation:splashIn 1s cubic-bezier(.2,.8,.2,1) both}
-        .splash-img{display:block;width:100%;height:100%;object-fit:contain;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
-        .splash-start{position:absolute;left:37.4%;top:74.4%;width:25.4%;height:14.4%;padding:0;border:0;border-radius:999px;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:startPulse 1.9s ease-out infinite;transition:transform .2s}
+        .splash-stage{position:absolute;inset:0;width:100%;height:100%;animation:splashIn 1s cubic-bezier(.2,.8,.2,1) both}
+        .splash-stage picture{display:block;width:100%;height:100%}
+        .splash-img{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
+        .splash-start{position:absolute;left:37%;top:74%;width:26%;height:14%;display:flex;align-items:center;justify-content:center;gap:.45em;padding:0;margin:0;border:0;border-radius:999px;cursor:pointer;direction:ltr;color:#fff;font-family:'Inter','Cairo',system-ui,sans-serif;font-weight:900;letter-spacing:.08em;line-height:1;font-size:28px;text-shadow:0 2px 4px rgba(90,0,0,.45);background:linear-gradient(180deg,#ff4a4a 0%,#e10d0d 45%,#b80000 100%);box-shadow:inset 0 3px 0 rgba(255,255,255,.45),inset 0 -5px 0 rgba(0,0,0,.22),0 8px 22px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent;animation:startPulse 1.9s ease-out infinite;transition:transform .2s,filter .2s}
+        .splash-start svg{width:1.05em;height:1.05em;flex:none;filter:drop-shadow(0 2px 3px rgba(90,0,0,.45))}
         .splash-start::after{content:"";position:absolute;inset:-10px -8px}
-        .splash-start:hover{transform:scale(1.04)} .splash-start:active{transform:scale(.97)}
+        .splash-start:hover{transform:scale(1.04);filter:brightness(1.08)} .splash-start:active{transform:scale(.97)}
         .splash-start:focus-visible{outline:3px solid #7c3aed;outline-offset:4px}
-        @keyframes startPulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}70%,100%{box-shadow:0 0 0 22px rgba(239,68,68,0)}}
-        @keyframes splashIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
-        @media (orientation:portrait){.splash-stage{width:min(100vw,calc(100vh*825/941));width:min(100vw,calc(100dvh*825/941));aspect-ratio:825/941}.splash-img{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 6%,#000 95%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 6%,#000 95%,transparent 100%)}.splash-start{left:23.6%;width:51.5%}}
+        @keyframes startPulse{0%{box-shadow:inset 0 3px 0 rgba(255,255,255,.45),inset 0 -5px 0 rgba(0,0,0,.22),0 8px 22px rgba(0,0,0,.35),0 0 0 0 rgba(239,68,68,.65)}70%,100%{box-shadow:inset 0 3px 0 rgba(255,255,255,.45),inset 0 -5px 0 rgba(0,0,0,.22),0 8px 22px rgba(0,0,0,.35),0 0 0 22px rgba(239,68,68,0)}}
+        @keyframes splashIn{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
         /* ===== بوابة التسجيل (بنفس ألوان الموقع البنفسجية، تتبع الوضع الفاتح/الداكن) ===== */
         @property --gang{syntax:'<angle>';initial-value:0deg;inherits:false}
         #loginGate{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:1.25rem;padding-top:max(1.25rem,env(safe-area-inset-top));overflow-y:auto;overflow-x:hidden;isolation:isolate;color:var(--ink);font-family:'Cairo','Inter',sans-serif;
@@ -337,19 +338,36 @@
 <body class="min-h-screen flex flex-col">
     <!-- شاشة البداية: الصورة + زر START -->
     <div id="splash" role="dialog" aria-label="7ASSON GAMING">
-                <div class="splash-stage">
-            <picture><source media="(orientation: portrait)" srcset="splash-portrait.jpg"><img class="splash-img" src="splash.jpg" alt="7ASSON GAMING" decoding="async" fetchpriority="high" draggable="false"></picture>
-            <button type="button" id="splashStart" class="splash-start" aria-label="START"></button>
+        <div class="splash-stage">
+            <picture><source media="(max-aspect-ratio: 1/1)" srcset="splash-portrait.jpg" data-w="941" data-h="1672" data-bx="258" data-by="1206" data-bw="473" data-bh="175"><img class="splash-img" id="splashImg" src="splash.jpg" alt="7ASSON GAMING" decoding="async" fetchpriority="high" draggable="false" data-w="1672" data-h="941" data-bx="631" data-by="703" data-bw="413" data-bh="133"></picture>
+            <button type="button" id="splashStart" class="splash-start" aria-label="START"><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 22a2.4 2.4 0 0 0 2.4-2.4h-4.8A2.4 2.4 0 0 0 12 22zm7-6.6V11a7 7 0 0 0-5.2-6.8V3.5a1.8 1.8 0 0 0-3.6 0v.7A7 7 0 0 0 5 11v4.4l-2 2V19h18v-1.6l-2-2z"/></svg><span>START</span></button>
         </div>
     </div>
     <script>
         (function () {
-            var h = document.documentElement, b = document.getElementById('splashStart');
-            if (!b) return;
+            var h = document.documentElement, b = document.getElementById('splashStart'), img = document.getElementById('splashImg'), sp = document.getElementById('splash');
+            if (!b || !img) return;
+            // الصورة تملأ الشاشة دائماً (cover). نحسب مكان زر START فوق زر الصورة بنفس معادلة cover.
+            function place() {
+                var vw = sp.clientWidth || innerWidth, vh = sp.clientHeight || innerHeight;
+                var portrait = vw / vh <= 1;
+                var d = portrait ? { w: 941, h: 1672, bx: 258, by: 1206, bw: 473, bh: 175 } : { w: 1672, h: 941, bx: 631, by: 703, bw: 413, bh: 133 };
+                var want = portrait ? 'splash-portrait.jpg' : 'splash.jpg';
+                if (img.getAttribute('src') !== want) img.setAttribute('src', want);
+                var sc = Math.max(vw / d.w, vh / d.h);
+                var fy = portrait ? 0.5 : 0.7;
+                img.style.objectPosition = '50% ' + (fy * 100) + '%';
+                var ox = (vw - d.w * sc) / 2, oy = (vh - d.h * sc) * fy;
+                b.style.left = (ox + d.bx * sc) + 'px'; b.style.top = (oy + d.by * sc) + 'px';
+                b.style.width = (d.bw * sc) + 'px'; b.style.height = (d.bh * sc) + 'px';
+                b.style.fontSize = (d.bh * sc * 0.36) + 'px';
+            }
+            place();
+            addEventListener('resize', place); addEventListener('orientationchange', function () { setTimeout(place, 150); });
             b.addEventListener('click', function () {
                 if (h.classList.contains('splash-done')) return;
                 h.classList.add('splash-done'); h.classList.remove('splash-on');
-                setTimeout(function () { var s = document.getElementById('splash'); if (s) s.style.display = 'none'; }, 800);
+                setTimeout(function () { sp.style.display = 'none'; }, 800);
             });
         })();
     </script>
