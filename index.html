@@ -218,7 +218,8 @@
         /* ===== نظام المطورين ===== */
         .dev-tag{display:inline-flex;align-items:center;gap:.25rem;font-size:.68rem;font-weight:700;padding:.08rem .5rem;border-radius:999px;background:rgba(124,58,237,.14);color:#7c3aed;vertical-align:middle;margin-inline-start:.35rem;white-space:nowrap}
         .dark .dev-tag{background:rgba(167,139,250,.2);color:#c4b5fd}
-        .dev-by{font-size:.72rem;font-weight:700;color:#7c3aed;display:flex;align-items:center;gap:.3rem}
+        .dev-by{font-size:.72rem;font-weight:700;color:#7c3aed;display:flex;align-items:center;gap:.3rem;background:none;border:0;padding:0;cursor:pointer;text-align:start;max-width:100%;-webkit-tap-highlight-color:transparent}
+        .dev-by:hover{text-decoration:underline}
         .dark .dev-by{color:#c4b5fd}
         .dv-stat{flex:1;min-width:7rem;text-align:center;padding:.8rem .5rem;border-radius:.9rem}
         .dv-stat b{display:block;font-size:1.5rem;line-height:1.2}
@@ -699,7 +700,7 @@
             <div class="grid grid-cols-1 gap-2">
                 <button id="contactAdminBtn" type="button" class="btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-envelope"></i><span data-translate="menuContact">مراسلة المدير</span></button>
                 <button id="menuFilesBtn" type="button" class="btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-folder-open"></i><span data-translate="menuFiles">الملفات المهمة</span></button>
-                <button id="menuDevBtn" type="button" class="btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-code"></i><span id="menuDevTxt" data-translate="menuDev">إضافة مطور</span></button>
+                <button id="menuDevBtn" type="button" class="btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-code"></i><span id="menuDevTxt" data-translate="menuDev">إضافة مطور</span><span id="dvMenuBadge" class="hidden" style="background:#ef4444;color:#fff;border-radius:9999px;padding:0 .45rem;font-size:.7rem">0</span></button>
             </div>
 
             <div class="space-y-5">
@@ -761,6 +762,7 @@
                 <button onclick="switchAdminTab('logs')" id="tabBtnLog" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabLogs">سجل التنزيلات</button>
                 <button onclick="switchAdminTab('customers')" id="tabBtnCust" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-users"></i> <span data-translate="tabCustomers">العملاء</span></button>
                 <button onclick="switchAdminTab('newvisitors')" id="tabBtnNew" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-user-plus"></i> <span>زوار جدد</span><span id="newBadge" class="hidden" style="background:#22c55e;color:#fff;border-radius:9999px;padding:0 .45rem;font-size:.7rem;margin-inline-start:.35rem">0</span></button>
+                <button onclick="switchAdminTab('review')" id="tabBtnRev" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-clipboard-check"></i> <span>المراجعة</span><span id="rvBadge" class="hidden" style="background:#f59e0b;color:#fff;border-radius:9999px;padding:0 .45rem;font-size:.7rem;margin-inline-start:.3rem">0</span></button>
                 <button onclick="switchAdminTab('devs')" id="tabBtnDevs" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-code"></i> <span>المطورون</span></button>
                 <button onclick="switchAdminTab('activity')" id="tabBtnAct" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-clock-rotate-left"></i> <span>سجل النشاط</span></button>
                 <button onclick="switchAdminTab('vip')" id="tabBtnVip" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-crown" style="color:#f5b301"></i> <span>عملاء مميزون</span></button>
@@ -934,6 +936,16 @@
                 <div id="fileManageList" class="space-y-3 pt-4 border-t ui-line"></div>
             </div>
 
+            <!-- تبويب: المراجعة (أعمال المطورين قبل النشر) -->
+            <div id="tabContentRev" class="hidden space-y-4">
+                <div class="flex items-center justify-between gap-2">
+                    <h4 class="font-bold ui-ink text-sm">أعمال بانتظار موافقتك</h4>
+                    <button type="button" id="refreshRvBtn" class="text-xs font-bold px-3 py-2 rounded-lg transition cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line"><i class="fa-solid fa-rotate"></i> تحديث</button>
+                </div>
+                <p class="text-xs ui-muted">جرّب العمل من الرابط، راجع نتيجة فحص الفيروسات، ثم وافق (يُنشر فوراً) أو ارفض مع ذكر السبب. أول عمل يوافَق عليه يعتمد حساب المطور تلقائياً.</p>
+                <div id="rvList" class="space-y-3"></div>
+            </div>
+
             <!-- تبويب: المطورون -->
             <div id="tabContentDevs" class="hidden space-y-4">
                 <div class="flex items-center justify-between gap-2">
@@ -1000,7 +1012,7 @@
                     <button type="button" id="devTabNew" class="px-3 py-2 rounded-lg text-sm font-bold cursor-pointer btn-primary">حساب مطور جديد</button>
                     <button type="button" id="devTabIn" class="px-3 py-2 rounded-lg text-sm font-bold cursor-pointer ui-soft ui-muted">لدي حساب مطور</button>
                 </div>
-                <p id="devAuthHint" class="text-sm ui-muted leading-7">انضم كمطور وانشر ألعابك وتطبيقاتك وخلفياتك وملفاتك في الموقع، وتابع عدد تنزيلاتها من لوحة تحكم خاصة بك. اكتب اسمك الكامل ورقم واتساب؛ يُعرض اسمك على منشوراتك، ويصل طلبات التنزيل (للمنشورات بلا رابط) إلى واتسابك مباشرة.</p>
+                <p id="devAuthHint" class="text-sm ui-muted leading-7">انضم كمطور وانشر ألعابك وتطبيقاتك وملفاتك، وتابع تنزيلاتها واستلم إشعاراً عند كل تنزيل. بعد تسجيل اسمك ورقم واتساب ستُطلب منك رفع عمل للمراجعة؛ يطّلع عليه المدير ويجرّبه، وعند الموافقة يُنشر ويُعتمد حسابك. يظهر اسمك للناس كمطور لأعمالك، ويصل طلبات التنزيل (للمنشورات بلا رابط) إلى واتسابك.</p>
                 <form id="devAuthForm" class="space-y-3" novalidate>
                     <div>
                         <label class="block text-sm font-medium mb-1" for="devName">الاسم الكامل</label>
@@ -1025,10 +1037,13 @@
                     <button type="button" data-dvtab="stats" class="dv-tab px-4 py-2 rounded-lg text-sm font-medium cursor-pointer btn-primary">إحصائياتي</button>
                     <button type="button" data-dvtab="mine" class="dv-tab px-4 py-2 rounded-lg text-sm font-medium cursor-pointer ui-soft ui-muted">منشوراتي</button>
                     <button type="button" data-dvtab="add" class="dv-tab px-4 py-2 rounded-lg text-sm font-medium cursor-pointer ui-soft ui-muted">نشر جديد</button>
+                    <button type="button" data-dvtab="notifs" class="dv-tab px-4 py-2 rounded-lg text-sm font-medium cursor-pointer ui-soft ui-muted"><i class="fa-solid fa-bell"></i> الإشعارات <span id="dvNotifBadge" class="hidden" style="background:#ef4444;color:#fff;border-radius:9999px;padding:0 .45rem;font-size:.7rem">0</span></button>
                 </div>
 
+                <div id="dvBanner" class="hidden rounded-xl p-3 text-sm leading-7"></div>
                 <div id="dvPaneStats" class="space-y-3"></div>
                 <div id="dvPaneMine" class="hidden space-y-3"></div>
+                <div id="dvPaneNotifs" class="hidden space-y-3"></div>
 
                 <form id="dvPaneAdd" class="hidden space-y-3">
                     <div>
@@ -1036,8 +1051,8 @@
                         <select id="dvKind" class="dv-field ui-soft border ui-line ui-ink cursor-pointer">
                             <option value="game">لعبة</option>
                             <option value="app">تطبيق</option>
-                            <option value="wallpaper">خلفيات</option>
                             <option value="file">ملف</option>
+                            <option value="wallpaper">خلفيات</option>
                         </select>
                     </div>
                     <div data-dvf="game app file"><label class="block text-sm font-medium mb-1">الاسم</label><input type="text" id="dvTitle" maxlength="80" class="dv-field ui-soft border ui-line ui-ink"></div>
@@ -1049,10 +1064,21 @@
                     <div data-dvf="file"><label class="block text-sm font-medium mb-1">حجم الملف (اختياري، مثال: 12 MB)</label><input type="text" id="dvSize" maxlength="20" dir="ltr" class="dv-field ui-soft border ui-line ui-ink"></div>
                     <div data-dvf="wallpaper"><label class="block text-sm font-medium mb-1">قسم الخلفيات</label><select id="dvWallKind" class="dv-field ui-soft border ui-line ui-ink cursor-pointer"><option value="phone">خلفيات الهاتف</option><option value="pc">خلفيات PC</option></select></div>
                     <div data-dvf="wallpaper"><label class="block text-sm font-medium mb-1">اختر الصور (يمكن عدة صور دفعة واحدة)</label><input type="file" id="dvWalls" accept="image/*" multiple class="dv-field ui-soft border ui-line ui-muted cursor-pointer"></div>
-                    <p id="dvAddErr" class="text-sm ui-err" hidden></p>
+                    <p id="dvAddErr" class="text-sm ui-err" hidden></p><p id="dvAddOk" class="text-sm" style="color:#16a34a" hidden></p>
                     <button type="submit" id="dvPublish" class="w-full font-bold py-2.5 rounded-lg transition cursor-pointer btn-primary">نشر</button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <!-- Public developer profile -->
+    <div id="devProfModal" class="fixed inset-0 overlay z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-strong rounded-xl max-w-md w-full max-h-[85vh] overflow-y-auto p-5 border ui-line shadow-2xl">
+            <div class="flex justify-between items-center mb-3 border-b ui-line pb-3">
+                <div><div class="text-xs ui-muted">المطور</div><h3 class="text-lg font-bold ui-accent" id="dpName"></h3><div class="text-xs ui-muted" id="dpCount"></div></div>
+                <button id="dpClose" class="ui-muted hover-ink text-xl cursor-pointer" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="dpList" class="space-y-2"></div>
         </div>
     </div>
 
@@ -1403,6 +1429,7 @@
                 logs:        ['tabContentLog',    'tabBtnLog',    () => loadLogs()],
                 customers:   ['tabContentCust',   'tabBtnCust',   () => loadCustomers()],
                 newvisitors: ['tabContentNew',    'tabBtnNew',    () => loadNewVisitors()],
+                review:      ['tabContentRev',    'tabBtnRev',    () => loadReview()],
                 devs:        ['tabContentDevs',   'tabBtnDevs',   () => loadDevsAdmin()],
                 activity:    ['tabContentAct',    'tabBtnAct',    () => loadActivity()],
                 vip:         ['tabContentVip',    'tabBtnVip',    () => loadVip()]
@@ -1422,7 +1449,9 @@
 
         // ===== أدوات مساعدة =====
         const ITEM_DEV = {};   // id المنشور -> { title, devId, devName, devWhatsapp }
-        const devTag = o => (o && o.devName) ? ` <span class="dev-tag"><i class="fa-solid fa-code"></i> ${escapeHtml(o.devName)}</span>` : '';
+        const devTag = o => ((o && o.devName) ? ` <span class="dev-tag"><i class="fa-solid fa-code"></i> ${escapeHtml(o.devName)}</span>` : '') + ((o && o.status === 'pending') ? ' <span class="dev-tag" style="background:#fef3c7;color:#b45309">بانتظار المراجعة</span>' : '') + ((o && o.status === 'rejected') ? ' <span class="dev-tag" style="background:#fee2e2;color:#b91c1c">مرفوض</span>' : '');
+        const isLive = o => !o || !o.status || o.status === 'approved';   // المنشور ظاهر للعامة
+        const devBy = o => (o && o.devId && o.devName) ? `<button type="button" class="dev-by" data-devid="${escapeHtml(o.devId)}" data-devname="${escapeHtml(o.devName)}"><i class="fa-solid fa-code"></i> المطور: ${escapeHtml(o.devName)}</button>` : '';
         async function logActivity(type, text, extra) {
             try { await addDoc(collection(db, 'activity'), { type, text, userName: getUser() || '', custId: getCustId(), ...(extra || {}), createdAt: serverTimestamp() }); }
             catch (e) { console.warn('activity skipped', e); }
@@ -1661,6 +1690,7 @@
                 container.innerHTML = '';
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
+                    if (!isLive(data)) return;
                     ITEM_DEV[docSnap.id] = { title: data.title, devId: data.devId || '', devName: data.devName || '', devWhatsapp: data.devWhatsapp || '' };
 
                     const tr = translations[currentLang];
@@ -1677,7 +1707,7 @@
                         <div class="face face-front">
                             <div class="cover-wrap"><img src="${escapeHtml(data.cover)}" alt="${escapeHtml(data.title)}" class="game-cover"></div>
                             <h3 class="game-title text-sm sm:text-lg font-bold ui-ink">${escapeHtml(data.title)}</h3>
-                            ${data.devName ? `<div class="dev-by"><i class="fa-solid fa-code"></i> ${escapeHtml(data.devName)}</div>` : ''}
+                            ${devBy(data)}
                             <div class="flex gap-1.5 sm:gap-2">
                                 <button type="button" class="flip-btn btn-primary flex-1 py-2.5 rounded-xl font-bold flex items-center justify-center gap-1.5 text-xs sm:text-sm cursor-pointer">
                                     <i class="fa-solid fa-download"></i> ${tr.downloadBtn}
@@ -1696,6 +1726,7 @@
                             <div class="video-slot"></div>
                             <p class="text-xs sm:text-sm ui-muted leading-relaxed whitespace-pre-wrap break-words">${escapeHtml(data.description)}</p>
                             <span class="pill self-start text-[11px] sm:text-xs px-2 py-0.5 rounded-full">${tr.downloadsCount} <strong>${data.downloadsCount || 0}</strong> ${tr.personUnit}</span>
+                            ${devBy(data)}
                             ${subImagesHtml}
                             <button type="button" class="download-btn btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer">
                                 <i class="fa-solid fa-download text-lg"></i> ${tr.downloadBtn}
@@ -1751,6 +1782,7 @@
                     userName: getUser() || '', custId: getCustId(), timestamp: serverTimestamp(),
                     devId: (ITEM_DEV[itemId] || {}).devId || '', devName: (ITEM_DEV[itemId] || {}).devName || ''
                 });
+                if ((ITEM_DEV[itemId] || {}).devId) notifyDev(ITEM_DEV[itemId].devId, 'download', `تم تنزيل «${itemTitle}» 🎉`, itemId);
             } catch (e) { console.warn('download log skipped', e); }
         }
 
@@ -1787,6 +1819,7 @@
                 const dv = ITEM_DEV[gameId] || {};
                 const waNum = (dv.devWhatsapp && /^\d{8,15}$/.test(dv.devWhatsapp)) ? dv.devWhatsapp : ADMIN_WHATSAPP;
                 logActivity('request', `${who || 'زائر'} طلب ${itemType === 'app' ? 'التطبيق' : 'اللعبة'} «${gameTitle}»` + (dv.devName ? ` (المطور: ${dv.devName})` : ''), { devId: dv.devId || '' });
+                if (dv.devId) notifyDev(dv.devId, 'request', `طلب جديد عبر واتساب لـ «${gameTitle}»`, gameId);
                 const message = encodeURIComponent(`مرحباً ${dv.devName || 'حسن'}، أنا ${who || 'زائر'} وأود تنزيل ${itemType === 'app' ? 'التطبيق' : 'اللعبة'} التالي: ${gameTitle}`);
                 window.open(`https://wa.me/${waNum}?text=${message}`, '_blank');
                 alert('تم إرسال طلب التنزيل إلى الإدارة، وجاري تحويلك إلى واتساب.');
@@ -2822,7 +2855,7 @@
         async function loadWallpapers() {
             try {
                 const snap = await getDocs(query(collection(db, 'wallpapers'), orderBy('createdAt', 'desc')));
-                wallData = snap.docs.filter(d => d.id !== '_seed').map(d => ({ id: d.id, persisted: true, ...d.data() }));
+                wallData = snap.docs.filter(d => d.id !== '_seed' && isLive(d.data())).map(d => ({ id: d.id, persisted: true, ...d.data() }));
                 wallData.forEach(w => { ITEM_DEV[w.id] = { title: w.title, devId: w.devId || '', devName: w.devName || '', devWhatsapp: w.devWhatsapp || '' }; });
                 // قبل أول دخول للمدير تظهر الصور المضمّنة في الملف
                 if (!snap.docs.some(d => d.id === '_seed')) builtinWalls().forEach(b => { if (!wallData.some(w => w.id === b.id)) wallData.push(b); });
@@ -3214,7 +3247,7 @@
         async function loadFiles() {
             try {
                 const snap = await getDocs(query(collection(db, 'files'), orderBy('createdAt', 'desc')));
-                fileData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                fileData = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(isLive);
                 fileData.forEach(f => { ITEM_DEV[f.id] = { title: f.title, devId: f.devId || '', devName: f.devName || '', devWhatsapp: f.devWhatsapp || '' }; });
             } catch (err) { console.error(err); fileData = []; }
             renderFiles();
@@ -3234,7 +3267,7 @@
                             <div class="min-w-0 flex-grow">
                                 <h3 class="text-base font-bold ui-ink" style="overflow-wrap:anywhere">${escapeHtml(f.title)}</h3>
                                 ${f.size ? `<span class="text-xs ui-muted" dir="ltr">${escapeHtml(f.size)}</span>` : ''}
-                                ${f.devName ? `<div class="dev-by"><i class="fa-solid fa-code"></i> ${escapeHtml(f.devName)}</div>` : ''}
+                                ${devBy(f)}
                             </div>
                         </div>
                         ${f.description ? `<p class="text-sm ui-muted" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(f.description)}</p>` : ''}
@@ -3301,11 +3334,14 @@
         }
 
         // =====================================================================
-        // ===== نظام المطورين: حساب مطور + لوحة تحكم خاصة + مراقبة المدير =====
+        // ===== نظام المطورين: انضمام بمراجعة المدير + فحص الروابط + إشعارات =====
         // =====================================================================
-        // - المطور ينشر لعبة/تطبيق/خلفيات/ملف؛ كل منشور يحمل devId و devName و devWhatsapp.
-        // - المطور يرى منشوراته فقط وعدد تنزيلاتها (أرقام فقط، بلا أسماء الأشخاص).
-        // - المدير يرى كل شيء: تبويب "المطورون" و"سجل النشاط"، ويحذف أي منشور أو مطور.
+        // دورة الحياة:
+        //  1) المطور يسجّل (اسم + واتساب) => حالته "متقدّم" ويُطلب منه رفع عمل للمراجعة.
+        //  2) عمله يُحفظ بحالة pending ولا يظهر للناس. المدير يطّلع عليه ويجرّبه ثم يوافق (=> يُنشر فوراً ويصبح المطور "معتمداً") أو يرفض.
+        //  3) المطور المعتمد ينشر مباشرة، إلا إذا كان رابط التنزيل لم يمرّ بفحص الفيروسات (clean) أو فعّل المدير "مراجعة كل أعماله".
+        //  4) كل تنزيل/طلب لمنشور مطور يصله كإشعار (بلا اسم الشخص).
+        const SCAN_API_URL = '';   // ضع هنا رابط Worker الفحص (virustotal-worker.js) لتفعيل فحص الفيروسات الحقيقي. اتركه فارغاً = فحص أولي + مراجعة المدير.
         const DEV_KEYS = ['devId', 'devName', 'devWhatsapp'];
         const dvGet = k => { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } };
         const dvSet = (k, v) => { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) {} };
@@ -3313,20 +3349,112 @@
         const dvEl = id => document.getElementById(id);
         const dvPhone = v => { let d = String(v || '').replace(/[^\d٠-٩]/g, '').replace(/[٠-٩]/g, c => '٠١٢٣٤٥٦٧٨٩'.indexOf(c)); return d.replace(/^00/, ''); };
         const dvNameKey = n => cleanName(n).toLowerCase();
-        let dvMode = 'new';
+        const dvApproved = d => !!d && (d.status === 'approved' || d.status === 'active');
+        let dvMode = 'new', dvDev = null;
+        const DV_LBL = { game: 'لعبة', app: 'تطبيق', wallpaper: 'خلفية', file: 'ملف' };
 
         function dvSession() { return { id: dvGet('devId'), name: dvGet('devName'), phone: dvGet('devWhatsapp') }; }
-        function dvPaintMenu() { const t = dvEl('menuDevTxt'); if (!t) return; if (dvSession().id) { t.removeAttribute('data-translate'); t.textContent = 'لوحة المطور'; } }
+        function DV_SET(o) { dvSet('devId', o.id); dvSet('devName', o.name); dvSet('devWhatsapp', o.phone); }
+        function dvPaintMenu() { const t = dvEl('menuDevTxt'); if (t && dvSession().id) { t.removeAttribute('data-translate'); t.textContent = 'لوحة المطور'; } }
+        function dvToast(text) {
+            const t = document.createElement('div');
+            t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:500;max-width:90vw;padding:.7rem 1.1rem;border-radius:.9rem;background:#6d28d9;color:#fff;font-weight:700;font-size:.9rem;box-shadow:0 10px 30px rgba(0,0,0,.35)';
+            t.textContent = '🔔 ' + text; document.body.appendChild(t); setTimeout(() => t.remove(), 6500);
+        }
+        function dvErr(el, msg) { el.textContent = msg; el.hidden = !msg; }
 
-        async function dvVerify() {   // يتأكد أن حساب المطور ما زال موجوداً وغير محظور
+        // ---------- إشعارات المطور ----------
+        async function notifyDev(devId, type, text, itemId) {
+            if (!devId) return;
+            try { await addDoc(collection(db, 'devNotifs'), { devId, type, text, itemId: itemId || '', read: false, createdAt: serverTimestamp() }); } catch (e) { console.warn('notif skipped', e); }
+        }
+        let dvLastSeen = 0, dvPoll = null;
+        function dvPaintBadge(n) {
+            [['dvMenuBadge'], ['dvNotifBadge']].forEach(([id]) => { const b = dvEl(id); if (b) { b.textContent = n; b.classList.toggle('hidden', !n); } });
+        }
+        async function dvFetchNotifs() {
+            const r = await getDocs(query(collection(db, 'devNotifs'), where('devId', '==', dvSession().id)));
+            const a = []; r.forEach(d => { const x = d.data(); a.push({ id: d.id, ...x, at: tsMs(x.createdAt) }); });
+            return a.sort((p, q) => q.at - p.at);
+        }
+        async function dvCheckNotifs(first) {
+            if (!dvSession().id) return;
+            try {
+                const a = await dvFetchNotifs(), unread = a.filter(n => !n.read);
+                dvPaintBadge(unread.length);
+                const fresh = unread.filter(n => n.at > dvLastSeen);
+                if (!first && fresh.length) {
+                    dvToast(fresh[0].text + (fresh.length > 1 ? ' (+' + (fresh.length - 1) + ')' : ''));
+                    try { if ('Notification' in window && Notification.permission === 'granted') new Notification('7ASSON GAMING', { body: fresh[0].text }); } catch (e) {}
+                }
+                dvLastSeen = Math.max(dvLastSeen, ...a.map(n => n.at), 0);
+            } catch (e) {}
+        }
+        function dvStartPoll() { clearInterval(dvPoll); if (!dvSession().id) return; dvCheckNotifs(true); dvPoll = setInterval(() => dvCheckNotifs(false), 40000); }
+        async function dvLoadNotifs() {
+            const pane = dvEl('dvPaneNotifs'); pane.innerHTML = '<p class="ui-muted text-center py-4">جاري التحميل...</p>';
+            try {
+                const a = await dvFetchNotifs();
+                const perm = ('Notification' in window && Notification.permission === 'default') ? '<button type="button" id="dvAskPerm" class="text-xs font-bold px-3 py-2 rounded-lg cursor-pointer btn-primary"><i class="fa-solid fa-bell"></i> فعّل تنبيهات المتصفح</button>' : '';
+                const unread = a.filter(n => !n.read).length;
+                pane.innerHTML = `<div class="flex items-center gap-2 flex-wrap">${perm}${unread ? '<button type="button" id="dvReadAll" class="text-xs font-bold px-3 py-2 rounded-lg cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line">تعليم الكل كمقروء</button>' : ''}</div>
+                    <p class="text-xs ui-muted">تصلك التنبيهات اللحظية ما دام الموقع مفتوحاً عندك؛ وما فاتك يبقى هنا.</p>
+                    ${a.length ? a.slice(0, 100).map(n => `<div class="ui-soft border ui-line rounded-lg px-3 py-2 flex items-start gap-3 text-sm" style="${n.read ? 'opacity:.65' : 'border-color:#8b5cf6'}"><i class="fa-solid ${n.type === 'download' ? 'fa-download' : n.type === 'approved' ? 'fa-circle-check' : n.type === 'rejected' ? 'fa-circle-xmark' : 'fa-hand'} ui-accent mt-1"></i><div class="flex-grow ui-ink leading-6">${escapeHtml(n.text)}</div><span class="text-xs ui-muted flex-shrink-0">${n.at ? new Date(n.at).toLocaleString('ar') : ''}</span></div>`).join('') : '<p class="ui-muted text-center py-6">لا توجد إشعارات بعد.</p>'}`;
+                const ra = dvEl('dvReadAll'); if (ra) ra.addEventListener('click', async () => { for (const n of a.filter(x => !x.read)) { try { await updateDoc(doc(db, 'devNotifs', n.id), { read: true }); } catch (e) {} } dvCheckNotifs(true); dvLoadNotifs(); });
+                const ap = dvEl('dvAskPerm'); if (ap) ap.addEventListener('click', async () => { try { await Notification.requestPermission(); } catch (e) {} dvLoadNotifs(); });
+                dvPaintBadge(unread);
+            } catch (e) { console.error(e); pane.innerHTML = '<p class="ui-err text-center py-4">تعذّر تحميل الإشعارات.</p>'; }
+        }
+
+        // ---------- فحص الروابط ----------
+        const SCAN_BAD_EXT = /\.(exe|scr|bat|cmd|com|pif|vbs|vbe|jse?|wsf|wsh|msi|msp|ps1|lnk|hta|dll|reg|cpl|jar)$/i;
+        const SCAN_SHORT = /(^|\.)(bit\.ly|tinyurl\.com|t\.co|is\.gd|cutt\.ly|rb\.gy|shorturl\.at|goo\.gl|ow\.ly|tiny\.cc|adf\.ly|linkvertise\.com|ouo\.io)$/i;
+        function localScan(url) {
+            const flags = [];
+            try {
+                const u = new URL(url), host = u.hostname; let path = u.pathname; try { path = decodeURIComponent(path); } catch (e) {}
+                if (u.protocol !== 'https:') flags.push('رابط غير مشفّر (http)');
+                if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host) || host.includes(':')) flags.push('الرابط يشير إلى عنوان IP مباشر');
+                if (SCAN_SHORT.test(host)) flags.push('رابط مختصر يخفي الوجهة الحقيقية');
+                if (/(^|\.)xn--/.test(host)) flags.push('نطاق بحروف مموّهة (punycode)');
+                if (u.username || u.password) flags.push('الرابط يحتوي بيانات دخول مضمّنة');
+                if (/\.(pdf|docx?|xlsx?|pptx?|jpe?g|png|gif|mp[34]|txt|zip|rar)\.(exe|scr|bat|cmd|com|pif|vbs|js|msi|jar|lnk|hta)$/i.test(path)) return { verdict: 'malicious', flags: flags.concat('امتداد مزدوج مخادع (مثل file.pdf.exe)') };
+                if (SCAN_BAD_EXT.test(path)) flags.push('ملف تنفيذي/سكربت يحتاج فحصاً يدوياً');
+            } catch (e) { return { verdict: 'malicious', flags: ['رابط غير صالح'] }; }
+            return { verdict: flags.length ? 'suspicious' : 'unverified', flags };
+        }
+        async function scanLink(url) {
+            const L = localScan(url), res = { engine: 'local', verdict: L.verdict, flags: L.flags, detail: '', at: Date.now() };
+            if (L.verdict === 'malicious') { res.detail = 'رُفض: ' + L.flags.join('، '); return res; }
+            if (!SCAN_API_URL) { res.detail = 'فحص أولي فقط (لم يُربط محرك فيروسات) — يحتاج مراجعة المدير.' + (L.flags.length ? ' • ' + L.flags.join('، ') : ''); return res; }
+            try {
+                const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 75000);
+                const r = await fetch(SCAN_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url }), signal: ctl.signal });
+                clearTimeout(tm);
+                const j = await r.json();
+                res.engine = 'virustotal';
+                const vt = { malicious: j.malicious | 0, suspicious: j.suspicious | 0, harmless: j.harmless | 0, undetected: j.undetected | 0, sha256: String(j.sha256 || ''), link: String(j.permalink || '') };
+                res.vt = vt;
+                const total = vt.harmless + vt.undetected + vt.malicious + vt.suspicious;
+                if (j.verdict === 'unscanned' || !total) { res.detail = 'تعذّر الفحص: ' + (j.detail || 'الملف كبير أو الرابط غير مباشر') + ' — يحتاج مراجعة المدير.'; return res; }
+                if (vt.malicious >= 3) { res.verdict = 'malicious'; res.detail = 'اكتشف ' + vt.malicious + ' محرك فيروسات تهديداً في هذا الملف.'; return res; }
+                if (vt.malicious > 0 || vt.suspicious > 0 || L.verdict === 'suspicious') { res.verdict = 'suspicious'; res.detail = `VirusTotal: ${vt.malicious} خبيث / ${vt.suspicious} مشبوه من ${total}` + (L.flags.length ? ' • ' + L.flags.join('، ') : ''); return res; }
+                res.verdict = 'clean'; res.detail = `سليم: 0 تهديد من ${total} محرك فحص.`; return res;
+            } catch (e) { res.detail = 'تعذّر الاتصال بأداة الفحص — يحتاج مراجعة المدير.'; return res; }
+        }
+        const SCAN_UI = { clean: ['سليم ✓', '#dcfce7', '#15803d'], unverified: ['لم يُتحقق', '#e5e7eb', '#374151'], suspicious: ['مشبوه', '#fef3c7', '#b45309'], malicious: ['خبيث', '#fee2e2', '#b91c1c'] };
+        const scanChip = sc => { if (!sc) return ''; const u = SCAN_UI[sc.verdict] || SCAN_UI.unverified; return `<span class="dev-tag" style="background:${u[1]};color:${u[2]}"><i class="fa-solid fa-shield-halved"></i> فحص: ${u[0]}</span>`; };
+        const JSONSAFE = o => JSON.parse(JSON.stringify(o));
+
+        // ---------- جلسة المطور ----------
+        async function dvVerify() {
             const ss = dvSession(); if (!ss.id) return null;
             try {
                 const snap = await getDoc(doc(db, 'developers', ss.id));
                 if (!snap.exists()) { DEV_KEYS.forEach(k => dvSet(k, '')); dvPaintMenu(); return null; }
-                return { id: snap.id, ...snap.data() };
-            } catch (e) { return { id: ss.id, name: ss.name, phone: ss.phone, status: 'active', offline: true }; }
+                dvDev = { id: snap.id, ...snap.data() }; return dvDev;
+            } catch (e) { dvDev = { id: ss.id, name: ss.name, phone: ss.phone, status: 'applicant', offline: true }; return dvDev; }
         }
-
         function dvShowAuth() {
             dvEl('devAuth').classList.remove('hidden'); dvEl('devDash').classList.add('hidden');
             dvEl('devTitle').innerHTML = '<i class="fa-solid fa-code"></i> إضافة مطور';
@@ -3337,35 +3465,46 @@
             dvMode = m;
             dvEl('devTabNew').className = 'px-3 py-2 rounded-lg text-sm font-bold cursor-pointer ' + (m === 'new' ? 'btn-primary' : 'ui-soft ui-muted');
             dvEl('devTabIn').className = 'px-3 py-2 rounded-lg text-sm font-bold cursor-pointer ' + (m === 'in' ? 'btn-primary' : 'ui-soft ui-muted');
-            dvEl('devAuthBtn').textContent = m === 'new' ? 'إنشاء حساب المطور' : 'دخول المطور';
+            dvEl('devAuthBtn').textContent = m === 'new' ? 'تقديم طلب الانضمام كمطور' : 'دخول المطور';
             dvEl('devAuthErr').hidden = true;
         }
-        function dvErr(el, msg) { el.textContent = msg; el.hidden = !msg; }
-
         async function openDevModal() {
-            closeMenu();
-            dvModal.classList.remove('hidden');
+            closeMenu(); dvModal.classList.remove('hidden');
             if (!dvSession().id) { dvShowAuth(); return; }
             const dev = await dvVerify();
             if (!dev) { dvShowAuth(); return; }
-            dvShowDash(dev);
+            dvShowDash(dev, true);
         }
-        function dvShowDash(dev) {
+        async function dvShowDash(dev, autoTab) {
             dvEl('devAuth').classList.add('hidden'); dvEl('devDash').classList.remove('hidden');
             dvEl('devTitle').innerHTML = '<i class="fa-solid fa-code"></i> لوحة المطور';
-            dvEl('devWho').innerHTML = escapeHtml(dev.name) + (dev.status === 'blocked' ? ' <span class="dev-tag" style="background:#fee2e2;color:#b91c1c">موقوف</span>' : '');
+            dvEl('devWho').innerHTML = escapeHtml(dev.name) + (dev.status === 'blocked' ? ' <span class="dev-tag" style="background:#fee2e2;color:#b91c1c">موقوف</span>' : dvApproved(dev) ? ' <span class="dev-tag" style="background:#dcfce7;color:#15803d">مطور معتمد ✓</span>' : ' <span class="dev-tag" style="background:#fef3c7;color:#b45309">متقدّم</span>');
             dvEl('devWho2').textContent = '+' + dev.phone;
-            dvTab('stats');
+            dvStartPoll();
+            const items = await dvRefreshBanner();
+            dvTab(autoTab && !dvApproved(dev) && !items.length ? 'add' : 'stats');
+        }
+        async function dvRefreshBanner() {
+            const dev = dvDev, box = dvEl('dvBanner'); let items = [];
+            try { items = await dvFetchMine(); } catch (e) {}
+            const pend = items.filter(i => i.status === 'pending'), rej = items.filter(i => i.status === 'rejected');
+            let html = '', bg = '#ede9fe', fg = '#5b21b6';
+            if (dev.status === 'blocked') { bg = '#fee2e2'; fg = '#991b1b'; html = '<b>حسابك موقوف من الإدارة.</b> لا يمكنك النشر حالياً.'; }
+            else if (dvApproved(dev)) { bg = '#dcfce7'; fg = '#166534'; html = '<b>حسابك معتمد ✓</b> ' + (dev.reviewAll ? 'منشوراتك تمرّ بمراجعة المدير قبل ظهورها.' : 'تُنشر أعمالك مباشرة، وأي رابط تنزيل لم يمرّ بفحص الفيروسات بنجاح يُحوَّل لمراجعة المدير.'); }
+            else if (pend.length) { html = '<b>عملك قيد المراجعة ⏳</b> سيطّلع عليه المدير ويجرّبه، وعند الموافقة يُنشر مباشرة ويصبح حسابك معتمداً.'; }
+            else if (rej.length) { bg = '#fef3c7'; fg = '#92400e'; html = '<b>لم يُقبل عملك الأخير.</b> ' + escapeHtml(rej[0].reason || '') + ' يمكنك رفع عمل آخر للمراجعة.'; }
+            else { html = `<b>أهلاً ${escapeHtml(dev.name)} 👋</b> لإتمام انضمامك كمطور، <b>ارفع عملك هنا</b> (لعبة أو تطبيق أو ملف) ليطّلع عليه المدير ويجرّبه. عند الموافقة يُنشر عملك مباشرة ويصبح حسابك معتمداً. <button type="button" id="dvGoAdd" class="mt-2 text-xs font-bold px-3 py-2 rounded-lg cursor-pointer btn-primary block">ارفع عملك الآن</button>`; }
+            box.style.background = bg; box.style.color = fg; box.innerHTML = html; box.classList.remove('hidden');
+            const g = dvEl('dvGoAdd'); if (g) g.addEventListener('click', () => dvTab('add'));
+            return items;
         }
         function dvTab(t) {
             document.querySelectorAll('.dv-tab').forEach(b => { b.className = 'dv-tab px-4 py-2 rounded-lg text-sm font-medium cursor-pointer ' + (b.dataset.dvtab === t ? 'btn-primary' : 'ui-soft ui-muted'); });
-            dvEl('dvPaneStats').classList.toggle('hidden', t !== 'stats');
-            dvEl('dvPaneMine').classList.toggle('hidden', t !== 'mine');
-            dvEl('dvPaneAdd').classList.toggle('hidden', t !== 'add');
-            if (t === 'stats') dvLoadStats(); else if (t === 'mine') dvLoadMine(); else dvKindChange();
+            ['Stats', 'Mine', 'Add', 'Notifs'].forEach(n => dvEl('dvPane' + n).classList.toggle('hidden', n.toLowerCase() !== t));
+            if (t === 'stats') dvLoadStats(); else if (t === 'mine') dvLoadMine(); else if (t === 'notifs') dvLoadNotifs(); else dvKindChange();
         }
 
-        // ---- جلب عناصر المطور وتنزيلاتها (أرقام فقط) ----
+        // ---------- عناصر المطور ----------
         async function dvFetchMine() {
             const id = dvSession().id, out = [];
             const [g, w, f, l] = await Promise.all([
@@ -3375,32 +3514,31 @@
                 getDocs(query(collection(db, 'logs'), where('devId', '==', id))).catch(() => null)
             ]);
             const dl = {}; if (l) l.forEach(d => { const x = d.data(); dl[x.itemId] = (dl[x.itemId] || 0) + 1; });
-            g.forEach(d => { const x = d.data(); out.push({ id: d.id, col: 'games', type: x.kind === 'app' ? 'app' : 'game', title: x.title, img: x.cover, dl: Math.max(x.downloadsCount || 0, dl[d.id] || 0), at: tsMs(x.createdAt), url: x.downloadUrl || '' }); });
-            w.forEach(d => { const x = d.data(); out.push({ id: d.id, col: 'wallpapers', type: 'wallpaper', title: x.title, img: x.thumb, dl: Math.max(x.downloadsCount || 0, dl[d.id] || 0), at: tsMs(x.createdAt), sub: x.kind === 'pc' ? 'PC' : 'هاتف' }); });
-            f.forEach(d => { const x = d.data(); out.push({ id: d.id, col: 'files', type: 'file', title: x.title, img: '', dl: dl[d.id] || 0, at: tsMs(x.createdAt), url: x.url }); });
-            out.sort((a, b) => b.at - a.at);
-            return out;
+            const base = (d, x) => ({ id: d.id, status: x.status || 'approved', reason: x.rejectReason || '', scan: x.scan || null, at: tsMs(x.createdAt) });
+            g.forEach(d => { const x = d.data(); out.push({ ...base(d, x), col: 'games', type: x.kind === 'app' ? 'app' : 'game', title: x.title, img: x.cover, dl: Math.max(x.downloadsCount || 0, dl[d.id] || 0), url: x.downloadUrl || '' }); });
+            w.forEach(d => { const x = d.data(); out.push({ ...base(d, x), col: 'wallpapers', type: 'wallpaper', title: x.title, img: x.thumb, dl: Math.max(x.downloadsCount || 0, dl[d.id] || 0), sub: x.kind === 'pc' ? 'PC' : 'هاتف' }); });
+            f.forEach(d => { const x = d.data(); out.push({ ...base(d, x), col: 'files', type: 'file', title: x.title, img: '', dl: dl[d.id] || 0, url: x.url }); });
+            return out.sort((a, b) => b.at - a.at);
         }
         async function dvLoadStats() {
             const pane = dvEl('dvPaneStats'); pane.innerHTML = '<p class="ui-muted text-center py-4">جاري التحميل...</p>';
             try {
-                const items = await dvFetchMine();
+                const all = await dvFetchMine(), items = all.filter(i => i.status === 'approved'), pendN = all.filter(i => i.status === 'pending').length;
                 let pending = 0;
                 try { const r = await getDocs(query(collection(db, 'requests'), where('devId', '==', dvSession().id))); r.forEach(d => { if (d.data().status === 'pending') pending++; }); } catch (e) {}
-                const total = items.reduce((a, b) => a + b.dl, 0);
-                const by = t => items.filter(i => i.type === t).length;
+                const total = items.reduce((a, b) => a + b.dl, 0), by = t => items.filter(i => i.type === t).length;
                 const top = items.slice().sort((a, b) => b.dl - a.dl).filter(i => i.dl > 0).slice(0, 5);
                 pane.innerHTML = `
                     <div class="flex flex-wrap gap-3">
                         <div class="dv-stat ui-soft border ui-line"><b class="ui-accent">${total}</b><span class="text-xs ui-muted">إجمالي التنزيلات</span></div>
-                        <div class="dv-stat ui-soft border ui-line"><b class="ui-ink">${items.length}</b><span class="text-xs ui-muted">منشوراتي</span></div>
+                        <div class="dv-stat ui-soft border ui-line"><b class="ui-ink">${items.length}</b><span class="text-xs ui-muted">منشور ظاهر</span></div>
+                        <div class="dv-stat ui-soft border ui-line"><b class="ui-ink">${pendN}</b><span class="text-xs ui-muted">قيد المراجعة</span></div>
                         <div class="dv-stat ui-soft border ui-line"><b class="ui-ink">${pending}</b><span class="text-xs ui-muted">طلبات واتساب معلّقة</span></div>
                     </div>
                     <p class="text-xs ui-muted">ألعاب: ${by('game')} • تطبيقات: ${by('app')} • خلفيات: ${by('wallpaper')} • ملفات: ${by('file')}</p>
                     <div><h4 class="font-bold ui-ink text-sm mb-2">الأكثر تنزيلاً</h4>${top.length ? top.map(i => `<div class="flex justify-between ui-soft border ui-line rounded-lg px-3 py-2 mb-2 text-sm"><span class="ui-ink truncate">${escapeHtml(i.title)}</span><strong class="ui-accent">${i.dl}</strong></div>`).join('') : '<p class="ui-muted text-sm">لا توجد تنزيلات بعد.</p>'}</div>`;
             } catch (e) { console.error(e); pane.innerHTML = '<p class="ui-err text-center py-4">تعذّر تحميل الإحصائيات.</p>'; }
         }
-        const DV_LBL = { game: 'لعبة', app: 'تطبيق', wallpaper: 'خلفية', file: 'ملف' };
         async function dvLoadMine() {
             const pane = dvEl('dvPaneMine'); pane.innerHTML = '<p class="ui-muted text-center py-4">جاري التحميل...</p>';
             try {
@@ -3408,17 +3546,23 @@
                 if (!items.length) { pane.innerHTML = '<p class="ui-muted text-center py-6">لم تنشر شيئاً بعد. افتح تبويب «نشر جديد».</p>'; return; }
                 pane.innerHTML = '';
                 items.forEach(it => {
+                    const st = it.status === 'pending' ? '<span class="dev-tag" style="background:#fef3c7;color:#b45309">بانتظار مراجعة المدير</span>' : it.status === 'rejected' ? '<span class="dev-tag" style="background:#fee2e2;color:#b91c1c">مرفوض</span>' : '<span class="dev-tag" style="background:#dcfce7;color:#15803d">منشور</span>';
                     const row = document.createElement('div');
                     row.className = 'ui-soft p-3 rounded-xl border ui-line flex items-center gap-3 flex-wrap';
                     row.innerHTML = `${it.img ? `<img src="${escapeHtml(it.img)}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">` : '<div class="w-12 h-12 rounded-lg ui-accent flex items-center justify-center flex-shrink-0 text-2xl"><i class="fa-solid fa-file"></i></div>'}
-                        <div class="flex-grow min-w-0"><h4 class="font-bold ui-ink text-sm truncate">${escapeHtml(it.title)}</h4><span class="text-xs ui-muted">${DV_LBL[it.type]}${it.sub ? ' • ' + it.sub : ''} • <i class="fa-solid fa-download"></i> ${it.dl} تنزيل</span></div>
-                        ${it.type === 'game' || it.type === 'app' ? '<button class="url-btn text-xs font-bold px-3 py-2 rounded-lg cursor-pointer btn-primary"><i class="fa-solid fa-link"></i> رابط</button>' : ''}
+                        <div class="flex-grow min-w-0"><h4 class="font-bold ui-ink text-sm truncate">${escapeHtml(it.title)} ${st}</h4><span class="text-xs ui-muted">${DV_LBL[it.type]}${it.sub ? ' • ' + it.sub : ''} • <i class="fa-solid fa-download"></i> ${it.dl} تنزيل ${scanChip(it.scan)}</span>${it.status === 'rejected' && it.reason ? `<div class="text-xs" style="color:#b91c1c">السبب: ${escapeHtml(it.reason)}</div>` : ''}</div>
+                        ${(it.type === 'game' || it.type === 'app') && it.status === 'approved' ? '<button class="url-btn text-xs font-bold px-3 py-2 rounded-lg cursor-pointer btn-primary"><i class="fa-solid fa-link"></i> رابط</button>' : ''}
                         <button class="del-btn text-xs font-bold px-3 py-2 rounded-lg cursor-pointer btn-danger"><i class="fa-solid fa-trash"></i> حذف</button>`;
                     const u = row.querySelector('.url-btn');
                     if (u) u.addEventListener('click', async () => {
                         const v = prompt('رابط التنزيل الجديد (اتركه فارغاً ليتحول الزر إلى طلب واتساب):', it.url || ''); if (v === null) return;
                         if (v.trim() && safeUrl(v.trim()) === '#') { alert('أدخل رابطاً صحيحاً يبدأ بـ https://'); return; }
-                        try { await updateDoc(doc(db, 'games', it.id), { downloadUrl: v.trim() }); dvLoadMine(); loadGames(); } catch (e) { alert('تعذّر الحفظ.'); }
+                        try {
+                            // تغيير الرابط يمرّ بالفحص من جديد؛ إن لم يكن سليماً يعود المنشور للمراجعة
+                            let patch = { downloadUrl: v.trim() };
+                            if (v.trim()) { const sc = JSONSAFE(await scanLink(v.trim())); if (sc.verdict === 'malicious') { alert('رُفض الرابط: ' + sc.detail); return; } patch.scan = sc; if (sc.verdict !== 'clean') { patch.status = 'pending'; alert('تم حفظ الرابط، لكنه يحتاج مراجعة المدير قبل ظهور المنشور مجدداً.'); } }
+                            await updateDoc(doc(db, 'games', it.id), patch); dvLoadMine(); dvRefreshBanner(); loadGames();
+                        } catch (e) { alert('تعذّر الحفظ.'); }
                     });
                     row.querySelector('.del-btn').addEventListener('click', async () => {
                         if (!confirm('حذف «' + it.title + '» نهائياً؟')) return;
@@ -3426,7 +3570,7 @@
                             await deleteDoc(doc(db, it.col, it.id));
                             if (it.col === 'wallpapers') await deleteDoc(doc(db, 'wallpaperFiles', it.id));
                             logActivity('dev', `المطور ${dvSession().name} حذف ${DV_LBL[it.type]} «${it.title}»`, { devId: dvSession().id });
-                            dvLoadMine(); loadGames(); loadWallpapers(); loadFiles();
+                            dvLoadMine(); dvRefreshBanner(); loadGames(); loadWallpapers(); loadFiles();
                         } catch (e) { console.error(e); alert('تعذّر الحذف.'); }
                     });
                     pane.appendChild(row);
@@ -3434,29 +3578,42 @@
             } catch (e) { console.error(e); pane.innerHTML = '<p class="ui-err text-center py-4">تعذّر تحميل منشوراتك.</p>'; }
         }
 
-        // ---- نموذج النشر ----
+        // ---------- نموذج النشر ----------
         function dvKindChange() {
-            const k = dvEl('dvKind').value;
-            dvModal.querySelectorAll('[data-dvf]').forEach(el => el.classList.toggle('hidden', !el.dataset.dvf.split(' ').includes(k)));
-            dvEl('dvUrlLbl').textContent = k === 'file' ? 'رابط الملف (Google Drive أو رابط تنزيل مباشر)' : 'رابط التنزيل (اختياري؛ إن تُرك فارغاً يتحول الزر إلى طلب عبر واتساب الخاص بك)';
+            const k = dvEl('dvKind').value, ok = dvApproved(dvDev);
+            const wo = dvEl('dvKind').querySelector('option[value=wallpaper]'); if (wo) { wo.disabled = !ok; wo.textContent = ok ? 'خلفيات' : 'خلفيات (بعد اعتمادك)'; }
+            if (k === 'wallpaper' && !ok) dvEl('dvKind').value = 'game';
+            const kk = dvEl('dvKind').value;
+            dvModal.querySelectorAll('[data-dvf]').forEach(el => el.classList.toggle('hidden', !el.dataset.dvf.split(' ').includes(kk)));
+            dvEl('dvUrlLbl').textContent = kk === 'file' ? 'رابط الملف (Google Drive أو رابط تنزيل مباشر) — يُفحص تلقائياً' : 'رابط التنزيل (اختياري؛ إن تُرك فارغاً يتحول الزر إلى طلب عبر واتساب الخاص بك) — يُفحص تلقائياً';
         }
         dvEl('dvKind').addEventListener('change', dvKindChange);
 
         dvEl('dvPaneAdd').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const err = dvEl('dvAddErr'), btn = dvEl('dvPublish'); dvErr(err, '');
+            const err = dvEl('dvAddErr'), ok = dvEl('dvAddOk'), btn = dvEl('dvPublish'); dvErr(err, ''); ok.hidden = true;
             const dev = await dvVerify();
             if (!dev) { dvShowAuth(); return; }
             if (dev.status === 'blocked') { dvErr(err, 'حسابك موقوف من الإدارة ولا يمكنك النشر.'); return; }
-            const tag = { devId: dev.id, devName: dev.name, devWhatsapp: dev.phone };
             const kind = dvEl('dvKind').value;
+            if (kind === 'wallpaper' && !dvApproved(dev)) { dvErr(err, 'نشر الخلفيات متاح بعد اعتماد حسابك.'); return; }
             const title = dvEl('dvTitle').value.trim(), desc = dvEl('dvDesc').value.trim(), url = dvEl('dvUrl').value.trim();
-            btn.disabled = true; btn.textContent = 'جاري النشر...';
+            btn.disabled = true; btn.textContent = 'جاري التجهيز...';
             try {
+                let scan = null;
+                const linkUrl = (kind === 'game' || kind === 'app' || kind === 'file') ? url : '';
+                if (linkUrl) {
+                    if (safeUrl(linkUrl) === '#') throw new Error('E:أدخل رابطاً صحيحاً يبدأ بـ https://');
+                    btn.textContent = 'جاري فحص الرابط من الفيروسات...';
+                    scan = JSONSAFE(await scanLink(linkUrl));
+                    if (scan.verdict === 'malicious') throw new Error('E:🚫 تم رفض الرابط لأسباب أمنية: ' + scan.detail);
+                }
+                const status = (!dvApproved(dev) || dev.reviewAll || (scan && scan.verdict !== 'clean')) ? 'pending' : 'approved';
+                const tag = { devId: dev.id, devName: dev.name, devWhatsapp: dev.phone, status, ...(scan ? { scan } : {}) };
+                btn.textContent = 'جاري النشر...';
                 if (kind === 'game' || kind === 'app') {
                     if (!title || !desc) throw new Error('E:اكتب الاسم والوصف.');
                     const cover = dvEl('dvCover').files[0]; if (!cover) throw new Error('E:اختر الصورة الرئيسية.');
-                    if (url && safeUrl(url) === '#') throw new Error('E:رابط التنزيل غير صحيح (يبدأ بـ https://).');
                     const subs = Array.from(dvEl('dvSubs').files).slice(0, 3);
                     let payload = null;
                     for (const step of COMPRESSION_STEPS) {
@@ -3467,7 +3624,6 @@
                     }
                     if (!payload) throw new Error('E:حجم الصور كبير جداً. اختر صوراً أصغر.');
                     await addDoc(collection(db, 'games'), { ...payload, createdAt: serverTimestamp() });
-                    loadGames();
                 } else if (kind === 'wallpaper') {
                     const files = Array.from(dvEl('dvWalls').files); if (!files.length) throw new Error('E:اختر صورة واحدة على الأقل.');
                     if (files.length > 10) throw new Error('E:حتى 10 صور في المرة الواحدة.');
@@ -3481,22 +3637,23 @@
                         await setDoc(doc(db, 'wallpaperFiles', id), { image });
                         await setDoc(doc(db, 'wallpapers', id), { title: (files.length === 1 && title) || files[i].name.replace(/\.[^.]+$/, ''), kind: wk, thumb, downloadsCount: 0, ...tag, createdAt: serverTimestamp() });
                     }
-                    loadWallpapers();
                 } else {
                     if (!title) throw new Error('E:اكتب اسم الملف.');
-                    if (safeUrl(url) === '#') throw new Error('E:أدخل رابط الملف (يبدأ بـ https://).');
+                    if (!url) throw new Error('E:أدخل رابط الملف.');
                     await addDoc(collection(db, 'files'), { title, description: desc, url, size: dvEl('dvSize').value.trim(), ...tag, createdAt: serverTimestamp() });
-                    loadFiles();
                 }
-                logActivity('dev', `المطور ${dev.name} نشر ${DV_LBL[kind]}` + (title ? ` «${title}»` : ''), { devId: dev.id });
-                dvEl('dvPaneAdd').reset(); dvKindChange(); dvTab('mine');
+                logActivity('dev', `المطور ${dev.name} ${status === 'pending' ? 'أرسل للمراجعة' : 'نشر'} ${DV_LBL[kind]}` + (title ? ` «${title}»` : '') + (scan ? ` (فحص: ${(SCAN_UI[scan.verdict] || [''])[0]})` : ''), { devId: dev.id });
+                dvEl('dvPaneAdd').reset(); await dvRefreshBanner();
+                dvTab('mine');
+                dvToast(status === 'pending' ? 'تم إرسال عملك للمراجعة ✅ سيطّلع عليه المدير.' : 'تم نشر عملك مباشرة ✅');
+                loadGames(); loadWallpapers(); loadFiles();
             } catch (ex) {
                 console.error(ex);
                 dvErr(err, (ex.message || '').startsWith('E:') ? ex.message.slice(2) : ex.code === 'permission-denied' ? 'Firestore رفض الحفظ (permission-denied). عدّل قواعد Firestore للسماح بالكتابة.' : 'حدث خطأ أثناء النشر، حاول مرة أخرى.');
             } finally { btn.disabled = false; btn.textContent = 'نشر'; }
         });
 
-        // ---- تسجيل / دخول المطور ----
+        // ---------- تسجيل / دخول المطور ----------
         dvEl('devAuthForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const err = dvEl('devAuthErr'), btn = dvEl('devAuthBtn'); dvErr(err, '');
@@ -3508,31 +3665,117 @@
                 const snap = await getDocs(query(collection(db, 'developers'), where('phone', '==', phone)));
                 if (dvMode === 'new') {
                     if (!snap.empty) { dvErr(err, 'هذا الرقم مسجّل كمطور من قبل. اختر «لدي حساب مطور» للدخول.'); return; }
-                    const ref = await addDoc(collection(db, 'developers'), { name, nameKey: dvNameKey(name), phone, userName: getUser() || '', custId: getCustId(), status: 'active', createdAt: serverTimestamp() });
+                    const ref = await addDoc(collection(db, 'developers'), { name, nameKey: dvNameKey(name), phone, userName: getUser() || '', custId: getCustId(), status: 'applicant', reviewAll: false, createdAt: serverTimestamp() });
                     DV_SET({ id: ref.id, name, phone });
-                    logActivity('dev', `${name} سجّل كمطور جديد`, { devId: ref.id });
+                    logActivity('dev', `${name} تقدّم بطلب الانضمام كمطور`, { devId: ref.id });
                 } else {
                     const hit = snap.docs.find(d => d.data().nameKey === dvNameKey(name));
-                    if (!hit) { dvErr(err, 'لا يوجد مطور بهذا الاسم والرقم. تأكد من البيانات أو أنشئ حساباً جديداً.'); return; }
+                    if (!hit) { dvErr(err, 'لا يوجد مطور بهذا الاسم والرقم. تأكد من البيانات أو قدّم طلباً جديداً.'); return; }
                     DV_SET({ id: hit.id, name: hit.data().name, phone });
                 }
-                dvPaintMenu(); dvShowDash(await dvVerify());
+                dvPaintMenu(); const dev = await dvVerify(); dvShowDash(dev, true);
             } catch (ex) {
                 console.error(ex);
-                dvErr(err, ex.code === 'permission-denied' ? 'Firestore رفض العملية (permission-denied). أضف مجموعة developers إلى قواعد Firestore.' : 'تعذّر الاتصال. حاول مرة أخرى.');
+                dvErr(err, ex.code === 'permission-denied' ? 'Firestore رفض العملية (permission-denied). أضف المجموعات الجديدة إلى قواعد Firestore.' : 'تعذّر الاتصال. حاول مرة أخرى.');
             } finally { btn.disabled = false; }
         });
-        function DV_SET(o) { dvSet('devId', o.id); dvSet('devName', o.name); dvSet('devWhatsapp', o.phone); }
         dvEl('devTabNew').addEventListener('click', () => dvSetMode('new'));
         dvEl('devTabIn').addEventListener('click', () => dvSetMode('in'));
-        dvEl('devLogout').addEventListener('click', () => { if (!confirm('تسجيل خروج حساب المطور من هذا الجهاز؟')) return; DV_KEYS.forEach(k => dvSet(k, '')); const t = dvEl('menuDevTxt'); t.dataset.translate = 'menuDev'; t.textContent = translations[currentLang].menuDev; dvShowAuth(); });
+        dvEl('devLogout').addEventListener('click', () => { if (!confirm('تسجيل خروج حساب المطور من هذا الجهاز؟')) return; DV_KEYS.forEach(k => dvSet(k, '')); clearInterval(dvPoll); dvPaintBadge(0); dvDev = null; const t = dvEl('menuDevTxt'); t.dataset.translate = 'menuDev'; t.textContent = translations[currentLang].menuDev; dvShowAuth(); });
         dvEl('devClose').addEventListener('click', () => dvModal.classList.add('hidden'));
         dvModal.addEventListener('click', (e) => { if (e.target === dvModal) dvModal.classList.add('hidden'); });
         document.querySelectorAll('.dv-tab').forEach(b => b.addEventListener('click', () => dvTab(b.dataset.dvtab)));
         dvEl('menuDevBtn').addEventListener('click', openDevModal);
-        dvPaintMenu();
+        dvPaintMenu(); dvStartPoll();
 
-        // ===== المدير: تبويب المطورين =====
+        // ---------- صفحة المطور للعامة (عند الضغط على اسمه) ----------
+        const dpModal = dvEl('devProfModal');
+        async function showDevProfile(id, name) {
+            dpModal.classList.remove('hidden');
+            dvEl('dpName').textContent = name; const box = dvEl('dpList'); box.innerHTML = '<p class="ui-muted text-center py-4">جاري التحميل...</p>';
+            try {
+                const [g, f] = await Promise.all([getDocs(query(collection(db, 'games'), where('devId', '==', id))), getDocs(query(collection(db, 'files'), where('devId', '==', id)))]);
+                const rows = []; g.forEach(d => { const x = d.data(); if (isLive(x)) rows.push({ t: x.kind === 'app' ? 'تطبيق' : 'لعبة', title: x.title, img: x.cover }); });
+                f.forEach(d => { const x = d.data(); if (isLive(x)) rows.push({ t: 'ملف', title: x.title, img: '' }); });
+                dvEl('dpCount').textContent = rows.length ? rows.length + ' عمل منشور' : '';
+                box.innerHTML = rows.length ? rows.map(r => `<div class="ui-soft border ui-line rounded-lg p-2 flex items-center gap-3">${r.img ? `<img src="${escapeHtml(r.img)}" class="w-10 h-10 rounded-lg object-cover">` : '<div class="w-10 h-10 ui-accent flex items-center justify-center text-xl"><i class="fa-solid fa-file"></i></div>'}<div class="min-w-0"><div class="ui-ink text-sm font-bold truncate">${escapeHtml(r.title)}</div><div class="text-xs ui-muted">${r.t}</div></div></div>`).join('') : '<p class="ui-muted text-center py-4">لا توجد أعمال منشورة بعد.</p>';
+            } catch (e) { box.innerHTML = '<p class="ui-err text-center py-4">تعذّر التحميل.</p>'; }
+        }
+        document.addEventListener('click', (e) => { const b = e.target.closest && e.target.closest('.dev-by[data-devid]'); if (b) { e.preventDefault(); showDevProfile(b.dataset.devid, b.dataset.devname); } });
+        dvEl('dpClose').addEventListener('click', () => dpModal.classList.add('hidden'));
+        dpModal.addEventListener('click', (e) => { if (e.target === dpModal) dpModal.classList.add('hidden'); });
+
+        // ===================== المدير: المراجعة =====================
+        async function rvCount() {
+            try {
+                const r = await Promise.all(['games', 'files', 'wallpapers'].map(c => getDocs(query(collection(db, c), where('status', '==', 'pending')))));
+                const n = r.reduce((a, s) => a + s.size, 0), b = dvEl('rvBadge'); b.textContent = n; b.classList.toggle('hidden', !n); return n;
+            } catch (e) { return 0; }
+        }
+        async function loadReview() {
+            const list = dvEl('rvList'); list.innerHTML = '<p class="ui-muted text-center py-4">جاري التحميل...</p>';
+            try {
+                const items = [];
+                for (const [col, type] of [['games', null], ['files', 'file'], ['wallpapers', 'wallpaper']]) {
+                    const sn = await getDocs(query(collection(db, col), where('status', '==', 'pending')));
+                    sn.forEach(d => { const x = d.data(); items.push({ id: d.id, col, type: type || (x.kind === 'app' ? 'app' : 'game'), at: tsMs(x.createdAt), ...x }); });
+                }
+                items.sort((a, b) => b.at - a.at); rvCount();
+                if (!items.length) { list.innerHTML = '<p class="ui-muted text-center py-6">لا توجد أعمال بانتظار المراجعة 🎉</p>'; return; }
+                list.innerHTML = '';
+                for (const it of items) {
+                    let dev = null; if (it.devId) { try { const s = await getDoc(doc(db, 'developers', it.devId)); if (s.exists()) dev = s.data(); } catch (e) {} }
+                    const first = dev && dev.status === 'applicant';
+                    const link = it.type === 'file' ? it.url : it.downloadUrl;
+                    const sc = it.scan;
+                    const imgs = [it.cover || it.thumb].concat(it.subImages || []).filter(Boolean);
+                    const card = document.createElement('div');
+                    card.className = 'ui-soft p-4 rounded-xl border ui-line space-y-3';
+                    card.innerHTML = `
+                        <div class="flex items-start justify-between gap-2 flex-wrap">
+                            <div class="min-w-0"><h4 class="font-bold ui-ink">${escapeHtml(it.title)} <span class="dev-tag">${DV_LBL[it.type]}</span>${first ? ' <span class="dev-tag" style="background:#fef3c7;color:#b45309">أول عمل — طلب انضمام</span>' : ''}</h4>
+                            <div class="text-xs ui-muted">المطور: <strong class="ui-ink">${escapeHtml(it.devName || '')}</strong> ${dev ? `<a href="https://wa.me/${escapeHtml(dev.phone)}" target="_blank" rel="noopener" class="ui-accent" dir="ltr">+${escapeHtml(dev.phone)}</a>` : ''}</div></div>
+                        </div>
+                        ${it.description ? `<p class="text-sm ui-muted whitespace-pre-wrap break-words">${escapeHtml(it.description)}</p>` : ''}
+                        ${imgs.length ? `<div class="flex gap-2 overflow-x-auto">${imgs.map(s => `<img src="${escapeHtml(s)}" class="h-24 rounded-lg border ui-line flex-shrink-0">`).join('')}</div>` : ''}
+                        ${it.video ? `<a href="${escapeHtml(safeUrl(it.video))}" target="_blank" rel="noopener" class="text-xs ui-accent block" dir="ltr">🎬 ${escapeHtml(it.video)}</a>` : ''}
+                        ${link ? `<div class="space-y-1"><a href="${escapeHtml(safeUrl(link))}" target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg"><i class="fa-solid fa-flask"></i> افتح الرابط لتجربته</a> <span class="text-xs ui-muted break-all" dir="ltr">${escapeHtml(link)}</span></div>
+                        <div class="text-xs ui-ink">${scanChip(sc)} <span class="ui-muted">${escapeHtml((sc && sc.detail) || 'لم يُفحص')}</span> ${sc && sc.vt && sc.vt.link ? `<a href="${escapeHtml(safeUrl(sc.vt.link))}" target="_blank" rel="noopener" class="ui-accent">تقرير VirusTotal</a>` : ''} <button type="button" class="rescan text-xs font-bold px-2 py-1 rounded-lg cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line">إعادة الفحص</button></div>` : '<div class="text-xs ui-muted">لا يوجد رابط تنزيل (سيُطلب عبر واتساب المطور).</div>'}
+                        <div class="flex gap-2 flex-wrap">
+                            <button type="button" class="ok-btn text-sm font-bold px-4 py-2 rounded-lg cursor-pointer btn-primary"><i class="fa-solid fa-check"></i> موافقة ونشر</button>
+                            <button type="button" class="no-btn text-sm font-bold px-4 py-2 rounded-lg cursor-pointer btn-danger"><i class="fa-solid fa-xmark"></i> رفض</button>
+                        </div>`;
+                    const rs = card.querySelector('.rescan');
+                    if (rs) rs.addEventListener('click', async () => { rs.disabled = true; rs.textContent = 'جاري الفحص...'; try { const n = JSONSAFE(await scanLink(link)); await updateDoc(doc(db, it.col, it.id), { scan: n }); } catch (e) {} loadReview(); });
+                    card.querySelector('.ok-btn').addEventListener('click', async () => {
+                        if (sc && (sc.verdict === 'suspicious') && !confirm('الفحص وجد مؤشرات مشبوهة. هل جرّبت الملف بنفسك وتريد الموافقة رغم ذلك؟')) return;
+                        try {
+                            await updateDoc(doc(db, it.col, it.id), { status: 'approved', reviewedAt: serverTimestamp() });
+                            if (it.devId) {
+                                if (first) { try { await updateDoc(doc(db, 'developers', it.devId), { status: 'approved' }); } catch (e) {} }
+                                notifyDev(it.devId, 'approved', `تمت الموافقة على «${it.title}» ونُشر في الموقع ✅` + (first ? ' — وأصبح حسابك معتمداً، تُنشر أعمالك القادمة مباشرة.' : ''), it.id);
+                            }
+                            logActivity('dev', `المدير وافق على ${DV_LBL[it.type]} «${it.title}»` + (it.devName ? ` للمطور ${it.devName}` : ''), { devId: it.devId || '' });
+                            loadReview(); loadGames(); loadWallpapers(); loadFiles();
+                        } catch (e) { console.error(e); alert('تعذّرت الموافقة.'); }
+                    });
+                    card.querySelector('.no-btn').addEventListener('click', async () => {
+                        const reason = prompt('سبب الرفض (يصل للمطور):', ''); if (reason === null) return;
+                        try {
+                            await updateDoc(doc(db, it.col, it.id), { status: 'rejected', rejectReason: reason.trim(), reviewedAt: serverTimestamp() });
+                            if (it.devId) notifyDev(it.devId, 'rejected', `لم تتم الموافقة على «${it.title}»` + (reason.trim() ? ': ' + reason.trim() : ''), it.id);
+                            logActivity('dev', `المدير رفض ${DV_LBL[it.type]} «${it.title}»`, { devId: it.devId || '' });
+                            loadReview();
+                        } catch (e) { alert('تعذّر الرفض.'); }
+                    });
+                    list.appendChild(card);
+                }
+            } catch (e) { console.error(e); list.innerHTML = '<p class="ui-err text-center py-4">تعذّر تحميل قائمة المراجعة.</p>'; }
+        }
+        dvEl('refreshRvBtn').addEventListener('click', loadReview);
+        new MutationObserver(() => { if (!adminModal.classList.contains('hidden')) rvCount(); }).observe(adminModal, { attributes: true, attributeFilter: ['class'] });
+
+        // ===================== المدير: المطورون =====================
         async function loadDevsAdmin() {
             const list = dvEl('devsList'); list.innerHTML = '<p class="ui-muted text-center py-4">جاري التحميل...</p>';
             try {
@@ -3541,26 +3784,31 @@
                     getDocs(collection(db, 'games')), getDocs(collection(db, 'wallpapers')), getDocs(collection(db, 'files')),
                     getDocs(query(collection(db, 'logs'), orderBy('timestamp', 'desc'), limit(2000))).catch(() => null)
                 ]);
-                const cnt = {}, dls = {};
-                [gs, ws, fs].forEach(sn => sn.forEach(d => { const x = d.data(); if (x.devId) cnt[x.devId] = (cnt[x.devId] || 0) + 1; }));
+                const cnt = {}, pend = {}, dls = {};
+                [gs, ws, fs].forEach(sn => sn.forEach(d => { const x = d.data(); if (x.devId) { cnt[x.devId] = (cnt[x.devId] || 0) + 1; if (x.status === 'pending') pend[x.devId] = (pend[x.devId] || 0) + 1; } }));
                 if (ls) ls.forEach(d => { const x = d.data(); if (x.devId) dls[x.devId] = (dls[x.devId] || 0) + 1; });
                 dvEl('devsCount').textContent = ds.size ? '(' + ds.size + ')' : '';
                 if (ds.empty) { list.innerHTML = '<p class="ui-muted text-center py-6">لا يوجد مطورون مسجّلون بعد.</p>'; return; }
                 list.innerHTML = '';
                 ds.forEach(d => {
-                    const x = d.data(), blocked = x.status === 'blocked';
+                    const x = d.data(), blocked = x.status === 'blocked', appl = x.status === 'applicant';
+                    const chip = blocked ? '<span class="dev-tag" style="background:#fee2e2;color:#b91c1c">موقوف</span>' : appl ? '<span class="dev-tag" style="background:#fef3c7;color:#b45309">متقدّم — ينتظر الموافقة</span>' : '<span class="dev-tag" style="background:#dcfce7;color:#15803d">معتمد</span>';
                     const row = document.createElement('div');
                     row.className = 'ui-soft p-3 rounded-xl border ui-line flex items-center gap-3 flex-wrap';
                     row.innerHTML = `
                         <div class="flex-grow min-w-0">
-                            <h4 class="font-bold ui-ink text-sm">${escapeHtml(x.name)}${blocked ? ' <span class="dev-tag" style="background:#fee2e2;color:#b91c1c">موقوف</span>' : ''}</h4>
+                            <h4 class="font-bold ui-ink text-sm">${escapeHtml(x.name)} ${chip}</h4>
                             <a href="https://wa.me/${escapeHtml(x.phone)}" target="_blank" rel="noopener" class="text-xs ui-accent" dir="ltr"><i class="fa-brands fa-whatsapp"></i> +${escapeHtml(x.phone)}</a>
-                            <div class="text-xs ui-muted mt-1">${x.userName ? 'حساب الزائر: ' + escapeHtml(x.userName) + ' • ' : ''}منشورات: <strong>${cnt[d.id] || 0}</strong> • تنزيلات: <strong>${dls[d.id] || 0}</strong></div>
+                            <div class="text-xs ui-muted mt-1">${x.userName ? 'حساب الزائر: ' + escapeHtml(x.userName) + ' • ' : ''}منشورات: <strong>${cnt[d.id] || 0}</strong>${pend[d.id] ? ' (<span style="color:#b45309">' + pend[d.id] + ' بانتظار المراجعة</span>)' : ''} • تنزيلات: <strong>${dls[d.id] || 0}</strong></div>
                         </div>
+                        ${appl ? '<button class="appr-btn text-xs font-bold px-3 py-2 rounded-lg cursor-pointer btn-primary">اعتماد مباشر</button>' : ''}
+                        ${!appl && !blocked ? `<button class="rev-btn text-xs font-bold px-3 py-2 rounded-lg cursor-pointer ui-soft ui-soft-hover ui-ink border ui-line" title="عند التفعيل لا يُنشر أي عمل له قبل موافقتك">مراجعة كل أعماله: ${x.reviewAll ? 'نعم' : 'لا'}</button>` : ''}
                         <button class="blk-btn text-xs font-bold px-3 py-2 rounded-lg cursor-pointer ui-soft ui-soft-hover ui-ink border ui-line">${blocked ? 'إلغاء الإيقاف' : 'إيقاف'}</button>
                         <button class="del-btn text-xs font-bold px-3 py-2 rounded-lg cursor-pointer btn-danger"><i class="fa-solid fa-trash"></i> حذف المطور</button>`;
+                    const ap = row.querySelector('.appr-btn'); if (ap) ap.addEventListener('click', async () => { try { await updateDoc(doc(db, 'developers', d.id), { status: 'approved' }); notifyDev(d.id, 'approved', 'تم اعتماد حسابك كمطور ✅', ''); loadDevsAdmin(); } catch (e) { alert('تعذّر التحديث.'); } });
+                    const rv = row.querySelector('.rev-btn'); if (rv) rv.addEventListener('click', async () => { try { await updateDoc(doc(db, 'developers', d.id), { reviewAll: !x.reviewAll }); loadDevsAdmin(); } catch (e) { alert('تعذّر التحديث.'); } });
                     row.querySelector('.blk-btn').addEventListener('click', async () => {
-                        try { await updateDoc(doc(db, 'developers', d.id), { status: blocked ? 'active' : 'blocked' }); loadDevsAdmin(); } catch (e) { alert('تعذّر التحديث.'); }
+                        try { await updateDoc(doc(db, 'developers', d.id), { status: blocked ? (x.prevStatus || 'approved') : 'blocked', prevStatus: blocked ? '' : x.status }); loadDevsAdmin(); } catch (e) { alert('تعذّر التحديث.'); }
                     });
                     row.querySelector('.del-btn').addEventListener('click', async () => {
                         if (!confirm('حذف المطور «' + x.name + '»؟')) return;
@@ -3580,7 +3828,7 @@
         }
         dvEl('refreshDevsBtn').addEventListener('click', loadDevsAdmin);
 
-        // ===== المدير: سجل النشاط (من فعل ماذا) =====
+        // ===================== المدير: سجل النشاط =====================
         let actRows = [];
         const ACT_ICON = { download: 'fa-download', register: 'fa-user-plus', login: 'fa-right-to-bracket', dev: 'fa-code', request: 'fa-hand', comment: 'fa-comments', message: 'fa-envelope' };
         const ACT_GROUP = { download: 'download', register: 'register', login: 'register', dev: 'dev', request: 'social', comment: 'social', message: 'social' };
