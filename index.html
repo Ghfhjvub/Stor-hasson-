@@ -442,6 +442,33 @@
 .port-th{flex:1 1 0;min-width:0;max-width:64px;aspect-ratio:1/1;border-radius:8px;overflow:hidden;border:2px solid transparent;opacity:.65;cursor:pointer;padding:0;background:none}
 .port-th img{width:100%;height:100%;object-fit:cover;display:block}
 .port-th.on{border-color:#8b5cf6;opacity:1}
+/* ===== أزرار الهيدر: دراجة البورتفوليو + تثبيت التطبيق ===== */
+.hdr-tools{display:flex;align-items:center;gap:10px}
+.moto{width:42px;height:42px;animation:none}
+.moto .mb-body{animation:mbBounce .8s ease-in-out infinite}
+.moto .mb-spokes{transform-box:fill-box;transform-origin:center;animation:mbSpin .6s linear infinite}
+.moto .mb-puff{transform-box:fill-box;transform-origin:center;animation:mbPuff 1.4s ease-out infinite}
+.moto .mb-puff.d2{animation-delay:.7s}
+.moto-btn:hover .robot{animation:mbWheelie .9s ease-in-out;transform-origin:25% 80%}
+.moto-btn::after{animation-delay:1.2s}
+.hdr-install::after{animation-delay:2.4s}
+.robot-btn.is-open{box-shadow:0 0 0 4px rgba(240,171,252,.6),0 10px 24px -8px rgba(109,40,217,.8),inset 0 1px 0 rgba(255,255,255,.45)}
+.dl-arrow{animation:dlBounce 1.3s ease-in-out infinite}
+@keyframes mbBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.3px)}}
+@keyframes mbSpin{to{transform:rotate(360deg)}}
+@keyframes mbPuff{0%{opacity:.85;transform:translate(0,0) scale(.5)}100%{opacity:0;transform:translate(-9px,-5px) scale(1.5)}}
+@keyframes mbWheelie{0%,100%{transform:rotate(0)}40%,65%{transform:rotate(-13deg)}}
+@keyframes dlBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+#projSection{scroll-margin-top:100px}
+@media (max-width:440px){
+ .hdr-tools{gap:6px}
+ .hdr-tools .robot-btn{width:44px;height:44px;border-radius:15px}
+ .hdr-tools .hdr-install{width:38px;height:38px;border-radius:13px}
+ .hdr-tools .robot{width:32px;height:32px}
+ .hdr-tools .moto{width:36px;height:36px}
+ .hdr-tools .hdr-install .robot{width:28px;height:28px}
+ .hdr-tools .robot-badge{width:17px;height:17px;font-size:9px}
+}
 </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -665,11 +692,22 @@
     <!-- Header -->
     <header class="site-header sticky top-0 z-40">
         <div class="w-full px-4 sm:px-8 py-3 flex justify-between items-center">
+            <div class="hdr-tools">
             <button id="menuBtn" class="robot-btn" aria-label="القائمة وخدمة العملاء">
                 <svg class="robot" viewBox="0 0 64 64" aria-hidden="true"><g class="r-antenna"><path d="M32 15V8" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle class="r-bulb" cx="32" cy="6" r="3.6"/></g><rect class="r-ear" x="3" y="29" width="8" height="15" rx="4"/><rect class="r-ear" x="53" y="29" width="8" height="15" rx="4"/><path d="M57 42v4a8 8 0 0 1-8 8h-6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="41" cy="54" r="2.6" fill="#fff"/><rect class="r-head" x="9" y="15" width="46" height="38" rx="14"/><rect class="r-face" x="15" y="22" width="34" height="24" rx="10"/><ellipse class="r-eye" cx="25" cy="32.5" rx="3.4" ry="4.4"/><ellipse class="r-eye" cx="39" cy="32.5" rx="3.4" ry="4.4"/><path class="r-mouth" d="M27 40.5q5 4 10 0"/></svg>
                 <span class="robot-badge"><i class="fa-solid fa-bars"></i></span>
                 <span class="robot-bubble" id="robotBubble" aria-hidden="true">مرحبا بك</span>
             </button>
+            <button id="portBtn" type="button" class="robot-btn moto-btn" aria-label="بورتفوليو - أعمالي">
+                <svg class="robot moto" viewBox="0 0 64 64" aria-hidden="true"><circle class="mb-puff" cx="6" cy="42" r="2.6" fill="#ddd6fe"/><circle class="mb-puff d2" cx="6" cy="42" r="2" fill="#ddd6fe"/><g class="mb-body"><path d="M47 24L50 46" stroke="#fff" stroke-width="3.2" stroke-linecap="round" fill="none"/><path d="M40 22l8 2" stroke="#fff" stroke-width="3.2" stroke-linecap="round" fill="none"/><rect class="r-ear" x="11" y="29" width="17" height="5.5" rx="2.75"/><rect class="r-head" x="16" y="33" width="31" height="11" rx="5.5"/><rect class="r-face" x="23" y="35.8" width="15" height="5.4" rx="2.7"/><path d="M21 29c2-6 6-8 11-7l9 2" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><circle class="r-head" cx="24" cy="15" r="8.2"/><rect class="r-face" x="24" y="11" width="12" height="8" rx="4"/><ellipse class="r-eye" cx="29" cy="15" rx="1.5" ry="2"/><ellipse class="r-eye" cx="33.5" cy="15" rx="1.5" ry="2"/><circle class="r-bulb" cx="54" cy="30" r="3.4"/></g><circle cx="16" cy="46" r="8" fill="none" stroke="#fff" stroke-width="3.4"/><g class="mb-spokes"><path d="M16 40v12M10 46h12M11.8 41.8l8.4 8.4M20.2 41.8l-8.4 8.4" stroke="#ddd6fe" stroke-width="1.5" stroke-linecap="round" fill="none"/></g><circle cx="16" cy="46" r="2" fill="#fff"/><circle cx="50" cy="46" r="8" fill="none" stroke="#fff" stroke-width="3.4"/><g class="mb-spokes"><path d="M50 40v12M44 46h12M45.8 41.8l8.4 8.4M54.2 41.8l-8.4 8.4" stroke="#ddd6fe" stroke-width="1.5" stroke-linecap="round" fill="none"/></g><circle cx="50" cy="46" r="2" fill="#fff"/></svg>
+                <span class="robot-badge"><i class="fa-solid fa-briefcase"></i></span>
+                <span class="robot-bubble" id="portBubble" aria-hidden="true" data-translate="portBubble">اضغط هنا لمشاهدة أعمالي</span>
+            </button>
+            <button type="button" data-install class="robot-btn hdr-install" aria-label="ثبّت التطبيق على هاتفك">
+                <svg class="robot" viewBox="0 0 64 64" aria-hidden="true"><rect class="r-head" x="18" y="7" width="28" height="50" rx="9"/><rect class="r-face" x="22" y="14" width="20" height="33" rx="5"/><rect class="r-ear" x="28" y="9.4" width="8" height="2" rx="1"/><circle cx="32" cy="52" r="2" fill="#7c3aed"/><path d="M25 41h14" stroke="#e9d5ff" stroke-width="3" stroke-linecap="round"/><g class="dl-arrow"><path d="M32 20v15M25.5 29l6.5 6.5 6.5-6.5" fill="none" stroke="#f0abfc" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+                <span class="robot-badge"><i class="fa-solid fa-download"></i></span>
+            </button>
+            </div>
             <div class="flex items-center gap-3">
                 <div class="text-right">
                     <h1 class="logo" dir="ltr"><span class="logo-7">7</span><span class="logo-shine">ASSON GAMING</span></h1>
@@ -704,7 +742,6 @@
             <button type="button" id="tabGamesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-primary flex items-center gap-2"><i class="fa-solid fa-gamepad"></i><span data-translate="tabGamesBtn">الألعاب</span></button>
             <button type="button" id="tabWallsBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-image"></i><span data-translate="tabWallsBtn">الخلفيات</span></button>
             <button type="button" id="tabFilesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-folder-open"></i><span data-translate="tabFilesBtn">الملفات</span></button>
-            <button type="button" id="tabPortBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-briefcase"></i><span data-translate="tabPortBtn">بورتفوليو</span></button>
         </div>
         <div id="gamesContainer" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-5 items-start">
             <div class="text-center py-12 col-span-full ui-muted" data-translate="loadingGames">جاري تحميل الألعاب...</div>
@@ -1347,7 +1384,7 @@
                 footerContact: "تواصل معنا",
                 linkGames: "الألعاب",
                 backBtn: "رجوع",
-                greet: "مرحبا بك", menuDev: "إضافة مطور", tabGamesBtn: "الألعاب", tabWallsBtn: "الخلفيات", tabProjBtn: "المشاريع", tabPortBtn: "بورتفوليو", portRole: "مهندس IT", portName: "حسن مصطفى حسن طه", portBio: "لديه خبرة كبيرة في تطوير المواقع الإلكترونية وبناء التطبيقات والألعاب والأمن السيبراني. ولديه أعمال كثيرة، منها:", portWorksTitle: "الأعمال", projOpen: "عرض العمل", noProj: "لا توجد أعمال حالياً." ,  tabFilesBtn: "الملفات", noFiles: "لا توجد ملفات حالياً.", fileDownload: "تنزيل الملف", menuContact: "مراسلة المدير", menuFiles: "الملفات المهمة", contactTitle: "مراسلة المدير", contactSub: "اكتب رسالتك وستصل مباشرة إلى المدير.", contactName: "اسمك", contactInfo: "رقم واتساب أو بريد للرد عليك (اختياري)", contactMsg: "اكتب رسالتك هنا...", contactSend: "إرسال الرسالة", contactSent: "تم إرسال رسالتك إلى المدير، شكراً لك!", contactWait: "انتظر قليلاً قبل إرسال رسالة أخرى.", contactErr: "تعذر إرسال الرسالة، حاول مرة أخرى.", subPhone: "خلفيات الهاتف", subPc: "خلفيات PC", noWalls: "لا توجد خلفيات في هذا القسم حالياً.",
+                greet: "مرحبا بك", menuDev: "إضافة مطور", tabGamesBtn: "الألعاب", tabWallsBtn: "الخلفيات", tabProjBtn: "المشاريع", portBubble: "اضغط هنا لمشاهدة أعمالي", portRole: "مهندس IT", portName: "حسن مصطفى حسن طه", portBio: "لديه خبرة كبيرة في تطوير المواقع الإلكترونية وبناء التطبيقات والألعاب والأمن السيبراني. ولديه أعمال كثيرة، منها:", portWorksTitle: "الأعمال", projOpen: "عرض العمل", noProj: "لا توجد أعمال حالياً." ,  tabFilesBtn: "الملفات", noFiles: "لا توجد ملفات حالياً.", fileDownload: "تنزيل الملف", menuContact: "مراسلة المدير", menuFiles: "الملفات المهمة", contactTitle: "مراسلة المدير", contactSub: "اكتب رسالتك وستصل مباشرة إلى المدير.", contactName: "اسمك", contactInfo: "رقم واتساب أو بريد للرد عليك (اختياري)", contactMsg: "اكتب رسالتك هنا...", contactSend: "إرسال الرسالة", contactSent: "تم إرسال رسالتك إلى المدير، شكراً لك!", contactWait: "انتظر قليلاً قبل إرسال رسالة أخرى.", contactErr: "تعذر إرسال الرسالة، حاول مرة أخرى.", subPhone: "خلفيات الهاتف", subPc: "خلفيات PC", noWalls: "لا توجد خلفيات في هذا القسم حالياً.",
                 kindLabel: "نوع المنشور", kindGame: "لعبة", kindApp: "تطبيق",
                 notifOn: "فعّل إشعارات الألعاب الجديدة", notifDone: "الإشعارات مفعّلة ✓", notifBlocked: "الإشعارات محظورة — فعّلها من إعدادات المتصفح",
                 gateWelcome: "أهلاً بك", migrateNote: "حدّثنا اسمك: اكتب اسمك الحقيقي الكامل لمتابعة التصفح.",
@@ -1416,7 +1453,7 @@
                 footerContact: "Contact us",
                 linkGames: "Games",
                 backBtn: "Back",
-                greet: "Welcome", menuDev: "Become a developer", tabGamesBtn: "Games", tabWallsBtn: "Wallpapers", tabProjBtn: "Projects", tabPortBtn: "Portfolio", portRole: "IT Engineer", portName: "Hassan Mustafa Hassan Taha", portBio: "Highly experienced in website development, building apps and games, and cybersecurity. Many of his works are shown below:", portWorksTitle: "Works", projOpen: "View work", noProj: "No works yet." ,  tabFilesBtn: "Files", noFiles: "No files yet.", fileDownload: "Download file", menuContact: "Message the admin", menuFiles: "Important files", contactTitle: "Message the admin", contactSub: "Write your message and it will reach the admin directly.", contactName: "Your name", contactInfo: "WhatsApp number or email for a reply (optional)", contactMsg: "Write your message here...", contactSend: "Send message", contactSent: "Your message was sent to the admin. Thank you!", contactWait: "Please wait a moment before sending another message.", contactErr: "Could not send the message, please try again.", subPhone: "Phone wallpapers", subPc: "PC wallpapers", noWalls: "No wallpapers in this section yet.",
+                greet: "Welcome", menuDev: "Become a developer", tabGamesBtn: "Games", tabWallsBtn: "Wallpapers", tabProjBtn: "Projects", portBubble: "Tap here to see my work", portRole: "IT Engineer", portName: "Hassan Mustafa Hassan Taha", portBio: "Highly experienced in website development, building apps and games, and cybersecurity. Many of his works are shown below:", portWorksTitle: "Works", projOpen: "View work", noProj: "No works yet." ,  tabFilesBtn: "Files", noFiles: "No files yet.", fileDownload: "Download file", menuContact: "Message the admin", menuFiles: "Important files", contactTitle: "Message the admin", contactSub: "Write your message and it will reach the admin directly.", contactName: "Your name", contactInfo: "WhatsApp number or email for a reply (optional)", contactMsg: "Write your message here...", contactSend: "Send message", contactSent: "Your message was sent to the admin. Thank you!", contactWait: "Please wait a moment before sending another message.", contactErr: "Could not send the message, please try again.", subPhone: "Phone wallpapers", subPc: "PC wallpapers", noWalls: "No wallpapers in this section yet.",
                 kindLabel: "Post type", kindGame: "Game", kindApp: "App",
                 notifOn: "Enable new game notifications", notifDone: "Notifications enabled ✓", notifBlocked: "Notifications blocked — enable them in browser settings",
                 gateWelcome: "Welcome", migrateNote: "Please update your name: enter your full real name to keep browsing.",
@@ -3010,7 +3047,7 @@
             document.getElementById('tabWallsBtn').className = name === 'walls' ? TAB_ON : TAB_OFF;
             
             document.getElementById('tabFilesBtn').className = name === 'files' ? TAB_ON : TAB_OFF;
-            document.getElementById('tabPortBtn').className = name === 'projects' ? TAB_ON : TAB_OFF;
+            document.getElementById('portBtn').classList.toggle('is-open', name === 'projects');
             if (name === 'walls') renderWallpapers(); else if (name === 'projects') renderProjects(); else if (name === 'files') renderFiles(); else fitCards();
         }
         function showWallKind(k) {
@@ -3022,7 +3059,21 @@
         document.getElementById('tabGamesBtn').addEventListener('click', () => showSection(false));
         document.getElementById('tabWallsBtn').addEventListener('click', () => showSection('walls'));
         document.getElementById('tabFilesBtn').addEventListener('click', () => showSection('files'));
-        document.getElementById('tabPortBtn').addEventListener('click', () => showSection('projects'));
+        document.getElementById('portBtn').addEventListener('click', () => {
+            const open = !document.getElementById('projSection').classList.contains('hidden');
+            showSection(open ? 'games' : 'projects');
+            if (open) window.scrollTo({ top: 0, behavior: 'smooth' });
+            else setTimeout(() => document.getElementById('projSection').scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+        });
+        // فقاعة الدراجة: كل 8 ثوانٍ تظهر "اضغط هنا لمشاهدة أعمالي" (نص فقط)
+        (function () {
+            const pb = document.getElementById('portBtn');
+            setInterval(() => {
+                if (document.hidden || document.documentElement.classList.contains('splash-on')) return;
+                pb.classList.add('greet', 'talk');
+                setTimeout(() => pb.classList.remove('greet', 'talk'), 3200);
+            }, 8000);
+        })();
         document.getElementById('subPhoneBtn').addEventListener('click', () => showWallKind('phone'));
         document.getElementById('subPcBtn').addEventListener('click', () => showWallKind('pc'));
         document.getElementById('langSelect').addEventListener('change', () => { renderWallpapers(); renderProjects(); });
