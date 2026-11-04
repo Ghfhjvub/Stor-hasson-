@@ -451,24 +451,67 @@
 .moto .mb-puff.d2{animation-delay:.7s}
 .moto-btn:hover .robot{animation:mbWheelie .9s ease-in-out;transform-origin:25% 80%}
 .moto-btn::after{animation-delay:1.2s}
-.hdr-install::after{animation-delay:2.4s}
 .robot-btn.is-open{box-shadow:0 0 0 4px rgba(240,171,252,.6),0 10px 24px -8px rgba(109,40,217,.8),inset 0 1px 0 rgba(255,255,255,.45)}
-.dl-arrow{animation:dlBounce 1.3s ease-in-out infinite}
 @keyframes mbBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.3px)}}
 @keyframes mbSpin{to{transform:rotate(360deg)}}
 @keyframes mbPuff{0%{opacity:.85;transform:translate(0,0) scale(.5)}100%{opacity:0;transform:translate(-9px,-5px) scale(1.5)}}
 @keyframes mbWheelie{0%,100%{transform:rotate(0)}40%,65%{transform:rotate(-13deg)}}
-@keyframes dlBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
-#projSection{scroll-margin-top:100px}
 @media (max-width:440px){
  .hdr-tools{gap:6px}
  .hdr-tools .robot-btn{width:44px;height:44px;border-radius:15px}
- .hdr-tools .hdr-install{width:38px;height:38px;border-radius:13px}
  .hdr-tools .robot{width:32px;height:32px}
  .hdr-tools .moto{width:36px;height:36px}
- .hdr-tools .hdr-install .robot{width:28px;height:28px}
  .hdr-tools .robot-badge{width:17px;height:17px;font-size:9px}
 }
+/* ===== صفحة البورتفوليو الكاملة ===== */
+.hero-actions{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap}
+.hero-actions .port-round{width:52px;height:52px}
+.port-round,.port-round::after{border-radius:50%!important}
+#projSection{position:fixed;inset:0;z-index:45;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:var(--bg,#f5f3ff);animation:ppOpen .35s cubic-bezier(.2,.8,.2,1)}
+html.dark #projSection{background:var(--bg,#0e0a1d)}
+#projSection.hidden{display:none}
+@keyframes ppOpen{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.pp-back{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));inset-inline-start:12px;z-index:3;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;color:#fff;background:rgba(30,10,70,.45);border:1px solid rgba(255,255,255,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);cursor:pointer}
+.pp-hero{position:relative;overflow:hidden;text-align:center;color:#fff;padding:calc(64px + env(safe-area-inset-top,0px)) 20px 44px;background:radial-gradient(520px 300px at 80% 0%,rgba(240,171,252,.45),transparent 60%),linear-gradient(160deg,#3b0f8c 0%,#6d28d9 52%,#c026d3 100%);border-radius:0 0 36px 36px}
+.pp-fl{position:absolute;left:var(--x);top:var(--y);font-size:26px;color:rgba(255,255,255,.22);animation:ppFloat 5s ease-in-out infinite;animation-delay:var(--d);pointer-events:none}
+@keyframes ppFloat{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-12px) rotate(6deg)}}
+.pp-photo-wrap{position:relative;width:160px;height:160px;margin:0 auto}
+.pp-photo-wrap::before{content:"";position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(#f0abfc,#a78bfa,#38bdf8,#f0abfc);animation:ppSpin 6s linear infinite}
+.pp-photo{position:relative;width:100%;height:100%;border-radius:50%;object-fit:cover;border:4px solid #fff;display:block;background:#ddd6fe;box-shadow:0 18px 40px -10px rgba(0,0,0,.5)}
+@keyframes ppSpin{to{transform:rotate(360deg)}}
+.pp-name{position:relative;margin-top:20px;font-size:1.6rem;font-weight:800;line-height:1.5;display:flex;flex-direction:column;align-items:center;gap:6px}
+.pp-role{font-size:.85rem;font-weight:700;padding:3px 14px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35)}
+.pp-roleline{position:relative;margin-top:8px;min-height:1.8em;font-weight:700;font-size:1.05rem;color:#f5d0fe}
+.pp-roleline.in{animation:ppIn .5s both}
+@keyframes ppIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.pp-tag{position:relative;max-width:36rem;margin:10px auto 0;font-size:.95rem;line-height:1.9;color:rgba(255,255,255,.9)}
+.pp-wa{position:relative;display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:10px 22px;border-radius:999px;background:#fff;color:#6d28d9;font-weight:800;font-size:.9rem;text-decoration:none;box-shadow:0 10px 24px -8px rgba(0,0,0,.45)}
+.pp-wa i{color:#22c55e;font-size:1.2rem}
+.pp-body{max-width:56rem;margin:0 auto;padding:28px 16px 60px;color:var(--ink)}
+.pp-card{padding:22px}
+.pp-h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem;margin-bottom:10px;color:var(--accent,#7c3aed)}
+.pp-about{line-height:2;font-size:.98rem}
+.pp-h2{margin:34px 0 14px;text-align:center;font-weight:800;font-size:1.25rem;color:var(--ink)}
+.pp-h2::after{content:"";display:block;width:54px;height:4px;border-radius:4px;margin:8px auto 0;background:linear-gradient(90deg,#7c3aed,#d946ef)}
+.pp-sub{text-align:center;margin:-6px 0 16px;font-size:.9rem}
+.pp-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.pp-grid .pp-tile{flex:0 1 100px;min-width:92px}
+.pp-tile{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border-radius:18px;background:var(--glass-strong);border:1px solid var(--glass-line);font-weight:800;font-size:.85rem;transition:transform .3s,box-shadow .3s;animation:ppIn .5s both}
+.pp-tile:hover{transform:translateY(-5px);box-shadow:0 16px 30px -14px var(--c)}
+.pp-ic{display:grid;place-items:center;flex-shrink:0;width:54px;height:54px;border-radius:16px;font-size:26px;color:var(--c);background:rgba(124,58,237,.12);background:color-mix(in srgb,var(--c) 16%,transparent)}
+.pp-skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.pp-skill{display:flex;align-items:center;gap:12px;padding:14px;transition:transform .3s,box-shadow .3s;animation:ppIn .5s both}
+.pp-skill:hover{transform:translateY(-4px);box-shadow:0 16px 30px -14px var(--c)}
+.pp-skill b{display:block;font-size:.95rem}
+.pp-skill small{display:block;font-size:.8rem;line-height:1.6}
+.pp-tile:nth-child(1),.pp-skill:nth-child(1){animation-delay:0.06s}
+.pp-tile:nth-child(2),.pp-skill:nth-child(2){animation-delay:0.12s}
+.pp-tile:nth-child(3),.pp-skill:nth-child(3){animation-delay:0.18s}
+.pp-tile:nth-child(4),.pp-skill:nth-child(4){animation-delay:0.24s}
+.pp-tile:nth-child(5),.pp-skill:nth-child(5){animation-delay:0.30s}
+.pp-tile:nth-child(6),.pp-skill:nth-child(6){animation-delay:0.36s}
+.pp-tile:nth-child(7),.pp-skill:nth-child(7){animation-delay:0.42s}
+.pp-tile:nth-child(8),.pp-skill:nth-child(8){animation-delay:0.48s}
 </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -703,10 +746,6 @@
                 <span class="robot-badge"><i class="fa-solid fa-briefcase"></i></span>
                 <span class="robot-bubble" id="portBubble" aria-hidden="true" data-translate="portBubble">اضغط هنا لمشاهدة أعمالي</span>
             </button>
-            <button type="button" data-install class="robot-btn hdr-install" aria-label="ثبّت التطبيق على هاتفك">
-                <svg class="robot" viewBox="0 0 64 64" aria-hidden="true"><rect class="r-head" x="18" y="7" width="28" height="50" rx="9"/><rect class="r-face" x="22" y="14" width="20" height="33" rx="5"/><rect class="r-ear" x="28" y="9.4" width="8" height="2" rx="1"/><circle cx="32" cy="52" r="2" fill="#7c3aed"/><path d="M25 41h14" stroke="#e9d5ff" stroke-width="3" stroke-linecap="round"/><g class="dl-arrow"><path d="M32 20v15M25.5 29l6.5 6.5 6.5-6.5" fill="none" stroke="#f0abfc" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
-                <span class="robot-badge"><i class="fa-solid fa-download"></i></span>
-            </button>
             </div>
             <div class="flex items-center gap-3">
                 <div class="text-right">
@@ -727,9 +766,15 @@
             <div class="hero-content">
             <h2 class="hero-title mb-2" data-translate="mainTitle">مكتبة الألعاب الحصرية</h2>
             <p class="hero-sub max-w-xl mx-auto mb-6" data-translate="mainSubtitle">استكشف أحدث الألعاب، شاهد العروض، وقم بالتنزيل مباشرة</p>
+            <div class="hero-actions">
+            <button type="button" id="portHeroBtn" class="robot-btn moto-btn port-round" aria-label="بورتفوليو - أعمالي" title="بورتفوليو">
+                <svg class="robot moto" viewBox="0 0 64 64" aria-hidden="true"><circle class="mb-puff" cx="6" cy="42" r="2.6" fill="#ddd6fe"/><circle class="mb-puff d2" cx="6" cy="42" r="2" fill="#ddd6fe"/><g class="mb-body"><path d="M47 24L50 46" stroke="#fff" stroke-width="3.2" stroke-linecap="round" fill="none"/><path d="M40 22l8 2" stroke="#fff" stroke-width="3.2" stroke-linecap="round" fill="none"/><rect class="r-ear" x="11" y="29" width="17" height="5.5" rx="2.75"/><rect class="r-head" x="16" y="33" width="31" height="11" rx="5.5"/><rect class="r-face" x="23" y="35.8" width="15" height="5.4" rx="2.7"/><path d="M21 29c2-6 6-8 11-7l9 2" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><circle class="r-head" cx="24" cy="15" r="8.2"/><rect class="r-face" x="24" y="11" width="12" height="8" rx="4"/><ellipse class="r-eye" cx="29" cy="15" rx="1.5" ry="2"/><ellipse class="r-eye" cx="33.5" cy="15" rx="1.5" ry="2"/><circle class="r-bulb" cx="54" cy="30" r="3.4"/></g><circle cx="16" cy="46" r="8" fill="none" stroke="#fff" stroke-width="3.4"/><g class="mb-spokes"><path d="M16 40v12M10 46h12M11.8 41.8l8.4 8.4M20.2 41.8l-8.4 8.4" stroke="#ddd6fe" stroke-width="1.5" stroke-linecap="round" fill="none"/></g><circle cx="16" cy="46" r="2" fill="#fff"/><circle cx="50" cy="46" r="8" fill="none" stroke="#fff" stroke-width="3.4"/><g class="mb-spokes"><path d="M50 40v12M44 46h12M45.8 41.8l8.4 8.4M54.2 41.8l-8.4 8.4" stroke="#ddd6fe" stroke-width="1.5" stroke-linecap="round" fill="none"/></g><circle cx="50" cy="46" r="2" fill="#fff"/></svg>
+                <span class="robot-badge"><i class="fa-solid fa-briefcase"></i></span>
+            </button>
             <button type="button" data-install class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm cursor-pointer">
                 <i class="fa-solid fa-mobile-screen-button text-lg"></i><span data-translate="installHero">ثبّت التطبيق على هاتفك</span>
             </button>
+            </div>
             <div id="visitorBadge" class="visitor-badge" aria-live="polite">
                 <i class="fa-solid fa-eye"></i>
                 <span data-translate="visitorsLabel">عدد الزوار</span>
@@ -753,14 +798,29 @@
             </div>
             <div id="wallContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 items-start"></div>
         </section>
-    <section id="projSection" class="hidden">
-            <div class="glass-strong border ui-line rounded-2xl p-5 sm:p-8 mb-8 text-center max-w-3xl mx-auto">
-                <img id="portPhoto" src="1.jpg" alt="Hassan Mustafa" class="port-photo" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%23ddd6fe%22/%3E%3Ccircle cx=%2250%22 cy=%2238%22 r=%2218%22 fill=%22%237c3aed%22/%3E%3Cpath d=%22M14 92c4-24 20-34 36-34s32 10 36 34z%22 fill=%22%237c3aed%22/%3E%3C/svg%3E'">
-                <h3 class="text-lg sm:text-xl font-bold ui-ink mt-4"><span data-translate="portRole">مهندس IT</span> <span class="ui-accent" data-translate="portName">حسن مصطفى حسن طه</span></h3>
-                <p class="text-sm sm:text-base ui-muted leading-8 mt-2" data-translate="portBio">لديه خبرة كبيرة في تطوير المواقع الإلكترونية وبناء التطبيقات والألعاب والأمن السيبراني. ولديه أعمال كثيرة، منها:</p>
+    <section id="projSection" class="hidden" role="dialog" aria-modal="true" aria-label="Portfolio">
+            <button type="button" id="portCloseBtn" class="pp-back"><i class="fa-solid fa-xmark"></i><span data-translate="portBack">رجوع</span></button>
+            <div class="pp-hero">
+                <i class="fa-brands fa-html5 pp-fl" style="--x:8%;--y:16%;--d:0s"></i><i class="fa-brands fa-css3-alt pp-fl" style="--x:84%;--y:12%;--d:0.6s"></i><i class="fa-brands fa-js pp-fl" style="--x:14%;--y:72%;--d:1.2s"></i><i class="fa-brands fa-java pp-fl" style="--x:82%;--y:68%;--d:0.3s"></i><i class="fa-brands fa-android pp-fl" style="--x:48%;--y:5%;--d:0.9s"></i><i class="fa-solid fa-shield-halved pp-fl" style="--x:92%;--y:40%;--d:1.5s"></i><i class="fa-solid fa-gamepad pp-fl" style="--x:3%;--y:44%;--d:0.45s"></i>
+                <div class="pp-photo-wrap"><img id="portPhoto" src="1.jpg" alt="Hassan Mustafa" class="pp-photo" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%23ddd6fe%22/%3E%3Ccircle cx=%2250%22 cy=%2238%22 r=%2218%22 fill=%22%237c3aed%22/%3E%3Cpath d=%22M14 92c4-24 20-34 36-34s32 10 36 34z%22 fill=%22%237c3aed%22/%3E%3C/svg%3E'"></div>
+                <h2 class="pp-name"><span class="pp-role" data-translate="portRole">مهندس IT</span><span data-translate="portName">حسن مصطفى حسن طه</span></h2>
+                <div id="portRoleLine" class="pp-roleline"></div>
+                <p class="pp-tag" data-translate="portBio">لديه خبرة كبيرة في تطوير المواقع الإلكترونية وبناء التطبيقات والألعاب والأمن السيبراني.</p>
+                <a id="portWa" href="#" target="_blank" rel="noopener noreferrer" class="pp-wa"><i class="fa-brands fa-whatsapp"></i><span data-translate="portContact">تواصل معي</span></a>
             </div>
-            <h3 class="text-center text-lg font-bold ui-accent mb-4" data-translate="portWorksTitle">الأعمال</h3>
-            <div id="projContainer" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 items-start"></div>
+            <div class="pp-body">
+                <div class="glass-strong border ui-line pp-card">
+                    <h3 class="pp-h"><i class="fa-solid fa-user-astronaut"></i><span data-translate="portAboutTitle">من هو حسن؟</span></h3>
+                    <p class="pp-about ui-muted" data-translate="portAbout">حسن مصطفى حسن طه مهندس تقنية معلومات شغوف ببناء الأشياء التي يستخدمها الناس فعلاً. يحوّل الفكرة إلى موقع أنيق، أو تطبيق سلس، أو لعبة ممتعة، ويحرص على أن يكون كل عمل آمناً ومحمياً بفضل خبرته في الأمن السيبراني. يؤمن أن التفاصيل الصغيرة هي ما يصنع الفرق، فيجمع في أعماله بين التصميم الجميل والأداء السريع والحماية القوية. هو صاحب موقع 7ASSON GAMING، ويعمل كل يوم على تطوير أعمال جديدة.</p>
+                </div>
+                <h3 class="pp-h2" data-translate="portLangTitle">لغات البرمجة التي يتقنها</h3>
+                <div class="pp-grid"><div class="pp-tile" style="--c:#e34f26"><span class="pp-ic"><i class="fa-brands fa-html5"></i></span><b>HTML5</b></div><div class="pp-tile" style="--c:#1572b6"><span class="pp-ic"><i class="fa-brands fa-css3-alt"></i></span><b>CSS3</b></div><div class="pp-tile" style="--c:#d4a800"><span class="pp-ic"><i class="fa-brands fa-js"></i></span><b>JavaScript</b></div><div class="pp-tile" style="--c:#e76f00"><span class="pp-ic"><i class="fa-brands fa-java"></i></span><b>Java</b></div><div class="pp-tile" style="--c:#478cbf"><span class="pp-ic"><i class="fa-solid fa-gamepad"></i></span><b>GDScript</b></div></div>
+                <h3 class="pp-h2" data-translate="portSkillsTitle">مهارات وخدمات</h3>
+                <div class="pp-skills"><div class="pp-skill glass-strong border ui-line" style="--c:#7c3aed"><span class="pp-ic"><i class="fa-solid fa-globe"></i></span><div><b data-translate="sk1t">تطوير المواقع</b><small class="ui-muted" data-translate="sk1d">مواقع سريعة وأنيقة تعمل بسلاسة على كل الأجهزة</small></div></div><div class="pp-skill glass-strong border ui-line" style="--c:#22a85f"><span class="pp-ic"><i class="fa-brands fa-android"></i></span><div><b data-translate="sk2t">تطبيقات أندرويد</b><small class="ui-muted" data-translate="sk2d">تطبيقات بلغة Java بتصميم عصري وتجربة سلسة</small></div></div><div class="pp-skill glass-strong border ui-line" style="--c:#ec4899"><span class="pp-ic"><i class="fa-solid fa-gamepad"></i></span><div><b data-translate="sk3t">تطوير الألعاب</b><small class="ui-muted" data-translate="sk3d">ألعاب ثنائية وثلاثية الأبعاد للهاتف والويب</small></div></div><div class="pp-skill glass-strong border ui-line" style="--c:#10b981"><span class="pp-ic"><i class="fa-solid fa-shield-halved"></i></span><div><b data-translate="sk4t">الأمن السيبراني</b><small class="ui-muted" data-translate="sk4d">حماية الأنظمة والبيانات وتأمين الأعمال</small></div></div><div class="pp-skill glass-strong border ui-line" style="--c:#f59e0b"><span class="pp-ic"><i class="fa-solid fa-fire"></i></span><div><b data-translate="sk5t">قواعد البيانات وFirebase</b><small class="ui-muted" data-translate="sk5d">تسجيل دخول ومزامنة لحظية وتخزين آمن</small></div></div><div class="pp-skill glass-strong border ui-line" style="--c:#ea7600"><span class="pp-ic"><i class="fa-solid fa-cube"></i></span><div><b data-translate="sk6t">التصميم ثلاثي الأبعاد</b><small class="ui-muted" data-translate="sk6d">مجسمات ومشاهد سينمائية باستخدام Blender</small></div></div><div class="pp-skill glass-strong border ui-line" style="--c:#06b6d4"><span class="pp-ic"><i class="fa-solid fa-pen-ruler"></i></span><div><b data-translate="sk7t">تصميم الواجهات UI/UX</b><small class="ui-muted" data-translate="sk7d">واجهات جذابة وسهلة الاستخدام</small></div></div><div class="pp-skill glass-strong border ui-line" style="--c:#ef4444"><span class="pp-ic"><i class="fa-solid fa-film"></i></span><div><b data-translate="sk8t">المونتاج والموشن</b><small class="ui-muted" data-translate="sk8d">فيديوهات وريلز احترافية بحركة وأنيميشن</small></div></div></div>
+                <h3 class="pp-h2" data-translate="portWorksTitle">الأعمال</h3>
+                <p class="pp-sub ui-muted" data-translate="portWorksSub">ولديه أعمال كثيرة، منها:</p>
+                <div id="projContainer" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 items-start"></div>
+            </div>
         </section>
     <section id="fileSection" class="hidden">
             <div id="fileContainer" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-5 items-start"></div>
@@ -1384,7 +1444,7 @@
                 footerContact: "تواصل معنا",
                 linkGames: "الألعاب",
                 backBtn: "رجوع",
-                greet: "مرحبا بك", menuDev: "إضافة مطور", tabGamesBtn: "الألعاب", tabWallsBtn: "الخلفيات", tabProjBtn: "المشاريع", portBubble: "اضغط هنا لمشاهدة أعمالي", portRole: "مهندس IT", portName: "حسن مصطفى حسن طه", portBio: "لديه خبرة كبيرة في تطوير المواقع الإلكترونية وبناء التطبيقات والألعاب والأمن السيبراني. ولديه أعمال كثيرة، منها:", portWorksTitle: "الأعمال", projOpen: "عرض العمل", noProj: "لا توجد أعمال حالياً." ,  tabFilesBtn: "الملفات", noFiles: "لا توجد ملفات حالياً.", fileDownload: "تنزيل الملف", menuContact: "مراسلة المدير", menuFiles: "الملفات المهمة", contactTitle: "مراسلة المدير", contactSub: "اكتب رسالتك وستصل مباشرة إلى المدير.", contactName: "اسمك", contactInfo: "رقم واتساب أو بريد للرد عليك (اختياري)", contactMsg: "اكتب رسالتك هنا...", contactSend: "إرسال الرسالة", contactSent: "تم إرسال رسالتك إلى المدير، شكراً لك!", contactWait: "انتظر قليلاً قبل إرسال رسالة أخرى.", contactErr: "تعذر إرسال الرسالة، حاول مرة أخرى.", subPhone: "خلفيات الهاتف", subPc: "خلفيات PC", noWalls: "لا توجد خلفيات في هذا القسم حالياً.",
+                greet: "مرحبا بك", menuDev: "إضافة مطور", tabGamesBtn: "الألعاب", tabWallsBtn: "الخلفيات", tabProjBtn: "المشاريع", portBubble: "اضغط هنا لمشاهدة أعمالي", portBack: "رجوع", portAboutTitle: "من هو حسن؟", portAbout: "حسن مصطفى حسن طه مهندس تقنية معلومات شغوف ببناء الأشياء التي يستخدمها الناس فعلاً. يحوّل الفكرة إلى موقع أنيق، أو تطبيق سلس، أو لعبة ممتعة، ويحرص على أن يكون كل عمل آمناً ومحمياً بفضل خبرته في الأمن السيبراني. يؤمن أن التفاصيل الصغيرة هي ما يصنع الفرق، فيجمع في أعماله بين التصميم الجميل والأداء السريع والحماية القوية. هو صاحب موقع 7ASSON GAMING، ويعمل كل يوم على تطوير أعمال جديدة.", portLangTitle: "لغات البرمجة التي يتقنها", portSkillsTitle: "مهارات وخدمات", portContact: "تواصل معي", portWorksSub: "ولديه أعمال كثيرة، منها:", portRoles: "مطوّر مواقع إلكترونية|مطوّر تطبيقات|مطوّر ألعاب|خبير أمن سيبراني", sk1t: "تطوير المواقع", sk1d: "مواقع سريعة وأنيقة تعمل بسلاسة على كل الأجهزة", sk2t: "تطبيقات أندرويد", sk2d: "تطبيقات بلغة Java بتصميم عصري وتجربة سلسة", sk3t: "تطوير الألعاب", sk3d: "ألعاب ثنائية وثلاثية الأبعاد للهاتف والويب", sk4t: "الأمن السيبراني", sk4d: "حماية الأنظمة والبيانات وتأمين الأعمال", sk5t: "قواعد البيانات وFirebase", sk5d: "تسجيل دخول ومزامنة لحظية وتخزين آمن", sk6t: "التصميم ثلاثي الأبعاد", sk6d: "مجسمات ومشاهد سينمائية باستخدام Blender", sk7t: "تصميم الواجهات UI/UX", sk7d: "واجهات جذابة وسهلة الاستخدام", sk8t: "المونتاج والموشن", sk8d: "فيديوهات وريلز احترافية بحركة وأنيميشن", portRole: "مهندس IT", portName: "حسن مصطفى حسن طه", portBio: "لديه خبرة كبيرة في تطوير المواقع الإلكترونية وبناء التطبيقات والألعاب والأمن السيبراني.", portWorksTitle: "الأعمال", projOpen: "عرض العمل", noProj: "لا توجد أعمال حالياً." ,  tabFilesBtn: "الملفات", noFiles: "لا توجد ملفات حالياً.", fileDownload: "تنزيل الملف", menuContact: "مراسلة المدير", menuFiles: "الملفات المهمة", contactTitle: "مراسلة المدير", contactSub: "اكتب رسالتك وستصل مباشرة إلى المدير.", contactName: "اسمك", contactInfo: "رقم واتساب أو بريد للرد عليك (اختياري)", contactMsg: "اكتب رسالتك هنا...", contactSend: "إرسال الرسالة", contactSent: "تم إرسال رسالتك إلى المدير، شكراً لك!", contactWait: "انتظر قليلاً قبل إرسال رسالة أخرى.", contactErr: "تعذر إرسال الرسالة، حاول مرة أخرى.", subPhone: "خلفيات الهاتف", subPc: "خلفيات PC", noWalls: "لا توجد خلفيات في هذا القسم حالياً.",
                 kindLabel: "نوع المنشور", kindGame: "لعبة", kindApp: "تطبيق",
                 notifOn: "فعّل إشعارات الألعاب الجديدة", notifDone: "الإشعارات مفعّلة ✓", notifBlocked: "الإشعارات محظورة — فعّلها من إعدادات المتصفح",
                 gateWelcome: "أهلاً بك", migrateNote: "حدّثنا اسمك: اكتب اسمك الحقيقي الكامل لمتابعة التصفح.",
@@ -1453,7 +1513,7 @@
                 footerContact: "Contact us",
                 linkGames: "Games",
                 backBtn: "Back",
-                greet: "Welcome", menuDev: "Become a developer", tabGamesBtn: "Games", tabWallsBtn: "Wallpapers", tabProjBtn: "Projects", portBubble: "Tap here to see my work", portRole: "IT Engineer", portName: "Hassan Mustafa Hassan Taha", portBio: "Highly experienced in website development, building apps and games, and cybersecurity. Many of his works are shown below:", portWorksTitle: "Works", projOpen: "View work", noProj: "No works yet." ,  tabFilesBtn: "Files", noFiles: "No files yet.", fileDownload: "Download file", menuContact: "Message the admin", menuFiles: "Important files", contactTitle: "Message the admin", contactSub: "Write your message and it will reach the admin directly.", contactName: "Your name", contactInfo: "WhatsApp number or email for a reply (optional)", contactMsg: "Write your message here...", contactSend: "Send message", contactSent: "Your message was sent to the admin. Thank you!", contactWait: "Please wait a moment before sending another message.", contactErr: "Could not send the message, please try again.", subPhone: "Phone wallpapers", subPc: "PC wallpapers", noWalls: "No wallpapers in this section yet.",
+                greet: "Welcome", menuDev: "Become a developer", tabGamesBtn: "Games", tabWallsBtn: "Wallpapers", tabProjBtn: "Projects", portBubble: "Tap here to see my work", portBack: "Back", portAboutTitle: "Who is Hassan?", portAbout: "Hassan Mustafa Hassan Taha is an IT engineer who loves building things people actually use. He turns an idea into an elegant website, a smooth app or a fun game, and makes sure every piece of work is secure thanks to his cybersecurity expertise. He believes small details make the difference, so his work combines beautiful design, fast performance and strong protection. He is the owner of 7ASSON GAMING and keeps building new work every day.", portLangTitle: "Programming languages he masters", portSkillsTitle: "Skills & services", portContact: "Contact me", portWorksSub: "He also has many works, including:", portRoles: "Website developer|App developer|Game developer|Cybersecurity expert", sk1t: "Web development", sk1d: "Fast, elegant websites that work smoothly on every device", sk2t: "Android apps", sk2d: "Java apps with modern design and a smooth experience", sk3t: "Game development", sk3d: "2D and 3D games for mobile and web", sk4t: "Cybersecurity", sk4d: "Protecting systems and data and securing work", sk5t: "Databases & Firebase", sk5d: "Login, real-time sync and secure storage", sk6t: "3D design", sk6d: "Models and cinematic scenes with Blender", sk7t: "UI/UX design", sk7d: "Attractive, easy-to-use interfaces", sk8t: "Editing & motion", sk8d: "Professional videos and reels with animation", portRole: "IT Engineer", portName: "Hassan Mustafa Hassan Taha", portBio: "Highly experienced in website development, building apps and games, and cybersecurity.", portWorksTitle: "Works", projOpen: "View work", noProj: "No works yet." ,  tabFilesBtn: "Files", noFiles: "No files yet.", fileDownload: "Download file", menuContact: "Message the admin", menuFiles: "Important files", contactTitle: "Message the admin", contactSub: "Write your message and it will reach the admin directly.", contactName: "Your name", contactInfo: "WhatsApp number or email for a reply (optional)", contactMsg: "Write your message here...", contactSend: "Send message", contactSent: "Your message was sent to the admin. Thank you!", contactWait: "Please wait a moment before sending another message.", contactErr: "Could not send the message, please try again.", subPhone: "Phone wallpapers", subPc: "PC wallpapers", noWalls: "No wallpapers in this section yet.",
                 kindLabel: "Post type", kindGame: "Game", kindApp: "App",
                 notifOn: "Enable new game notifications", notifDone: "Notifications enabled ✓", notifBlocked: "Notifications blocked — enable them in browser settings",
                 gateWelcome: "Welcome", migrateNote: "Please update your name: enter your full real name to keep browsing.",
@@ -3047,7 +3107,6 @@
             document.getElementById('tabWallsBtn').className = name === 'walls' ? TAB_ON : TAB_OFF;
             
             document.getElementById('tabFilesBtn').className = name === 'files' ? TAB_ON : TAB_OFF;
-            document.getElementById('portBtn').classList.toggle('is-open', name === 'projects');
             if (name === 'walls') renderWallpapers(); else if (name === 'projects') renderProjects(); else if (name === 'files') renderFiles(); else fitCards();
         }
         function showWallKind(k) {
@@ -3059,17 +3118,44 @@
         document.getElementById('tabGamesBtn').addEventListener('click', () => showSection(false));
         document.getElementById('tabWallsBtn').addEventListener('click', () => showSection('walls'));
         document.getElementById('tabFilesBtn').addEventListener('click', () => showSection('files'));
-        document.getElementById('portBtn').addEventListener('click', () => {
-            const open = !document.getElementById('projSection').classList.contains('hidden');
-            showSection(open ? 'games' : 'projects');
-            if (open) window.scrollTo({ top: 0, behavior: 'smooth' });
-            else setTimeout(() => document.getElementById('projSection').scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
-        });
+        // ===== صفحة البورتفوليو الكاملة =====
+        let portRoleTimer = null, portRoleI = 0;
+        function paintPortRole() {
+            const el = document.getElementById('portRoleLine');
+            const arr = String(translations[currentLang].portRoles || '').split('|').filter(Boolean);
+            if (!el || !arr.length) return;
+            el.classList.remove('in'); void el.offsetWidth;
+            el.textContent = arr[portRoleI % arr.length]; portRoleI++;
+            el.classList.add('in');
+        }
+        function openPortfolio() {
+            const sec = document.getElementById('projSection');
+            if (!sec.classList.contains('hidden')) return;
+            renderProjects();
+            document.getElementById('portWa').href = 'https://wa.me/' + ADMIN_WHATSAPP;
+            sec.classList.remove('hidden'); sec.scrollTop = 0;
+            document.documentElement.style.overflow = 'hidden';
+            clearInterval(portRoleTimer); paintPortRole(); portRoleTimer = setInterval(paintPortRole, 2200);
+            try { history.pushState({ portfolio: 1 }, ''); } catch (e) {}
+        }
+        function closePortfolio(fromPop) {
+            const sec = document.getElementById('projSection');
+            if (sec.classList.contains('hidden')) return;
+            sec.classList.add('hidden');
+            document.documentElement.style.overflow = '';
+            clearInterval(portRoleTimer);
+            if (!fromPop && history.state && history.state.portfolio) { try { history.back(); } catch (e) {} }
+        }
+        document.getElementById('portBtn').addEventListener('click', openPortfolio);
+        document.getElementById('portHeroBtn').addEventListener('click', openPortfolio);
+        document.getElementById('portCloseBtn').addEventListener('click', () => closePortfolio(false));
+        window.addEventListener('popstate', () => closePortfolio(true));
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.getElementById('projModal').classList.contains('hidden')) closePortfolio(false); });
         // فقاعة الدراجة: كل 8 ثوانٍ تظهر "اضغط هنا لمشاهدة أعمالي" (نص فقط)
         (function () {
             const pb = document.getElementById('portBtn');
             setInterval(() => {
-                if (document.hidden || document.documentElement.classList.contains('splash-on')) return;
+                if (document.hidden || document.documentElement.classList.contains('splash-on') || !document.getElementById('projSection').classList.contains('hidden')) return;
                 pb.classList.add('greet', 'talk');
                 setTimeout(() => pb.classList.remove('greet', 'talk'), 3200);
             }, 8000);
