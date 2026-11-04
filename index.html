@@ -435,6 +435,14 @@
         ::-webkit-scrollbar{width:9px;height:9px} ::-webkit-scrollbar-thumb{background:rgba(124,58,237,.35);border-radius:9px}
         @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
     </style>
+<style>
+/* ===== قسم البورتفوليو ===== */
+.port-photo{width:150px;height:150px;border-radius:50%;object-fit:cover;display:block;margin:0 auto;border:3px solid #8b5cf6;box-shadow:0 0 0 6px rgba(139,92,246,.18),0 10px 30px rgba(124,58,237,.35)}
+.port-thumbs{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.port-th{flex:1 1 0;min-width:0;max-width:64px;aspect-ratio:1/1;border-radius:8px;overflow:hidden;border:2px solid transparent;opacity:.65;cursor:pointer;padding:0;background:none}
+.port-th img{width:100%;height:100%;object-fit:cover;display:block}
+.port-th.on{border-color:#8b5cf6;opacity:1}
+</style>
 </head>
 <body class="min-h-screen flex flex-col">
     <!-- صفحة الترحيب: خلفية بيضاء + تعريف بالموقع + زر تسجيل الدخول -->
@@ -696,6 +704,7 @@
             <button type="button" id="tabGamesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-primary flex items-center gap-2"><i class="fa-solid fa-gamepad"></i><span data-translate="tabGamesBtn">الألعاب</span></button>
             <button type="button" id="tabWallsBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-image"></i><span data-translate="tabWallsBtn">الخلفيات</span></button>
             <button type="button" id="tabFilesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-folder-open"></i><span data-translate="tabFilesBtn">الملفات</span></button>
+            <button type="button" id="tabPortBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-briefcase"></i><span data-translate="tabPortBtn">بورتفوليو</span></button>
         </div>
         <div id="gamesContainer" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-5 items-start">
             <div class="text-center py-12 col-span-full ui-muted" data-translate="loadingGames">جاري تحميل الألعاب...</div>
@@ -708,6 +717,12 @@
             <div id="wallContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 items-start"></div>
         </section>
     <section id="projSection" class="hidden">
+            <div class="glass-strong border ui-line rounded-2xl p-5 sm:p-8 mb-8 text-center max-w-3xl mx-auto">
+                <img id="portPhoto" src="1.jpg" alt="Hassan Mustafa" class="port-photo" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%23ddd6fe%22/%3E%3Ccircle cx=%2250%22 cy=%2238%22 r=%2218%22 fill=%22%237c3aed%22/%3E%3Cpath d=%22M14 92c4-24 20-34 36-34s32 10 36 34z%22 fill=%22%237c3aed%22/%3E%3C/svg%3E'">
+                <h3 class="text-lg sm:text-xl font-bold ui-ink mt-4"><span data-translate="portRole">مهندس IT</span> <span class="ui-accent" data-translate="portName">حسن مصطفى حسن طه</span></h3>
+                <p class="text-sm sm:text-base ui-muted leading-8 mt-2" data-translate="portBio">لديه خبرة كبيرة في تطوير المواقع الإلكترونية وبناء التطبيقات والألعاب والأمن السيبراني. ولديه أعمال كثيرة، منها:</p>
+            </div>
+            <h3 class="text-center text-lg font-bold ui-accent mb-4" data-translate="portWorksTitle">الأعمال</h3>
             <div id="projContainer" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 items-start"></div>
         </section>
     <section id="fileSection" class="hidden">
@@ -894,7 +909,7 @@
                 <button onclick="switchAdminTab('manage')" id="tabBtnManage" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">إدارة الألعاب</button>
                 <button onclick="switchAdminTab('requests')" id="tabBtnReq" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabRequests">طلبات التنزيل</button>
                 <button onclick="switchAdminTab('wall')" id="tabBtnWall" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">الخلفيات</button>
-                <button onclick="switchAdminTab('projects')" id="tabBtnProj" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">المشاريع</button>
+                <button onclick="switchAdminTab('projects')" id="tabBtnProj" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer"><i class="fa-solid fa-briefcase"></i> بورتفوليو</button>
                 <button onclick="switchAdminTab('messages')" id="tabBtnMsg" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">الرسائل<span id="msgBadge" class="hidden" style="background:#ef4444;color:#fff;border-radius:9999px;padding:0 .45rem;font-size:.7rem;margin-inline-start:.35rem">0</span></button>
                 <button onclick="switchAdminTab('files')" id="tabBtnFile" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer">الملفات</button>
                 <button onclick="switchAdminTab('logs')" id="tabBtnLog" class="px-4 py-2 ui-soft ui-muted rounded-lg text-sm font-medium transition cursor-pointer" data-translate="tabLogs">سجل التنزيلات</button>
@@ -1019,24 +1034,33 @@
 
             <!-- تبويب: المشاريع -->
             <div id="tabContentProj" class="hidden space-y-5">
+                <div class="ui-soft border ui-line rounded-xl p-4 space-y-3">
+                    <h4 class="font-bold ui-ink text-sm">صورتي في البورتفوليو</h4>
+                    <div class="flex items-center gap-3">
+                        <img id="portAdminPhoto" src="1.jpg" alt="" class="w-16 h-16 rounded-full object-cover border-2 border-violet-500 flex-shrink-0">
+                        <input type="file" id="portPhotoFile" accept="image/*" class="flex-grow min-w-0 ui-soft border ui-line rounded-lg px-3 py-2 text-xs ui-muted cursor-pointer">
+                    </div>
+                    <button type="button" id="portPhotoSaveBtn" class="w-full font-bold py-2.5 rounded-lg transition cursor-pointer btn-primary">حفظ صورتي</button>
+                </div>
+                <h4 class="font-bold ui-ink text-sm pt-2 border-t ui-line">إضافة عمل جديد</h4>
                 <form id="addProjForm" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium mb-1">اسم المشروع</label>
+                        <label class="block text-sm font-medium mb-1">اسم العمل</label>
                         <input type="text" id="projTitle" required class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">وصف المشروع</label>
-                        <textarea id="projDesc" rows="3" required class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink"></textarea>
+                        <label class="block text-sm font-medium mb-1">وصف العمل (اختياري)</label>
+                        <textarea id="projDesc" rows="3" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink"></textarea>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">رابط المشروع (لمعاينته)</label>
+                        <label class="block text-sm font-medium mb-1">رابط العمل (يفتح عند الضغط على زر عرض العمل)</label>
                         <input type="url" id="projUrl" required placeholder="https://..." dir="ltr" class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500 ui-ink">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">صور المشروع (حتى 5 صور، الأولى هي الغلاف)</label>
+                        <label class="block text-sm font-medium mb-1">صور العمل (حتى 5 صور، الأولى هي الغلاف)</label>
                         <input type="file" id="projFiles" accept="image/*" multiple required class="w-full ui-soft border ui-line rounded-lg px-3 py-2 text-sm ui-muted cursor-pointer">
                     </div>
-                    <button type="submit" id="projPublishBtn" class="w-full font-bold py-2.5 rounded-lg transition cursor-pointer btn-primary">نشر المشروع</button>
+                    <button type="submit" id="projPublishBtn" class="w-full font-bold py-2.5 rounded-lg transition cursor-pointer btn-primary">نشر العمل</button>
                 </form>
                 <div id="projManageList" class="space-y-3 pt-4 border-t ui-line"></div>
             </div>
@@ -1323,7 +1347,7 @@
                 footerContact: "تواصل معنا",
                 linkGames: "الألعاب",
                 backBtn: "رجوع",
-                greet: "مرحبا بك", menuDev: "إضافة مطور", tabGamesBtn: "الألعاب", tabWallsBtn: "الخلفيات", tabProjBtn: "المشاريع", projOpen: "معاينة المشروع", noProj: "لا توجد مشاريع حالياً." ,  tabFilesBtn: "الملفات", noFiles: "لا توجد ملفات حالياً.", fileDownload: "تنزيل الملف", menuContact: "مراسلة المدير", menuFiles: "الملفات المهمة", contactTitle: "مراسلة المدير", contactSub: "اكتب رسالتك وستصل مباشرة إلى المدير.", contactName: "اسمك", contactInfo: "رقم واتساب أو بريد للرد عليك (اختياري)", contactMsg: "اكتب رسالتك هنا...", contactSend: "إرسال الرسالة", contactSent: "تم إرسال رسالتك إلى المدير، شكراً لك!", contactWait: "انتظر قليلاً قبل إرسال رسالة أخرى.", contactErr: "تعذر إرسال الرسالة، حاول مرة أخرى.", subPhone: "خلفيات الهاتف", subPc: "خلفيات PC", noWalls: "لا توجد خلفيات في هذا القسم حالياً.",
+                greet: "مرحبا بك", menuDev: "إضافة مطور", tabGamesBtn: "الألعاب", tabWallsBtn: "الخلفيات", tabProjBtn: "المشاريع", tabPortBtn: "بورتفوليو", portRole: "مهندس IT", portName: "حسن مصطفى حسن طه", portBio: "لديه خبرة كبيرة في تطوير المواقع الإلكترونية وبناء التطبيقات والألعاب والأمن السيبراني. ولديه أعمال كثيرة، منها:", portWorksTitle: "الأعمال", projOpen: "عرض العمل", noProj: "لا توجد أعمال حالياً." ,  tabFilesBtn: "الملفات", noFiles: "لا توجد ملفات حالياً.", fileDownload: "تنزيل الملف", menuContact: "مراسلة المدير", menuFiles: "الملفات المهمة", contactTitle: "مراسلة المدير", contactSub: "اكتب رسالتك وستصل مباشرة إلى المدير.", contactName: "اسمك", contactInfo: "رقم واتساب أو بريد للرد عليك (اختياري)", contactMsg: "اكتب رسالتك هنا...", contactSend: "إرسال الرسالة", contactSent: "تم إرسال رسالتك إلى المدير، شكراً لك!", contactWait: "انتظر قليلاً قبل إرسال رسالة أخرى.", contactErr: "تعذر إرسال الرسالة، حاول مرة أخرى.", subPhone: "خلفيات الهاتف", subPc: "خلفيات PC", noWalls: "لا توجد خلفيات في هذا القسم حالياً.",
                 kindLabel: "نوع المنشور", kindGame: "لعبة", kindApp: "تطبيق",
                 notifOn: "فعّل إشعارات الألعاب الجديدة", notifDone: "الإشعارات مفعّلة ✓", notifBlocked: "الإشعارات محظورة — فعّلها من إعدادات المتصفح",
                 gateWelcome: "أهلاً بك", migrateNote: "حدّثنا اسمك: اكتب اسمك الحقيقي الكامل لمتابعة التصفح.",
@@ -1392,7 +1416,7 @@
                 footerContact: "Contact us",
                 linkGames: "Games",
                 backBtn: "Back",
-                greet: "Welcome", menuDev: "Become a developer", tabGamesBtn: "Games", tabWallsBtn: "Wallpapers", tabProjBtn: "Projects", projOpen: "Preview project", noProj: "No projects yet." ,  tabFilesBtn: "Files", noFiles: "No files yet.", fileDownload: "Download file", menuContact: "Message the admin", menuFiles: "Important files", contactTitle: "Message the admin", contactSub: "Write your message and it will reach the admin directly.", contactName: "Your name", contactInfo: "WhatsApp number or email for a reply (optional)", contactMsg: "Write your message here...", contactSend: "Send message", contactSent: "Your message was sent to the admin. Thank you!", contactWait: "Please wait a moment before sending another message.", contactErr: "Could not send the message, please try again.", subPhone: "Phone wallpapers", subPc: "PC wallpapers", noWalls: "No wallpapers in this section yet.",
+                greet: "Welcome", menuDev: "Become a developer", tabGamesBtn: "Games", tabWallsBtn: "Wallpapers", tabProjBtn: "Projects", tabPortBtn: "Portfolio", portRole: "IT Engineer", portName: "Hassan Mustafa Hassan Taha", portBio: "Highly experienced in website development, building apps and games, and cybersecurity. Many of his works are shown below:", portWorksTitle: "Works", projOpen: "View work", noProj: "No works yet." ,  tabFilesBtn: "Files", noFiles: "No files yet.", fileDownload: "Download file", menuContact: "Message the admin", menuFiles: "Important files", contactTitle: "Message the admin", contactSub: "Write your message and it will reach the admin directly.", contactName: "Your name", contactInfo: "WhatsApp number or email for a reply (optional)", contactMsg: "Write your message here...", contactSend: "Send message", contactSent: "Your message was sent to the admin. Thank you!", contactWait: "Please wait a moment before sending another message.", contactErr: "Could not send the message, please try again.", subPhone: "Phone wallpapers", subPc: "PC wallpapers", noWalls: "No wallpapers in this section yet.",
                 kindLabel: "Post type", kindGame: "Game", kindApp: "App",
                 notifOn: "Enable new game notifications", notifDone: "Notifications enabled ✓", notifBlocked: "Notifications blocked — enable them in browser settings",
                 gateWelcome: "Welcome", migrateNote: "Please update your name: enter your full real name to keep browsing.",
@@ -2986,6 +3010,7 @@
             document.getElementById('tabWallsBtn').className = name === 'walls' ? TAB_ON : TAB_OFF;
             
             document.getElementById('tabFilesBtn').className = name === 'files' ? TAB_ON : TAB_OFF;
+            document.getElementById('tabPortBtn').className = name === 'projects' ? TAB_ON : TAB_OFF;
             if (name === 'walls') renderWallpapers(); else if (name === 'projects') renderProjects(); else if (name === 'files') renderFiles(); else fitCards();
         }
         function showWallKind(k) {
@@ -2997,9 +3022,10 @@
         document.getElementById('tabGamesBtn').addEventListener('click', () => showSection(false));
         document.getElementById('tabWallsBtn').addEventListener('click', () => showSection('walls'));
         document.getElementById('tabFilesBtn').addEventListener('click', () => showSection('files'));
+        document.getElementById('tabPortBtn').addEventListener('click', () => showSection('projects'));
         document.getElementById('subPhoneBtn').addEventListener('click', () => showWallKind('phone'));
         document.getElementById('subPcBtn').addEventListener('click', () => showWallKind('pc'));
-        document.getElementById('langSelect').addEventListener('change', () => renderWallpapers());
+        document.getElementById('langSelect').addEventListener('change', () => { renderWallpapers(); renderProjects(); });
 
         function renderWallpapers() {
             const c = document.getElementById('wallContainer');
@@ -3233,12 +3259,13 @@
         // ===== قسم المشاريع =====
         // projects/{id}: title, description, url, images[] (صور مضغوطة)، createdAt
         const MAX_PROJ_CHARS = 900000;
+        const PORT_PROFILE_ID = '__profile';   // مستند الصورة الشخصية داخل مجموعة projects (لا يظهر ضمن الأعمال)
         let projData = [];
 
         async function loadProjects() {
             try {
                 const snap = await getDocs(query(collection(db, 'projects'), orderBy('createdAt', 'desc')));
-                projData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                projData = snap.docs.filter(d => d.id !== PORT_PROFILE_ID).map(d => ({ id: d.id, ...d.data() }));
             } catch (err) { console.error(err); projData = []; }
             renderProjects();
         }
@@ -3251,15 +3278,29 @@
             if (!projData.length) { c.innerHTML = `<div class="text-center py-12 col-span-full ui-faint">${tr.noProj}</div>`; return; }
             projData.forEach(p => {
                 const t = escapeHtml(p.title);
+                const imgs = (p.images || []).slice(0, 5);
+                const desc = (p.description || '').trim();
+                const thumbs = imgs.length > 1
+                    ? '<div class="port-thumbs">' + imgs.map((src, i) => `<button type="button" class="port-th${i === 0 ? ' on' : ''}" data-i="${i}"><img src="${escapeHtml(src)}" alt="" loading="lazy"></button>`).join('') + '</div>'
+                    : '';
+                const descHtml = desc
+                    ? `<p class="text-sm ui-muted" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(desc)}</p>`
+                    : '';
                 const card = document.createElement('div');
                 card.className = 'game-card';
                 card.innerHTML = `
                     <div class="face face-front">
-                        <button type="button" class="cover-wrap block w-full cursor-pointer" style="aspect-ratio:16/10" aria-label="${t}"><img src="${escapeHtml((p.images || [])[0] || '')}" alt="${t}" class="game-cover" loading="lazy"></button>
+                        <button type="button" class="cover-wrap block w-full cursor-pointer" style="aspect-ratio:16/10" aria-label="${t}"><img src="${escapeHtml(imgs[0] || '')}" alt="${t}" class="game-cover port-main" loading="lazy"></button>
+                        ${thumbs}
                         <h3 class="game-title text-base font-bold ui-ink" style="min-height:0">${t}</h3>
-                        <p class="text-sm ui-muted" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(p.description)}</p>
+                        ${descHtml}
                         <a href="${escapeHtml(safeUrl(p.url))}" target="_blank" rel="noopener noreferrer" class="btn-primary w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 text-sm cursor-pointer"><i class="fa-solid fa-arrow-up-right-from-square"></i> ${tr.projOpen}</a>
                     </div>`;
+                const main = card.querySelector('.port-main');
+                card.querySelectorAll('.port-th').forEach(btn => btn.addEventListener('click', () => {
+                    main.src = imgs[Number(btn.dataset.i)];
+                    card.querySelectorAll('.port-th').forEach(x => x.classList.toggle('on', x === btn));
+                }));
                 card.querySelector('.cover-wrap').addEventListener('click', () => openProj(p));
                 c.appendChild(card);
             });
@@ -3309,22 +3350,22 @@
                     url: document.getElementById('projUrl').value.trim(),
                     images, createdAt: serverTimestamp()
                 });
-                alert('تم نشر المشروع بنجاح!');
+                alert('تم نشر العمل بنجاح!');
                 document.getElementById('addProjForm').reset();
                 loadProjects(); loadProjManage();
             } catch (err) {
                 console.error(err);
                 alert(err.code === 'permission-denied'
                     ? 'Firestore رفض الحفظ (permission-denied). اسمح بالقراءة والكتابة على المجموعة projects في قواعد Firestore.'
-                    : err.message === 'TOO_LARGE' ? 'حجم الصور كبير جداً، قلّل عددها.' : 'حدث خطأ أثناء حفظ المشروع.');
-            } finally { btn.disabled = false; btn.textContent = 'نشر المشروع'; }
+                    : err.message === 'TOO_LARGE' ? 'حجم الصور كبير جداً، قلّل عددها.' : 'حدث خطأ أثناء حفظ العمل.');
+            } finally { btn.disabled = false; btn.textContent = 'نشر العمل'; }
         });
         async function loadProjManage() {
             const list = document.getElementById('projManageList');
             list.innerHTML = `<p class="ui-muted text-center py-4">جاري التحميل...</p>`;
             try {
                 const snap = await getDocs(query(collection(db, 'projects'), orderBy('createdAt', 'desc')));
-                if (snap.empty) { list.innerHTML = `<p class="ui-muted text-center py-6">لا توجد مشاريع.</p>`; return; }
+                if (snap.empty) { list.innerHTML = `<p class="ui-muted text-center py-6">لا توجد أعمال.</p>`; return; }
                 list.innerHTML = '';
                 snap.docs.forEach(d => {
                     const p = d.data();
@@ -3335,7 +3376,7 @@
                         <div class="flex-grow min-w-0"><h4 class="font-bold ui-ink text-sm truncate">${escapeHtml(p.title)}</h4></div>
                         <button class="del-btn text-xs font-bold px-3 py-2 rounded-lg transition cursor-pointer btn-danger"><i class="fa-solid fa-trash"></i> حذف</button>`;
                     row.querySelector('.del-btn').addEventListener('click', async () => {
-                        if (!confirm('هل أنت متأكد من حذف المشروع "' + p.title + '" نهائياً؟')) return;
+                        if (!confirm('هل أنت متأكد من حذف العمل "' + p.title + '" نهائياً؟')) return;
                         try { await deleteDoc(doc(db, 'projects', d.id)); loadProjManage(); loadProjects(); }
                         catch (err) { console.error(err); alert('حدث خطأ أثناء الحذف.'); }
                     });
@@ -3344,6 +3385,36 @@
             } catch (err) { console.error(err); list.innerHTML = `<p class="ui-err text-center py-4">حدث خطأ أثناء التحميل.</p>`; }
         }
         loadProjects();
+
+        // ---- صورتي في البورتفوليو (projects/__profile) ----
+        function setPortPhoto(src) {
+            ['portPhoto', 'portAdminPhoto'].forEach(id => { const el = document.getElementById(id); if (el && src) el.src = src; });
+        }
+        async function loadPortProfile() {
+            try {
+                const snap = await getDoc(doc(db, 'projects', PORT_PROFILE_ID));
+                if (snap.exists() && snap.data().photo) setPortPhoto(snap.data().photo);
+            } catch (err) { console.error(err); }
+        }
+        document.getElementById('portPhotoSaveBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('portPhotoSaveBtn');
+            const f = document.getElementById('portPhotoFile').files[0];
+            if (!f) { alert('اختر صورتك أولاً.'); return; }
+            btn.disabled = true; btn.textContent = 'جاري الحفظ...';
+            try {
+                const photo = await compressImage(f, 700, 0.85);
+                await setDoc(doc(db, 'projects', PORT_PROFILE_ID), { photo, isProfile: true, updatedAt: serverTimestamp() });
+                setPortPhoto(photo);
+                document.getElementById('portPhotoFile').value = '';
+                alert('تم حفظ صورتك بنجاح!');
+            } catch (err) {
+                console.error(err);
+                alert(err.code === 'permission-denied'
+                    ? 'Firestore رفض الحفظ (permission-denied). اسمح بالكتابة على المجموعة projects في قواعد Firestore.'
+                    : 'حدث خطأ أثناء حفظ الصورة.');
+            } finally { btn.disabled = false; btn.textContent = 'حفظ صورتي'; }
+        });
+        loadPortProfile();
 
 
         // ===== مراسلة المدير (Firestore: messages) =====
