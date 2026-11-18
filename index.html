@@ -1038,6 +1038,20 @@ html.is-standalone #admInstallBtn{display:none!important}
                     <button id="admSoundBtn" type="button" class="text-xs ui-muted px-3 py-2 rounded-lg ui-soft border ui-line cursor-pointer"><i class="fa-solid fa-volume-high"></i> <span>الصوت: تشغيل</span></button>
                 </div>
                 <div id="admNotifHint" class="text-xs ui-muted mb-2 hidden"></div>
+                <div id="admPushBox" class="mb-3 p-3 rounded-lg border ui-line" style="background:var(--soft)">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-mobile-screen-button ui-accent"></i>
+                        <b class="text-sm ui-ink flex-grow">إشعارات الهاتف (تصل والتطبيق مغلق)</b>
+                        <span id="admPushState" class="text-xs ui-muted">غير مفعّلة</span>
+                    </div>
+                    <input id="admPushCode" type="password" autocomplete="off" placeholder="رمز المدير (ADMIN_CODE)" class="w-full text-sm px-3 py-2 rounded-lg border ui-line mb-2" style="background:var(--field);color:var(--ink)">
+                    <div class="flex flex-wrap gap-2">
+                        <button id="admPushBtn" type="button" class="btn-primary text-xs font-bold px-3 py-2 rounded-lg cursor-pointer"><i class="fa-solid fa-link"></i> ربط الإشعارات الحقيقية</button>
+                        <button id="admPushTestBtn" type="button" class="hidden btn-primary text-xs font-bold px-3 py-2 rounded-lg cursor-pointer"><i class="fa-solid fa-paper-plane"></i> إشعار تجريبي</button>
+                        <button id="admPushOffBtn" type="button" class="hidden text-xs ui-muted px-3 py-2 rounded-lg ui-soft border ui-line cursor-pointer"><i class="fa-solid fa-link-slash"></i> إلغاء الربط</button>
+                    </div>
+                    <div id="admPushMsg" class="text-xs ui-muted mt-2 hidden"></div>
+                </div>
                 <div id="admNotifList" class="space-y-2 max-h-72 overflow-y-auto"></div>
             </div>
 
@@ -3116,7 +3130,7 @@ html.is-standalone #admInstallBtn{display:none!important}
 
         // عند فتح التطبيق: امسح الشارة عن الأيقونة وأغلق الإشعارات القديمة
         function clearBadge() {
-            try { if (navigator.clearAppBadge) navigator.clearAppBadge(); } catch (e) {}
+            if (!window.__ADMIN_APP) { try { if (navigator.clearAppBadge) navigator.clearAppBadge(); } catch (e) {} }   // المدير: الرقم يُدار حسب غير المقروء
             if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistration().then(r => r && r.getNotifications().then(l => l.forEach(n => n.close()))).catch(() => {});
         }
         clearBadge();
@@ -4352,6 +4366,90 @@ html.is-standalone #admInstallBtn{display:none!important}
         const admMs = v => (v && typeof v.toMillis === 'function') ? v.toMillis() : ((v && v.seconds) ? v.seconds * 1000 : 0);
         const admIsPanelOpen = () => !document.getElementById('admNotifPanel').classList.contains('hidden');
 
+        // ===== إشعارات حقيقية تصل والتطبيق مغلق (FCM + Cloudflare Worker) =====
+        // ضع رابط الـ Worker ومفتاح VAPID (Firebase Console > Project settings > Cloud Messaging > Web Push certificates)
+        const ADM_WORKER_URL = 'PUT_YOUR_WORKER_URL_HERE';   // مثال: https://7asson.اسمك.workers.dev
+        const ADM_VAPID_KEY = 'PUT_YOUR_VAPID_KEY_HERE';
+        const admPushReady = () => /^https:\/\//.test(ADM_WORKER_URL) && ADM_VAPID_KEY.length > 80;
+        const admRm = k => { try { localStorage.removeItem(k); } catch (e) {} };
+        const admById = id => document.getElementById(id);
+
+        function admSwPost(msg) {
+            try { const r = admSwReg, w = r && (r.active || r.waiting || r.installing); if (w) w.postMessage(msg); } catch (e) {}
+        }
+        async function admPost(path, body) {
+            const r = await fetch(ADM_WORKER_URL.replace(/\/+$/, '') + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+            let j = {}; try { j = await r.json(); } catch (e) {}
+            return { ok: r.ok, status: r.status, data: j };
+        }
+        function admPushMsg(t) { const el = admById('admPushMsg'); if (!el) return; el.textContent = t || ''; el.classList.toggle('hidden', !t); }
+        function admPushRefresh() {
+            const st = admById('admPushState'); if (!st) return;
+            const linked = 'Notification' in window && Notification.permission === 'granted' && !!admLs('admPushTok');
+            st.textContent = linked ? 'مفعّلة ✓' : 'غير مفعّلة';
+            st.style.color = linked ? '#059669' : '';
+            admById('admPushCode').classList.toggle('hidden', linked);
+            admById('admPushBtn').classList.toggle('hidden', linked);
+            admById('admPushTestBtn').classList.toggle('hidden', !linked);
+            admById('admPushOffBtn').classList.toggle('hidden', !linked);
+        }
+        async function admGetPushToken() {
+            if (!admSwReg) await admInitSw();
+            if (!admSwReg) throw new Error('admin-sw.js غير موجود بجانب index.html');
+            const { getMessaging, getToken } = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js');
+            return getToken(getMessaging(app), { vapidKey: ADM_VAPID_KEY, serviceWorkerRegistration: admSwReg });
+        }
+        async function admPushLink() {
+            if (!window.__ADMIN_APP) { admPushMsg('اربط الإشعارات من داخل تطبيق المدير المثبّت (الرابط الذي ينتهي بـ ?app=admin).'); return; }
+            if (!admPushReady()) { admPushMsg('ضع رابط الـ Worker ومفتاح VAPID في ADM_WORKER_URL و ADM_VAPID_KEY داخل index.html ثم ارفعه.'); return; }
+            if (!('Notification' in window) || !('PushManager' in window)) { admPushMsg('هذا المتصفح لا يدعم الإشعارات الحقيقية. على الآيفون ثبّت التطبيق على الشاشة الرئيسية (iOS 16.4 فأحدث) ثم افتحه منها.'); return; }
+            const input = admById('admPushCode'), btn = admById('admPushBtn');
+            const code = (input.value || admLs('admPushCode') || '').trim();
+            if (!code) { admPushMsg('اكتب رمز المدير (ADMIN_CODE) أولاً.'); input.focus(); return; }
+            btn.disabled = true; admPushMsg('جارٍ الربط…');
+            try {
+                if (Notification.permission === 'default') await Notification.requestPermission();
+                if (Notification.permission !== 'granted') { admPushMsg('الإشعارات غير مسموحة — فعّلها من إعدادات الهاتف أو المتصفح ثم أعد المحاولة.'); return; }
+                const token = await admGetPushToken();
+                if (!token) throw new Error('no_token');
+                const r = await admPost('/register', { code, token });
+                if (r.status === 401) { admPushMsg('رمز المدير غير صحيح.'); return; }
+                if (!r.ok) throw new Error(r.data.error || r.status);
+                admLs('admPushCode', code); admLs('admPushTok', token); admLs('admPushAt', String(Date.now()));
+                input.value = '';
+                admPushMsg('تم الربط ✓ — اضغط «إشعار تجريبي» ثم اخرج من التطبيق وانتظر لحظات.');
+            } catch (e) { console.warn('push link', e); admPushMsg('تعذّر الربط: ' + ((e && e.message) || e)); }
+            finally { btn.disabled = false; admPushRefresh(); }
+        }
+        async function admPushTest() {
+            const code = admLs('admPushCode'); if (!code) return;
+            try {
+                const r = await admPost('/test', { code });
+                admPushMsg(r.ok ? 'أُرسل الإشعار التجريبي ✓ — إن لم يظهر خلال لحظات أعد «ربط الإشعارات».'
+                    : r.data.error === 'no_devices' ? 'لا يوجد جهاز مربوط — أعد الربط.' : 'فشل الإرسال: ' + (r.data.error || r.status));
+            } catch (e) { admPushMsg('تعذّر الوصول إلى الـ Worker.'); }
+        }
+        async function admPushOff() {
+            const code = admLs('admPushCode'), token = admLs('admPushTok');
+            try { if (code && token) await admPost('/unregister', { code, token }); } catch (e) {}
+            admRm('admPushTok'); admRm('admPushCode'); admRm('admPushAt');
+            admPushMsg('تم إلغاء الربط على هذا الجهاز.'); admPushRefresh();
+        }
+        // عند كل فتح: جدّد رمز الجهاز بصمت (الرموز قد تتغير) دون إزعاج
+        async function admPushSync() {
+            try {
+                const code = admLs('admPushCode');
+                if (!code || !admPushReady() || !('Notification' in window) || Notification.permission !== 'granted') return;
+                const token = await admGetPushToken();
+                const stale = Date.now() - (+admLs('admPushAt') || 0) > 3 * 864e5;
+                if (token && (token !== admLs('admPushTok') || stale)) {
+                    const r = await admPost('/register', { code, token });
+                    if (r.ok) { admLs('admPushTok', token); admLs('admPushAt', String(Date.now())); }
+                }
+                admPushRefresh();
+            } catch (e) { console.warn('push sync', e); }
+        }
+
         function admToast(text, ms) {
             let box = document.getElementById('admToastBox');
             if (!box) {
@@ -4406,6 +4504,7 @@ html.is-standalone #admInstallBtn{display:none!important}
         function admAppBadge() {
             const n = admUnread();
             try { if (navigator.setAppBadge) Promise.resolve(n ? navigator.setAppBadge(n) : navigator.clearAppBadge()).catch(() => {}); } catch (e) {}
+            admSwPost({ type: 'badge', n });
         }
         function admAgo(ts) {
             const s = Math.max(0, Math.round((Date.now() - ts) / 1000));
@@ -4433,6 +4532,7 @@ html.is-standalone #admInstallBtn{display:none!important}
                 : perm === 'denied' ? 'إشعارات الجهاز محظورة لهذا الموقع — فعّلها من إعدادات المتصفح.'
                 : 'فعّل إشعارات الجهاز لتصلك التنبيهات والتطبيق في الخلفية.';
             document.querySelector('#admSoundBtn span').textContent = 'الصوت: ' + (admLs('admSound') === '0' ? 'متوقف' : 'تشغيل');
+            admPushRefresh();
         }
 
         function admMakeEvent(kind, id, d) {
@@ -4463,7 +4563,7 @@ html.is-standalone #admInstallBtn{display:none!important}
         function startAdminNotifs() {
             if (admStarted) { admRender(); return; }
             admStarted = true; admLoaded.a = admLoaded.l = false; admSummaryDone = false;
-            if (window.__ADMIN_APP) admInitSw();
+            if (window.__ADMIN_APP) admInitSw().then(admPushSync);
             if (admLs('admReadTs') === null) admLs('admReadTs', String(Date.now()));
             const handle = kind => snap => {
                 const first = !admLoaded[kind]; admLoaded[kind] = true;
@@ -4489,6 +4589,7 @@ html.is-standalone #admInstallBtn{display:none!important}
             admUnsubs.forEach(u => { try { u(); } catch (e) {} });
             admUnsubs = []; admStarted = false; admEvents.clear();
             try { if (navigator.clearAppBadge) Promise.resolve(navigator.clearAppBadge()).catch(() => {}); } catch (e) {}
+            admSwPost({ type: 'badge', n: 0 });
         }
 
         function admTogglePanel(force) {
@@ -4551,6 +4652,10 @@ html.is-standalone #admInstallBtn{display:none!important}
         document.getElementById('admBellBtn').addEventListener('click', () => admTogglePanel());
         document.getElementById('admPermBtn').addEventListener('click', () => admAskPerm(false));
         document.getElementById('admSoundBtn').addEventListener('click', () => { admLs('admSound', admLs('admSound') === '0' ? '1' : '0'); admRender(); });
+        document.getElementById('admPushBtn').addEventListener('click', admPushLink);
+        document.getElementById('admPushTestBtn').addEventListener('click', admPushTest);
+        document.getElementById('admPushOffBtn').addEventListener('click', admPushOff);
+        document.addEventListener('visibilitychange', () => { if (!document.hidden && admStarted) admAppBadge(); });
         document.getElementById('admLogoutBtn').addEventListener('click', admLock);
         document.getElementById('closeAdminBtn').addEventListener('click', () => { admStop(); admTogglePanel(false); });
         document.getElementById('adminPasswordInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('submitPasswordBtn').click(); });
