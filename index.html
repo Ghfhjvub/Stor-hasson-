@@ -659,15 +659,12 @@ html .hero-video .hero-sub{display:none}
 #wallSection:not(.hidden),#fileSection:not(.hidden){display:flex;flex-direction:column;flex:1 1 0;min-height:0}
 #wallSection>div.mb-6{margin-bottom:8px}
 #wallSection>div .px-4{padding:.35rem .9rem}
-#gamesContainer:not(.hidden),#wallContainer,#fileContainer{display:grid;grid-auto-flow:column;grid-template-columns:none;gap:var(--g);width:var(--W);margin-inline:auto;flex:1 1 0;min-height:0;overflow-x:auto;overflow-y:hidden;align-content:start;align-items:start;scrollbar-width:thin;overscroll-behavior:contain}
-/* games and apps: 4 per row */
-#gamesContainer:not(.hidden){--cw:calc((var(--W) - 3*var(--g))/4);grid-auto-columns:var(--cw);grid-template-rows:repeat(auto-fill,calc(var(--cw) + 46px))}
-#gamesContainer>.col-span-full{grid-column:1/span 4;grid-row:1}
-#gamesContainer .game-card:not(.is-flipped){border-radius:12px}
-#gamesContainer .face-front{padding:4px;gap:4px}
-#gamesContainer .face-front .cover-wrap{aspect-ratio:1/1;border-radius:9px}
-#gamesContainer .face-front :is(.game-title,.dev-by,.comments-btn){display:none}
-#gamesContainer .face-front .flip-btn{padding:6px 0;font-size:.62rem;gap:3px;border-radius:9px;min-height:0}
+#fileContainer{display:grid;grid-auto-flow:column;grid-template-columns:none;gap:var(--g);width:var(--W);margin-inline:auto;flex:1 1 0;min-height:0;overflow-x:auto;overflow-y:auto;align-content:start;align-items:start;scrollbar-width:thin;overscroll-behavior:contain;grid-auto-columns:min(82%,300px)}
+/* games and apps: plain responsive grid that wraps onto new rows, no horizontal scrolling */
+#gamesContainer:not(.hidden){min-height:0}
+#gamesContainer .game-card:not(.is-flipped){border-radius:14px}
+#gamesContainer .face-front{padding:6px;gap:6px}
+#gamesContainer .face-front .cover-wrap{aspect-ratio:1/1;border-radius:11px}
 /* opened card = centered window with details, comments and download */
 #gamesContainer .game-card.is-flipped{position:fixed;inset:0;margin:auto;z-index:45;width:min(92vw,480px);height:fit-content!important;max-height:86dvh;overflow-y:auto;transform:none!important;box-shadow:0 30px 80px -20px rgba(15,31,61,.55)}
 #gamesContainer .game-card.is-flipped .face-front{display:none}
@@ -675,19 +672,16 @@ html .hero-video .hero-sub{display:none}
 body:has(#gamesContainer .game-card.is-flipped)::after{content:"";position:fixed;inset:0;z-index:44;background:rgba(15,31,61,.5)}
 .v3-actions{display:flex;gap:8px;align-items:stretch}
 .v3-actions .download-btn{flex:1;width:auto}
-/* wallpapers: 6 per row */
-#wallContainer{--cw:calc((var(--W) - 5*var(--g))/6);grid-auto-columns:var(--cw);grid-template-rows:repeat(auto-fill,calc(var(--cw)*1.78 + 36px))}
-#wallContainer[class*="grid-cols-1"]{grid-template-rows:repeat(auto-fill,calc(var(--cw)*.625 + 36px))}
-#wallContainer>.col-span-full{grid-column:1/span 6;grid-row:1}
-#wallContainer .game-card{border-radius:9px}
-#wallContainer .face-front{padding:3px;gap:3px}
-#wallContainer .cover-wrap{border-radius:7px}
-#wallContainer .face-front :is(.game-title,.wall-like-btn,.wall-dl-stat){display:none}
-#wallContainer .face-front>.flex{display:none}
-#wallContainer .wall-dl{padding:4px 0;font-size:0;border-radius:7px;min-height:0}
-#wallContainer .wall-dl i{font-size:.75rem}
-/* files: one horizontal strip */
-#fileContainer{grid-auto-columns:min(82%,300px);overflow-y:auto}
+/* wallpapers: a few independently-swipeable rows (phone), one wide swipeable row (pc) */
+#wallContainer{display:flex;flex-direction:column;gap:14px;flex:1 1 0;min-height:0}
+.wall-row{display:flex;gap:var(--g);overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:thin;overscroll-behavior:contain;padding:2px 2px 8px}
+.wall-row .game-card{flex:0 0 auto;scroll-snap-align:start;border-radius:12px}
+.wall-row .game-card .face-front{padding:4px;gap:5px}
+.wall-row .game-card .cover-wrap{border-radius:9px}
+#wallContainer[data-kind="phone"] .wall-row .game-card{width:clamp(108px,39vw,160px)}
+#wallContainer[data-kind="pc"] .wall-row .game-card{width:clamp(220px,64vw,340px)}
+#wallContainer .wall-dl{padding:6px 0;font-size:.7rem;border-radius:8px;min-height:0;gap:4px}
+#wallContainer .game-title{font-size:.78rem;min-height:0;margin-top:2px}
 /* bottom bar on every screen size, clear of the support bubble */
 #v3Nav{display:flex;max-width:520px;margin-inline:auto;border:1px solid var(--line);border-bottom:0;border-radius:16px 16px 0 0}
 html.admin-app #v3Nav,html.splash-on #v3Nav{display:none}
@@ -3377,13 +3371,21 @@ html.admin-app #v3Nav,html.splash-on #v3Nav{display:none}
             const c = document.getElementById('wallContainer');
             const tr = translations[currentLang];
             const list = wallData.filter(w => w.kind === curWallKind);
-            c.className = 'grid gap-3 sm:gap-6 items-start ' + (curWallKind === 'pc' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-5');
+            c.dataset.kind = curWallKind;
             c.innerHTML = '';
             if (!list.length) {
-                c.innerHTML = `<div class="text-center py-12 col-span-full ui-faint">${tr.noWalls}</div>`;
+                c.innerHTML = `<div class="text-center py-12 ui-faint">${tr.noWalls}</div>`;
                 return;
             }
-            list.forEach(w => {
+            // phone wallpapers: split across 2-3 independently swipeable rows · pc wallpapers: one swipeable row
+            const rowsCount = curWallKind === 'pc' ? 1 : Math.min(3, Math.max(2, Math.ceil(list.length / 4)));
+            const rows = Array.from({ length: rowsCount }, () => {
+                const row = document.createElement('div');
+                row.className = 'wall-row';
+                c.appendChild(row);
+                return row;
+            });
+            list.forEach((w, i) => {
                 const t = escapeHtml(w.title);
                 const card = document.createElement('div');
                 card.className = 'game-card';
@@ -3401,7 +3403,7 @@ html.admin-app #v3Nav,html.splash-on #v3Nav{display:none}
                 card.querySelector('.wall-dl').addEventListener('click', (e) => downloadWall(w, e.currentTarget));
                 card.querySelector('.wall-like').addEventListener('click', () => toggleWallLike(w));
                 card.dataset.wid = w.id;
-                c.appendChild(card);
+                rows[i % rowsCount].appendChild(card);
                 paintWallStats(w);
             });
         }
@@ -5117,13 +5119,19 @@ html.admin-app #v3Nav,html.splash-on #v3Nav{display:none}
     if(!o||e.target.closest('.game-card,.overlay,[id$="Modal"]')) return;
     var b=o.querySelector('.flip-back'); if(b) b.click();
   });
-  // mouse wheel scrolls the grids sideways
-  ['gamesContainer','wallContainer','fileContainer'].forEach(function(id){
+  // mouse wheel scrolls the horizontal strips sideways
+  ['fileContainer'].forEach(function(id){
     var el=document.getElementById(id); if(!el) return;
     el.addEventListener('wheel',function(e){
       if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){el.scrollLeft+=e.deltaY;e.preventDefault();}
     },{passive:false});
   });
+  // each wallpaper row scrolls sideways on its own, even though rows are re-created on every render
+  var wc=document.getElementById('wallContainer');
+  if(wc) wc.addEventListener('wheel',function(e){
+    var row=e.target.closest('.wall-row'); if(!row) return;
+    if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){row.scrollLeft+=e.deltaY;e.preventDefault();}
+  },{passive:false});
 })();
 </script>
 </body>
