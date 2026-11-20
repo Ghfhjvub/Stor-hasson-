@@ -978,14 +978,12 @@ html.dark .robot-btn{background:#f5f5f5!important;border-color:#f5f5f5!important
             <button type="button" id="tabWallsBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-image"></i><span data-translate="tabWallsBtn">الخلفيات</span></button>
             <button type="button" id="tabFilesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-folder-open"></i><span data-translate="tabFilesBtn">الملفات</span></button>
         </div>
-        <div id="gamesCarousel" class="games-carousel">
+        <div id="gamesCarousel" class="games-carousel hidden">
             <button type="button" id="gamesPrevBtn" class="games-nav games-nav-prev" aria-label="اللعبة السابقة" title="السابق"><i class="fa-solid fa-chevron-right"></i></button>
             <div id="gamesContainer" class="games-track" aria-live="polite">
                 <div class="text-center py-12 col-span-full ui-muted" data-translate="loadingGames">جاري تحميل الألعاب...</div>
             </div>
             <button type="button" id="gamesNextBtn" class="games-nav games-nav-next" aria-label="اللعبة التالية" title="التالي"><i class="fa-solid fa-chevron-left"></i></button>
-        </div>
-            <div class="text-center py-12 col-span-full ui-muted" data-translate="loadingGames">جاري تحميل الألعاب...</div>
         </div>
     <section id="wallSection" class="hidden">
             <div class="flex justify-center gap-2 mb-6">
@@ -2219,20 +2217,23 @@ html.dark .robot-btn{background:#f5f5f5!important;border-color:#f5f5f5!important
             gamesCarouselIndex = Math.min(Math.max(0, gamesCarouselIndex), maxIndex);
             const prev = document.getElementById('gamesPrevBtn');
             const next = document.getElementById('gamesNextBtn');
-            if (prev) prev.disabled = gamesCarouselIndex <= 0;
-            if (next) next.disabled = gamesCarouselIndex >= maxIndex;
+            // السهم الموجود يمين الشاشة يتقدم، والسهم الموجود يسار الشاشة يرجع
+            if (prev) prev.disabled = gamesCarouselIndex >= maxIndex;
+            if (next) next.disabled = gamesCarouselIndex <= 0;
             if (!cards.length) return;
             const target = cards[gamesCarouselIndex];
             const offset = target.offsetLeft - track.offsetLeft;
             track.scrollTo({ left: offset, behavior: 'smooth' });
         }
+        // زر اليمين (gamesPrevBtn في موضعه الحالي يمين الشاشة) ينتقل للأمام
         document.getElementById('gamesPrevBtn').addEventListener('click', () => {
-            gamesCarouselIndex = Math.max(0, gamesCarouselIndex - 1);
-            updateGamesCarousel();
-        });
-        document.getElementById('gamesNextBtn').addEventListener('click', () => {
             const cards = document.querySelectorAll('#gamesContainer > .game-card');
             gamesCarouselIndex = Math.min(gamesCarouselIndex + 1, Math.max(0, cards.length - 2));
+            updateGamesCarousel();
+        });
+        // زر اليسار يرجع إلى اللعبة/التطبيق السابق
+        document.getElementById('gamesNextBtn').addEventListener('click', () => {
+            gamesCarouselIndex = Math.max(0, gamesCarouselIndex - 1);
             updateGamesCarousel();
         });
         window.addEventListener('resize', () => updateGamesCarousel());
@@ -3353,6 +3354,7 @@ html.dark .robot-btn{background:#f5f5f5!important;border-color:#f5f5f5!important
 
         function showSection(name) {
             if (name === true) name = 'walls'; if (name === false) name = 'games';
+            if (!['games', 'walls', 'projects', 'files'].includes(name)) name = 'games';
             document.getElementById('gamesCarousel').classList.toggle('hidden', name !== 'games');
             document.getElementById('wallSection').classList.toggle('hidden', name !== 'walls');
             document.getElementById('projSection').classList.toggle('hidden', name !== 'projects');
