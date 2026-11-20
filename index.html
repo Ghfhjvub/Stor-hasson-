@@ -671,6 +671,45 @@ html.dark .robot-btn{background:#f5f5f5!important;border-color:#f5f5f5!important
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 
+
+<style id="games-carousel-overrides">
+/* بطاقتان فقط في صف واحد؛ التنقل يتم حصراً عبر السهمين */
+#gamesCarousel.games-carousel{
+  position:relative; width:100%; display:flex; align-items:center;
+  gap:8px; padding:0 34px; box-sizing:border-box; min-width:0;
+}
+#gamesCarousel .games-track{
+  display:flex !important; flex-flow:row nowrap !important; direction:ltr;
+  align-items:stretch; gap:16px; width:100%; min-width:0;
+  overflow-x:auto; overflow-y:hidden; scroll-behavior:smooth;
+  scroll-snap-type:x mandatory; scrollbar-width:none;
+  -webkit-overflow-scrolling:touch; padding:4px 2px 16px;
+}
+#gamesCarousel .games-track::-webkit-scrollbar{display:none}
+#gamesCarousel .games-track > .game-card{
+  direction:rtl; text-align:right; flex:0 0 calc(50% - 8px) !important;
+  width:calc(50% - 8px) !important; min-width:0; max-width:none;
+  scroll-snap-align:start; margin:0 !important;
+}
+#gamesCarousel .games-nav{
+  position:absolute; z-index:5; top:50%; transform:translateY(-50%);
+  width:42px; height:54px; border:1px solid currentColor; border-radius:16px;
+  display:grid; place-items:center; background:#111; color:#fff;
+  box-shadow:0 5px 18px #0002; font-size:22px; cursor:pointer;
+}
+#gamesCarousel .games-nav:disabled{opacity:.28; cursor:default}
+#gamesCarousel .games-nav-prev{right:0}
+#gamesCarousel .games-nav-next{left:0}
+@media(max-width:520px){
+  #gamesCarousel.games-carousel{padding:0 30px; gap:0}
+  #gamesCarousel .games-track{gap:12px}
+  #gamesCarousel .games-track > .game-card{
+    flex-basis:calc(50% - 6px) !important; width:calc(50% - 6px) !important;
+  }
+  #gamesCarousel .games-nav{width:34px;height:48px;border-radius:13px;font-size:18px}
+}
+</style>
+
 </head>
 <body class="min-h-screen flex flex-col">
     <!-- صفحة الترحيب: خلفية بيضاء + تعريف بالموقع + زر تسجيل الدخول -->
@@ -939,7 +978,13 @@ html.dark .robot-btn{background:#f5f5f5!important;border-color:#f5f5f5!important
             <button type="button" id="tabWallsBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-image"></i><span data-translate="tabWallsBtn">الخلفيات</span></button>
             <button type="button" id="tabFilesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-folder-open"></i><span data-translate="tabFilesBtn">الملفات</span></button>
         </div>
-        <div id="gamesContainer" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-5 items-start">
+        <div id="gamesCarousel" class="games-carousel">
+            <button type="button" id="gamesPrevBtn" class="games-nav games-nav-prev" aria-label="اللعبة السابقة" title="السابق"><i class="fa-solid fa-chevron-right"></i></button>
+            <div id="gamesContainer" class="games-track" aria-live="polite">
+                <div class="text-center py-12 col-span-full ui-muted" data-translate="loadingGames">جاري تحميل الألعاب...</div>
+            </div>
+            <button type="button" id="gamesNextBtn" class="games-nav games-nav-next" aria-label="اللعبة التالية" title="التالي"><i class="fa-solid fa-chevron-left"></i></button>
+        </div>
             <div class="text-center py-12 col-span-full ui-muted" data-translate="loadingGames">جاري تحميل الألعاب...</div>
         </div>
     <section id="wallSection" class="hidden">
@@ -2163,6 +2208,35 @@ html.dark .robot-btn{background:#f5f5f5!important;border-color:#f5f5f5!important
             }
         });
 
+
+        // شريط الألعاب: بطاقتان فقط في صف واحد مع تنقل بالأزرار
+        let gamesCarouselIndex = 0;
+        function updateGamesCarousel() {
+            const track = document.getElementById('gamesContainer');
+            if (!track) return;
+            const cards = Array.from(track.querySelectorAll(':scope > .game-card'));
+            const maxIndex = Math.max(0, cards.length - 2);
+            gamesCarouselIndex = Math.min(Math.max(0, gamesCarouselIndex), maxIndex);
+            const prev = document.getElementById('gamesPrevBtn');
+            const next = document.getElementById('gamesNextBtn');
+            if (prev) prev.disabled = gamesCarouselIndex <= 0;
+            if (next) next.disabled = gamesCarouselIndex >= maxIndex;
+            if (!cards.length) return;
+            const target = cards[gamesCarouselIndex];
+            const offset = target.offsetLeft - track.offsetLeft;
+            track.scrollTo({ left: offset, behavior: 'smooth' });
+        }
+        document.getElementById('gamesPrevBtn').addEventListener('click', () => {
+            gamesCarouselIndex = Math.max(0, gamesCarouselIndex - 1);
+            updateGamesCarousel();
+        });
+        document.getElementById('gamesNextBtn').addEventListener('click', () => {
+            const cards = document.querySelectorAll('#gamesContainer > .game-card');
+            gamesCarouselIndex = Math.min(gamesCarouselIndex + 1, Math.max(0, cards.length - 2));
+            updateGamesCarousel();
+        });
+        window.addEventListener('resize', () => updateGamesCarousel());
+
         // عرض الألعاب في الواجهة الرئيسية (الأحدث أولاً)
         async function loadGames() {
             const container = document.getElementById('gamesContainer');
@@ -2230,7 +2304,9 @@ html.dark .robot-btn{background:#f5f5f5!important;border-color:#f5f5f5!important
                     setupFlip(card, data);
                     container.appendChild(card);
                 });
+                gamesCarouselIndex = 0;
                 fitCards();
+                requestAnimationFrame(updateGamesCarousel);
             } catch (err) {
                 console.error(err);
                 container.innerHTML = `<div class="text-center py-12 col-span-full ui-err">حدث خطأ أثناء تحميل الألعاب.</div>`;
@@ -3277,7 +3353,7 @@ html.dark .robot-btn{background:#f5f5f5!important;border-color:#f5f5f5!important
 
         function showSection(name) {
             if (name === true) name = 'walls'; if (name === false) name = 'games';
-            document.getElementById('gamesContainer').classList.toggle('hidden', name !== 'games');
+            document.getElementById('gamesCarousel').classList.toggle('hidden', name !== 'games');
             document.getElementById('wallSection').classList.toggle('hidden', name !== 'walls');
             document.getElementById('projSection').classList.toggle('hidden', name !== 'projects');
             document.getElementById('fileSection').classList.toggle('hidden', name !== 'files');
