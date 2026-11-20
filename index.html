@@ -635,182 +635,7 @@ html .site-footer{background:var(--soft);-webkit-backdrop-filter:none;backdrop-f
 #v3Nav button.on{color:var(--accent);background:var(--soft)}
 @media (max-width:767px){#v3Nav{display:flex}html.admin-app #v3Nav,html.splash-on #v3Nav{display:none}body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}#toTopBtn{bottom:calc(84px + env(safe-area-inset-bottom))!important}}
 </style>
-<style id="themeV3b">
-/* ===== v3.1 : fixed one-screen layout, tiny cards, horizontal scrolling ===== */
-:root{--W:min(calc(100vw - 24px),680px);--g:8px}
-html:not(.admin-app),html:not(.admin-app) body{height:100%;overflow:hidden;overscroll-behavior:none}
-html:not(.admin-app) body{height:100dvh;min-height:0;padding-bottom:calc(64px + env(safe-area-inset-bottom))}
-html .site-header{flex:none}
-html:not(.admin-app) main{flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:hidden;width:100%;max-width:720px;padding:8px 12px 0}
-/* removed: top section tabs, footer, back-to-top (kept in the DOM so the app code still works) */
-#tabGamesBtn,#tabWallsBtn,#tabFilesBtn{display:none}
-main>div:has(>#tabGamesBtn){display:none}
-html .site-footer,#toTopBtn{display:none}
-/* compact hero */
-html .hero-video{flex:none;display:block;min-height:0;margin:0 0 8px;padding:12px 14px;border-radius:16px}
-html .hero-video .hero-title{font-size:clamp(1.05rem,4.6vw,1.5rem);margin:0 0 6px}
-html .hero-video .hero-sub{display:none}
-.hero-actions{gap:8px}
-.hero-actions .port-round{width:38px;height:38px}
-.hero-actions .btn-primary{padding:.4rem 1rem;font-size:.75rem}
-.visitor-badge{margin:6px auto 0;padding:.2rem .7rem;font-size:.7rem}
-@media (max-height:620px){html .hero-video{display:none}}
-/* sections fill the remaining screen */
-#wallSection:not(.hidden),#fileSection:not(.hidden){display:flex;flex-direction:column;flex:1 1 0;min-height:0}
-#wallSection>div.mb-6{margin-bottom:8px}
-#wallSection>div .px-4{padding:.35rem .9rem}
-#fileContainer{display:grid;grid-auto-flow:column;grid-template-columns:none;gap:var(--g);width:var(--W);margin-inline:auto;flex:1 1 0;min-height:0;overflow-x:auto;overflow-y:auto;align-content:start;align-items:start;scrollbar-width:thin;overscroll-behavior:contain;grid-auto-columns:min(82%,300px)}
-/* games and apps: plain responsive grid that wraps onto new rows, no horizontal scrolling */
-#gamesContainer:not(.hidden){min-height:0}
-#gamesContainer .game-card:not(.is-flipped){border-radius:14px}
-#gamesContainer .face-front{padding:6px;gap:6px}
-#gamesContainer .face-front .cover-wrap{aspect-ratio:1/1;border-radius:11px}
-/* opened card = centered window with details, comments and download */
-#gamesContainer .game-card.is-flipped{position:fixed;inset:0;margin:auto;z-index:45;width:min(92vw,480px);height:fit-content!important;max-height:86dvh;overflow-y:auto;transform:none!important;box-shadow:0 30px 80px -20px rgba(15,31,61,.55)}
-#gamesContainer .game-card.is-flipped .face-front{display:none}
-#gamesContainer .face-back{padding:14px;gap:10px}
-body:has(#gamesContainer .game-card.is-flipped)::after{content:"";position:fixed;inset:0;z-index:44;background:rgba(15,31,61,.5)}
-.v3-actions{display:flex;gap:8px;align-items:stretch}
-.v3-actions .download-btn{flex:1;width:auto}
-/* wallpapers: a few independently-swipeable rows (phone), one wide swipeable row (pc) */
-#wallContainer{display:flex;flex-direction:column;gap:14px;flex:1 1 0;min-height:0}
-.wall-row{display:flex;gap:var(--g);overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:thin;overscroll-behavior:contain;padding:2px 2px 8px}
-.wall-row .game-card{flex:0 0 auto;scroll-snap-align:start;border-radius:12px}
-.wall-row .game-card .face-front{padding:4px;gap:5px}
-.wall-row .game-card .cover-wrap{border-radius:9px}
-#wallContainer[data-kind="phone"] .wall-row .game-card{width:clamp(108px,39vw,160px)}
-#wallContainer[data-kind="pc"] .wall-row .game-card{width:clamp(220px,64vw,340px)}
-#wallContainer .wall-dl{padding:6px 0;font-size:.7rem;border-radius:8px;min-height:0;gap:4px}
-#wallContainer .game-title{font-size:.78rem;min-height:0;margin-top:2px}
-/* bottom bar on every screen size, clear of the support bubble */
-#v3Nav{display:flex;max-width:520px;margin-inline:auto;border:1px solid var(--line);border-bottom:0;border-radius:16px 16px 0 0}
-html.admin-app #v3Nav,html.splash-on #v3Nav{display:none}
-@media (max-width:767px){#v3Nav{padding-right:84px}}
-</style>
 
-
-<style>
-
-/* ===== 7ASSON GAMING | MONOCHROME PREMIUM REDESIGN ===== */
-:root{
- --ink:#111;--muted:#555;--faint:#777;--bg:#f5f5f5;--paper:#fff;
- --line:#e5e5e5;--soft:#f1f1f1;--soft-hover:#e7e7e7;
- --accent:#111;--accent-2:#000;--gold:#111;--gold-text:#111;
- --glass:rgba(255,255,255,.88);--glass-strong:#fff;--glass-line:#e5e5e5;
- --field:#fff;--header:rgba(255,255,255,.94);
- --shadow:0 18px 55px rgba(0,0,0,.08);--blob:rgba(0,0,0,.035);
- color-scheme:light;
-}
-html.dark{
- --ink:#111;--muted:#555;--faint:#777;--bg:#f5f5f5;--paper:#fff;
- --line:#e5e5e5;--soft:#f1f1f1;--soft-hover:#e7e7e7;--accent:#111;--accent-2:#000;
- --gold:#111;--gold-text:#111;--glass:rgba(255,255,255,.9);--glass-strong:#fff;
- --glass-line:#e5e5e5;--field:#fff;--header:rgba(255,255,255,.94);
- --shadow:0 18px 55px rgba(0,0,0,.08);--blob:rgba(0,0,0,.035);
-}
-html,body{background:#f5f5f5!important;color:#111!important}
-body{font-family:'Cairo','Inter',sans-serif;line-height:1.65;background-image:none!important;overflow-x:hidden}
-::selection{background:#111;color:#fff}
-button,a,input,textarea,select{accent-color:#111}
-button{transition:transform .2s ease,background .2s ease,border-color .2s ease,box-shadow .2s ease}
-button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #111;outline-offset:3px}
-.site-header{background:rgba(255,255,255,.94)!important;border-bottom:1px solid #e8e8e8!important;box-shadow:0 5px 24px rgba(0,0,0,.035)!important;backdrop-filter:blur(18px)}
-.site-header>div{max-width:1440px;margin:auto;min-height:72px}
-main{max-width:1440px;margin-inline:auto}
-.hero-video{min-height:300px!important;border-radius:26px!important;overflow:hidden!important;background:#111!important;box-shadow:0 22px 55px rgba(0,0,0,.13)!important}
-.hero-video video{filter:grayscale(1) brightness(.48)!important}
-.hero-shade{background:linear-gradient(90deg,rgba(0,0,0,.84),rgba(0,0,0,.42))!important}
-.hero-title,.hero-sub{color:#fff!important}
-.hero-title{font-size:clamp(1.8rem,4vw,3.2rem)!important;font-weight:900!important;letter-spacing:-.04em}
-.hero-sub{color:#ddd!important}
-.btn-primary,.ld-btn,.gate-btn,.primary-btn,.download-btn{
- background:#111!important;color:#fff!important;border:1px solid #111!important;
- box-shadow:0 8px 20px rgba(0,0,0,.12)!important
-}
-.btn-primary:hover,.ld-btn:hover,.gate-btn:hover,.download-btn:hover{background:#333!important;transform:translateY(-2px)}
-.ui-soft,.ui-soft-hover,.ui-line,.ui-muted{color:#333!important;border-color:#e2e2e2!important;background:#fff!important}
-.ui-soft-hover:hover{background:#eee!important}
-#tabGamesBtn,#tabWallsBtn,#tabFilesBtn{border-radius:12px!important;min-height:44px;padding-inline:20px!important}
-#gamesContainer{gap:20px!important}
-#gamesContainer>*,#wallsContainer>*,#filesContainer>*{min-width:0}
-#gamesContainer .game-card,#gamesContainer .app-card,.game-card,.app-card,.wall-card,.file-card{
- border:1px solid #e8e8e8!important;border-radius:18px!important;background:#fff!important;
- box-shadow:0 8px 28px rgba(0,0,0,.045)!important;overflow:hidden
-}
-#gamesContainer .game-card:hover,.game-card:hover,.app-card:hover,.wall-card:hover{
- transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.09)!important
-}
-.card,.glass,.glass-card,.panel,.modal-content{background:#fff!important;border-color:#e7e7e7!important;color:#111!important;box-shadow:var(--shadow)!important}
-input,textarea,select,.form-input{background:#fff!important;color:#111!important;border:1px solid #ddd!important;border-radius:11px!important}
-input::placeholder,textarea::placeholder{color:#999!important}
-#splash{background:#f7f7f7!important;color:#111!important}
-#splash .ld-bg{background:radial-gradient(circle at 50% 0%,#e9e9e9,transparent 58%)!important}
-#splash .ld-grid{opacity:.16!important;background-image:linear-gradient(#aaa 1px,transparent 1px),linear-gradient(90deg,#aaa 1px,transparent 1px)!important}
-#splash .ld-blob{background:#ddd!important;filter:blur(55px)!important;opacity:.45!important}
-#splash .ld-mini-mark,#splash .ld-btn{background:#111!important;color:#fff!important}
-#splash .ld-title,#splash .ld-t1,#splash .ld-t2,#splash .ld-kicker,#splash .ld-eyebrow{color:#111!important}
-#splash .ld-tag,#splash .ld-feat span{color:#666!important}
-#splash .ld-feat,#splash .ld-dev,#splash .ld-card,#splash .ld-modal-box{
- background:#fff!important;border:1px solid #e8e8e8!important;color:#111!important;
- box-shadow:0 12px 35px rgba(0,0,0,.055)!important;border-radius:17px!important
-}
-#splash .ld-feat i,#splash .ld-h .ic{color:#111!important}
-#splash .ld-lang{background:#fff!important;color:#111!important;border:1px solid #ddd!important}
-#splash .ld-link{color:#333!important}
-#loginGate{background:rgba(0,0,0,.55)!important;backdrop-filter:blur(8px)}
-.gate-card{background:#fff!important;color:#111!important;border:1px solid #e6e6e6!important;border-radius:24px!important;box-shadow:0 24px 80px rgba(0,0,0,.2)!important}
-.gate-tabs,.gate-tab{border-color:#e5e5e5!important}
-.gate-tab.on{background:#111!important;color:#fff!important}
-.gate-title,.gate-kicker,.gate-lbl,.gate-foot{color:#111!important}
-.robot-btn{background:#111!important;border:1px solid #111!important;box-shadow:0 6px 18px rgba(0,0,0,.12)!important}
-.robot-btn:hover{background:#333!important}
-.robot-badge{background:#fff!important;color:#111!important}
-#v3Nav{background:rgba(255,255,255,.97)!important;border:1px solid #e4e4e4!important;box-shadow:0 -8px 30px rgba(0,0,0,.06)!important;backdrop-filter:blur(16px)}
-#v3Nav button,#v3Nav a{color:#555!important}
-#v3Nav .active,#v3Nav .on{color:#111!important}
-#toTopBtn{background:#111!important;color:#fff!important;border:1px solid #111!important}
-.orb{background:#ddd!important;opacity:.18!important;filter:blur(70px)!important}
-hr,.divider{border-color:#e8e8e8!important}
-.badge,.tag,.chip{background:#f1f1f1!important;color:#222!important;border-color:#e4e4e4!important}
-footer{background:#111!important;color:#eee!important}
-footer a{color:#fff!important}
-@media(min-width:768px){
- main{padding:34px 42px 70px!important}
- .hero-video{min-height:390px!important;margin-bottom:42px!important}
- #gamesContainer{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:22px!important}
- .site-header>div{padding-inline:42px!important}
-}
-@media(min-width:1200px){
- #gamesContainer{grid-template-columns:repeat(5,minmax(0,1fr))!important}
-}
-@media(max-width:767px){
- body{font-size:14px;padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}
- .site-header>div{min-height:62px;padding:9px 14px!important}
- main{padding:18px 14px 34px!important}
- .hero-video{min-height:270px!important;border-radius:19px!important;margin-bottom:26px!important}
- .hero-title{font-size:1.8rem!important}
- .hero-sub{font-size:.9rem!important;padding-inline:12px}
- #gamesContainer{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
- #gamesContainer .game-card,.game-card,.app-card,.wall-card{border-radius:14px!important}
- #tabGamesBtn,#tabWallsBtn,#tabFilesBtn{padding:9px 13px!important;font-size:12px!important;flex:1}
- .ld-wrap{padding:18px 16px 34px!important}
- .ld-title{font-size:clamp(2.6rem,13vw,4.5rem)!important}
- .ld-feats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
- .ld-feat{padding:14px 10px!important}
- .ld-top{gap:10px}
- .ld-dev{max-width:100%}
- #v3Nav{width:calc(100% - 16px)!important;max-width:none!important;left:8px!important;right:8px!important;bottom:0!important;padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;border-radius:16px 16px 0 0!important}
- #toTopBtn{bottom:calc(88px + env(safe-area-inset-bottom))!important}
- .gate-wrap{padding:16px!important}
- .gate-card{border-radius:20px!important}
-}
-@media(max-width:380px){
- #gamesContainer{gap:9px!important}
- .ld-feats{grid-template-columns:1fr 1fr!important}
- .ld-tools .ld-lang{padding:7px 9px!important}
-}
-
-</style>
 </head>
 <body class="min-h-screen flex flex-col">
     <!-- صفحة الترحيب: خلفية بيضاء + تعريف بالموقع + زر تسجيل الدخول -->
@@ -3493,21 +3318,13 @@ footer a{color:#fff!important}
             const c = document.getElementById('wallContainer');
             const tr = translations[currentLang];
             const list = wallData.filter(w => w.kind === curWallKind);
-            c.dataset.kind = curWallKind;
+            c.className = 'grid gap-3 sm:gap-6 items-start ' + (curWallKind === 'pc' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-5');
             c.innerHTML = '';
             if (!list.length) {
-                c.innerHTML = `<div class="text-center py-12 ui-faint">${tr.noWalls}</div>`;
+                c.innerHTML = `<div class="text-center py-12 col-span-full ui-faint">${tr.noWalls}</div>`;
                 return;
             }
-            // phone wallpapers: split across 2-3 independently swipeable rows · pc wallpapers: one swipeable row
-            const rowsCount = curWallKind === 'pc' ? 1 : Math.min(3, Math.max(2, Math.ceil(list.length / 4)));
-            const rows = Array.from({ length: rowsCount }, () => {
-                const row = document.createElement('div');
-                row.className = 'wall-row';
-                c.appendChild(row);
-                return row;
-            });
-            list.forEach((w, i) => {
+            list.forEach(w => {
                 const t = escapeHtml(w.title);
                 const card = document.createElement('div');
                 card.className = 'game-card';
@@ -3525,7 +3342,7 @@ footer a{color:#fff!important}
                 card.querySelector('.wall-dl').addEventListener('click', (e) => downloadWall(w, e.currentTarget));
                 card.querySelector('.wall-like').addEventListener('click', () => toggleWallLike(w));
                 card.dataset.wid = w.id;
-                rows[i % rowsCount].appendChild(card);
+                c.appendChild(card);
                 paintWallStats(w);
             });
         }
@@ -5218,42 +5035,6 @@ footer a{color:#fff!important}
     });
   });});});
   ['gamesContainer','wallSection','fileSection'].forEach(function(id){var c=document.getElementById(id); if(c) lz.observe(c,{childList:true,subtree:true});});
-})();
-</script>
-
-<script>
-(function(){
-  var gc=document.getElementById('gamesContainer'); if(!gc) return;
-  // inside the opened card: comments button sits next to Download
-  function tidy(card){
-    var cm=card.querySelector('.face-front .comments-btn'), dl=card.querySelector('.face-back .download-btn');
-    if(!cm||!dl||dl.parentNode.classList.contains('v3-actions')) return;
-    var row=document.createElement('div'); row.className='v3-actions';
-    dl.parentNode.insertBefore(row,dl); row.appendChild(cm); row.appendChild(dl);
-  }
-  new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(n){
-    if(n.nodeType===1&&n.classList.contains('game-card')) tidy(n);
-  });});}).observe(gc,{childList:true});
-  gc.querySelectorAll('.game-card').forEach(tidy);
-  // tap outside the opened card closes it
-  document.addEventListener('click',function(e){
-    var o=gc.querySelector('.game-card.is-flipped');
-    if(!o||e.target.closest('.game-card,.overlay,[id$="Modal"]')) return;
-    var b=o.querySelector('.flip-back'); if(b) b.click();
-  });
-  // mouse wheel scrolls the horizontal strips sideways
-  ['fileContainer'].forEach(function(id){
-    var el=document.getElementById(id); if(!el) return;
-    el.addEventListener('wheel',function(e){
-      if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){el.scrollLeft+=e.deltaY;e.preventDefault();}
-    },{passive:false});
-  });
-  // each wallpaper row scrolls sideways on its own, even though rows are re-created on every render
-  var wc=document.getElementById('wallContainer');
-  if(wc) wc.addEventListener('wheel',function(e){
-    var row=e.target.closest('.wall-row'); if(!row) return;
-    if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){row.scrollLeft+=e.deltaY;e.preventDefault();}
-  },{passive:false});
 })();
 </script>
 </body>
