@@ -636,6 +636,41 @@ html .site-footer{background:var(--soft);-webkit-backdrop-filter:none;backdrop-f
 @media (max-width:767px){#v3Nav{display:flex}html.admin-app #v3Nav,html.splash-on #v3Nav{display:none}body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}#toTopBtn{bottom:calc(84px + env(safe-area-inset-bottom))!important}}
 </style>
 
+
+<style id="7asson-monochrome-final">
+:root{--ink:#111!important;--muted:#555!important;--faint:#777!important;--glass:rgba(255,255,255,.82)!important;--glass-strong:rgba(255,255,255,.97)!important;--glass-line:rgba(0,0,0,.14)!important;--soft:rgba(0,0,0,.055)!important;--soft-hover:rgba(0,0,0,.11)!important;--field:#fff!important;--line:rgba(0,0,0,.16)!important;--accent:#111!important;--accent-2:#444!important;--gold:#111!important;--gold-text:#222!important;--header:rgba(255,255,255,.96)!important;--shadow:0 14px 38px -20px rgba(0,0,0,.28)!important;--bg:#fff!important;--blob:rgba(0,0,0,.035)!important}
+html.dark{--ink:#f5f5f5!important;--muted:#c4c4c4!important;--faint:#999!important;--glass:rgba(20,20,20,.84)!important;--glass-strong:rgba(12,12,12,.97)!important;--glass-line:rgba(255,255,255,.15)!important;--soft:rgba(255,255,255,.07)!important;--soft-hover:rgba(255,255,255,.13)!important;--field:#171717!important;--line:rgba(255,255,255,.16)!important;--accent:#fff!important;--accent-2:#ddd!important;--gold:#fff!important;--gold-text:#eee!important;--header:rgba(8,8,8,.97)!important;--shadow:0 14px 38px -20px rgba(0,0,0,.75)!important;--bg:#080808!important;--blob:rgba(255,255,255,.025)!important}
+html,body{background:#fff!important;color:#111!important}
+html.dark,html.dark body{background:#080808!important;color:#f5f5f5!important}
+::selection{background:#111!important;color:#fff!important}
+.site-header{background:var(--header)!important;border-bottom:1px solid var(--line)!important;backdrop-filter:blur(18px)}
+.btn-primary,.gate-btn,.app-ico{background:#111!important;color:#fff!important;border-color:#111!important;box-shadow:0 8px 22px rgba(0,0,0,.16)!important}
+html.dark .btn-primary,html.dark .gate-btn,html.dark .app-ico{background:#f5f5f5!important;color:#111!important;border-color:#f5f5f5!important}
+.ui-soft,.glass,.glass-strong,.menu-panel,.cs-card{background:var(--glass)!important;border-color:var(--line)!important}
+html.dark .ui-soft,html.dark .glass,html.dark .glass-strong,html.dark .menu-panel,html.dark .cs-card{background:var(--glass-strong)!important;border-color:var(--line)!important}
+.ui-accent,.text-cyan-300,.text-cyan-400,.text-cyan-500,.text-blue-400,.text-blue-500{color:var(--accent)!important}
+.border-cyan-500,.border-blue-500,.border-blue-400{border-color:var(--line)!important}
+.bg-cyan-500,.bg-blue-500,.bg-blue-600,.bg-indigo-500,.bg-indigo-600{background:#111!important;color:#fff!important}
+html.dark .bg-cyan-500,html.dark .bg-blue-500,html.dark .bg-blue-600,html.dark .bg-indigo-500,html.dark .bg-indigo-600{background:#f5f5f5!important;color:#111!important}
+[class*="text-cyan-"],[class*="text-blue-"],[class*="text-indigo-"]{color:var(--accent)!important}
+[class*="border-cyan-"],[class*="border-blue-"],[class*="border-indigo-"]{border-color:var(--line)!important}
+.logo-7,.logo-shine{color:var(--ink)!important;background:none!important;-webkit-text-fill-color:var(--ink)!important}
+html.dark .logo-7,html.dark .logo-shine{color:#fff!important;-webkit-text-fill-color:#fff!important}
+.hero-video{border-color:var(--line)!important;box-shadow:var(--shadow)!important}
+/* Keep the live hero video in its original colors and playback state. */
+#heroVideo{filter:none!important;opacity:1!important;mix-blend-mode:normal!important}
+.header-profile-trigger{display:inline-flex;align-items:center;justify-content:center;padding:0;border:0;background:transparent;border-radius:50%;cursor:pointer;flex:none;outline-offset:4px}
+.header-profile-trigger img{display:block;width:48px;height:48px;border:2px solid #111!important;box-shadow:0 3px 12px rgba(0,0,0,.16)}
+html.dark .header-profile-trigger img{border-color:#fff!important}
+#topCategoryTabs{display:none!important}
+/* Remove blue visual accents from remaining controls without touching media. */
+button:not(.header-profile-trigger),a{--tw-ring-color:rgba(0,0,0,.22)}
+.robot-btn{background:#111!important;border-color:#111!important}
+html.dark .robot-btn{background:#f5f5f5!important;border-color:#f5f5f5!important}
+.robot-btn svg{filter:grayscale(1)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+
 </head>
 <body class="min-h-screen flex flex-col">
     <!-- صفحة الترحيب: خلفية بيضاء + تعريف بالموقع + زر تسجيل الدخول -->
@@ -864,18 +899,14 @@ html .site-footer{background:var(--soft);-webkit-backdrop-filter:none;backdrop-f
                 <span class="robot-badge"><i class="fa-solid fa-bars"></i></span>
                 <span class="robot-bubble" id="robotBubble" aria-hidden="true">مرحبا بك</span>
             </button>
-            <button id="portBtn" type="button" class="robot-btn moto-btn" aria-label="بورتفوليو - أعمالي">
-                <svg class="robot moto" viewBox="0 0 64 64" aria-hidden="true"><circle class="mb-puff" cx="6" cy="42" r="2.6" fill="#cffafe"/><circle class="mb-puff d2" cx="6" cy="42" r="2" fill="#cffafe"/><g class="mb-body"><path d="M47 24L50 46" stroke="#fff" stroke-width="3.2" stroke-linecap="round" fill="none"/><path d="M40 22l8 2" stroke="#fff" stroke-width="3.2" stroke-linecap="round" fill="none"/><rect class="r-ear" x="11" y="29" width="17" height="5.5" rx="2.75"/><rect class="r-head" x="16" y="33" width="31" height="11" rx="5.5"/><rect class="r-face" x="23" y="35.8" width="15" height="5.4" rx="2.7"/><path d="M21 29c2-6 6-8 11-7l9 2" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><circle class="r-head" cx="24" cy="15" r="8.2"/><rect class="r-face" x="24" y="11" width="12" height="8" rx="4"/><ellipse class="r-eye" cx="29" cy="15" rx="1.5" ry="2"/><ellipse class="r-eye" cx="33.5" cy="15" rx="1.5" ry="2"/><circle class="r-bulb" cx="54" cy="30" r="3.4"/></g><circle cx="16" cy="46" r="8" fill="none" stroke="#fff" stroke-width="3.4"/><g class="mb-spokes"><path d="M16 40v12M10 46h12M11.8 41.8l8.4 8.4M20.2 41.8l-8.4 8.4" stroke="#cffafe" stroke-width="1.5" stroke-linecap="round" fill="none"/></g><circle cx="16" cy="46" r="2" fill="#fff"/><circle cx="50" cy="46" r="8" fill="none" stroke="#fff" stroke-width="3.4"/><g class="mb-spokes"><path d="M50 40v12M44 46h12M45.8 41.8l8.4 8.4M54.2 41.8l-8.4 8.4" stroke="#cffafe" stroke-width="1.5" stroke-linecap="round" fill="none"/></g><circle cx="50" cy="46" r="2" fill="#fff"/></svg>
-                <span class="robot-badge"><i class="fa-solid fa-briefcase"></i></span>
-                <span class="robot-bubble" id="portBubble" aria-hidden="true" data-translate="portBubble">اضغط هنا لمشاهدة أعمالي</span>
-            </button>
+            
             </div>
             <div class="flex items-center gap-3">
                 <div class="text-right">
                     <h1 class="logo" dir="ltr"><span class="logo-7">7</span><span class="logo-shine">ASSON GAMING</span></h1>
                     <span class="text-xs ui-muted" data-translate="developerTitle">المطور: حسن مصطفى</span>
                 </div>
-                <img src="1.jpg" alt="Hassan Mustafa" class="w-11 h-11 rounded-full border-2 border-cyan-500 object-cover shadow">
+                <button type="button" id="headerProfileBtn" class="header-profile-trigger" aria-label="فتح الملف الشخصي" title="الملف الشخصي"><img src="1.jpg" alt="Hassan Mustafa" class="w-11 h-11 rounded-full border-2 border-cyan-500 object-cover shadow"></button>
             </div>
         </div>
         <div class="bot-wrap w-full px-4 sm:px-8"><div id="botStrip" class="bot-strip" aria-hidden="true"></div></div>
@@ -890,10 +921,7 @@ html .site-footer{background:var(--soft);-webkit-backdrop-filter:none;backdrop-f
             <h2 class="hero-title mb-2" data-translate="mainTitle">مكتبة الألعاب الحصرية</h2>
             <p class="hero-sub max-w-xl mx-auto mb-6" data-translate="mainSubtitle">استكشف أحدث الألعاب، شاهد العروض، وقم بالتنزيل مباشرة</p>
             <div class="hero-actions">
-            <button type="button" id="portHeroBtn" class="robot-btn moto-btn port-round" aria-label="بورتفوليو - أعمالي" title="بورتفوليو">
-                <svg class="robot moto" viewBox="0 0 64 64" aria-hidden="true"><circle class="mb-puff" cx="6" cy="42" r="2.6" fill="#cffafe"/><circle class="mb-puff d2" cx="6" cy="42" r="2" fill="#cffafe"/><g class="mb-body"><path d="M47 24L50 46" stroke="#fff" stroke-width="3.2" stroke-linecap="round" fill="none"/><path d="M40 22l8 2" stroke="#fff" stroke-width="3.2" stroke-linecap="round" fill="none"/><rect class="r-ear" x="11" y="29" width="17" height="5.5" rx="2.75"/><rect class="r-head" x="16" y="33" width="31" height="11" rx="5.5"/><rect class="r-face" x="23" y="35.8" width="15" height="5.4" rx="2.7"/><path d="M21 29c2-6 6-8 11-7l9 2" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><circle class="r-head" cx="24" cy="15" r="8.2"/><rect class="r-face" x="24" y="11" width="12" height="8" rx="4"/><ellipse class="r-eye" cx="29" cy="15" rx="1.5" ry="2"/><ellipse class="r-eye" cx="33.5" cy="15" rx="1.5" ry="2"/><circle class="r-bulb" cx="54" cy="30" r="3.4"/></g><circle cx="16" cy="46" r="8" fill="none" stroke="#fff" stroke-width="3.4"/><g class="mb-spokes"><path d="M16 40v12M10 46h12M11.8 41.8l8.4 8.4M20.2 41.8l-8.4 8.4" stroke="#cffafe" stroke-width="1.5" stroke-linecap="round" fill="none"/></g><circle cx="16" cy="46" r="2" fill="#fff"/><circle cx="50" cy="46" r="8" fill="none" stroke="#fff" stroke-width="3.4"/><g class="mb-spokes"><path d="M50 40v12M44 46h12M45.8 41.8l8.4 8.4M54.2 41.8l-8.4 8.4" stroke="#cffafe" stroke-width="1.5" stroke-linecap="round" fill="none"/></g><circle cx="50" cy="46" r="2" fill="#fff"/></svg>
-                <span class="robot-badge"><i class="fa-solid fa-briefcase"></i></span>
-            </button>
+            
             <button type="button" data-install class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm cursor-pointer">
                 <i class="fa-solid fa-mobile-screen-button text-lg"></i><span data-translate="installHero">ثبّت التطبيق على هاتفك</span>
             </button>
@@ -906,7 +934,7 @@ html .site-footer{background:var(--soft);-webkit-backdrop-filter:none;backdrop-f
             </div>
         </section>
 
-        <div class="flex flex-wrap justify-center gap-2 mb-6">
+        <div id="topCategoryTabs" class="flex flex-wrap justify-center gap-2 mb-6">
             <button type="button" id="tabGamesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-primary flex items-center gap-2"><i class="fa-solid fa-gamepad"></i><span data-translate="tabGamesBtn">الألعاب</span></button>
             <button type="button" id="tabWallsBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-image"></i><span data-translate="tabWallsBtn">الخلفيات</span></button>
             <button type="button" id="tabFilesBtn" class="px-4 py-2 rounded-xl text-sm font-bold cursor-pointer ui-soft ui-soft-hover ui-muted border ui-line flex items-center gap-2"><i class="fa-solid fa-folder-open"></i><span data-translate="tabFilesBtn">الملفات</span></button>
@@ -3296,20 +3324,10 @@ html .site-footer{background:var(--soft);-webkit-backdrop-filter:none;backdrop-f
             clearInterval(portRoleTimer);
             if (!fromPop && history.state && history.state.portfolio) { try { history.back(); } catch (e) {} }
         }
-        document.getElementById('portBtn').addEventListener('click', openPortfolio);
-        document.getElementById('portHeroBtn').addEventListener('click', openPortfolio);
+        document.getElementById('headerProfileBtn').addEventListener('click', openPortfolio);
         document.getElementById('portCloseBtn').addEventListener('click', () => closePortfolio(false));
         window.addEventListener('popstate', () => closePortfolio(true));
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.getElementById('projModal').classList.contains('hidden')) closePortfolio(false); });
-        // فقاعة الدراجة: كل 8 ثوانٍ تظهر "اضغط هنا لمشاهدة أعمالي" (نص فقط)
-        (function () {
-            const pb = document.getElementById('portBtn');
-            setInterval(() => {
-                if (document.hidden || document.documentElement.classList.contains('splash-on') || !document.getElementById('projSection').classList.contains('hidden')) return;
-                pb.classList.add('greet', 'talk');
-                setTimeout(() => pb.classList.remove('greet', 'talk'), 3200);
-            }, 8000);
-        })();
         document.getElementById('subPhoneBtn').addEventListener('click', () => showWallKind('phone'));
         document.getElementById('subPcBtn').addEventListener('click', () => showWallKind('pc'));
         document.getElementById('langSelect').addEventListener('change', () => { renderWallpapers(); renderProjects(); });
