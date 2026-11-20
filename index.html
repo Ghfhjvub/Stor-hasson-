@@ -635,6 +635,65 @@ html .site-footer{background:var(--soft);-webkit-backdrop-filter:none;backdrop-f
 #v3Nav button.on{color:var(--accent);background:var(--soft)}
 @media (max-width:767px){#v3Nav{display:flex}html.admin-app #v3Nav,html.splash-on #v3Nav{display:none}body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}#toTopBtn{bottom:calc(84px + env(safe-area-inset-bottom))!important}}
 </style>
+<style id="themeV3b">
+/* ===== v3.1 : fixed one-screen layout, tiny cards, horizontal scrolling ===== */
+:root{--W:min(calc(100vw - 24px),680px);--g:8px}
+html:not(.admin-app),html:not(.admin-app) body{height:100%;overflow:hidden;overscroll-behavior:none}
+html:not(.admin-app) body{height:100dvh;min-height:0;padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+html .site-header{flex:none}
+html:not(.admin-app) main{flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:hidden;width:100%;max-width:720px;padding:8px 12px 0}
+/* removed: top section tabs, footer, back-to-top (kept in the DOM so the app code still works) */
+#tabGamesBtn,#tabWallsBtn,#tabFilesBtn{display:none}
+main>div:has(>#tabGamesBtn){display:none}
+html .site-footer,#toTopBtn{display:none}
+/* compact hero */
+html .hero-video{flex:none;display:block;min-height:0;margin:0 0 8px;padding:12px 14px;border-radius:16px}
+html .hero-video .hero-title{font-size:clamp(1.05rem,4.6vw,1.5rem);margin:0 0 6px}
+html .hero-video .hero-sub{display:none}
+.hero-actions{gap:8px}
+.hero-actions .port-round{width:38px;height:38px}
+.hero-actions .btn-primary{padding:.4rem 1rem;font-size:.75rem}
+.visitor-badge{margin:6px auto 0;padding:.2rem .7rem;font-size:.7rem}
+@media (max-height:620px){html .hero-video{display:none}}
+/* sections fill the remaining screen */
+#wallSection:not(.hidden),#fileSection:not(.hidden){display:flex;flex-direction:column;flex:1 1 0;min-height:0}
+#wallSection>div.mb-6{margin-bottom:8px}
+#wallSection>div .px-4{padding:.35rem .9rem}
+#gamesContainer:not(.hidden),#wallContainer,#fileContainer{display:grid;grid-auto-flow:column;grid-template-columns:none;gap:var(--g);width:var(--W);margin-inline:auto;flex:1 1 0;min-height:0;overflow-x:auto;overflow-y:hidden;align-content:start;align-items:start;scrollbar-width:thin;overscroll-behavior:contain}
+/* games and apps: 4 per row */
+#gamesContainer:not(.hidden){--cw:calc((var(--W) - 3*var(--g))/4);grid-auto-columns:var(--cw);grid-template-rows:repeat(auto-fill,calc(var(--cw) + 46px))}
+#gamesContainer>.col-span-full{grid-column:1/span 4;grid-row:1}
+#gamesContainer .game-card:not(.is-flipped){border-radius:12px}
+#gamesContainer .face-front{padding:4px;gap:4px}
+#gamesContainer .face-front .cover-wrap{aspect-ratio:1/1;border-radius:9px}
+#gamesContainer .face-front :is(.game-title,.dev-by,.comments-btn){display:none}
+#gamesContainer .face-front .flip-btn{padding:6px 0;font-size:.62rem;gap:3px;border-radius:9px;min-height:0}
+/* opened card = centered window with details, comments and download */
+#gamesContainer .game-card.is-flipped{position:fixed;inset:0;margin:auto;z-index:45;width:min(92vw,480px);height:fit-content!important;max-height:86dvh;overflow-y:auto;transform:none!important;box-shadow:0 30px 80px -20px rgba(15,31,61,.55)}
+#gamesContainer .game-card.is-flipped .face-front{display:none}
+#gamesContainer .face-back{padding:14px;gap:10px}
+body:has(#gamesContainer .game-card.is-flipped)::after{content:"";position:fixed;inset:0;z-index:44;background:rgba(15,31,61,.5)}
+.v3-actions{display:flex;gap:8px;align-items:stretch}
+.v3-actions .download-btn{flex:1;width:auto}
+/* wallpapers: 6 per row */
+#wallContainer{--cw:calc((var(--W) - 5*var(--g))/6);grid-auto-columns:var(--cw);grid-template-rows:repeat(auto-fill,calc(var(--cw)*1.78 + 36px))}
+#wallContainer[class*="grid-cols-1"]{grid-template-rows:repeat(auto-fill,calc(var(--cw)*.625 + 36px))}
+#wallContainer>.col-span-full{grid-column:1/span 6;grid-row:1}
+#wallContainer .game-card{border-radius:9px}
+#wallContainer .face-front{padding:3px;gap:3px}
+#wallContainer .cover-wrap{border-radius:7px}
+#wallContainer .face-front :is(.game-title,.wall-like-btn,.wall-dl-stat){display:none}
+#wallContainer .face-front>.flex{display:none}
+#wallContainer .wall-dl{padding:4px 0;font-size:0;border-radius:7px;min-height:0}
+#wallContainer .wall-dl i{font-size:.75rem}
+/* files: one horizontal strip */
+#fileContainer{grid-auto-columns:min(82%,300px);overflow-y:auto}
+/* bottom bar on every screen size, clear of the support bubble */
+#v3Nav{display:flex;max-width:520px;margin-inline:auto;border:1px solid var(--line);border-bottom:0;border-radius:16px 16px 0 0}
+html.admin-app #v3Nav,html.splash-on #v3Nav{display:none}
+@media (max-width:767px){#v3Nav{padding-right:84px}}
+</style>
+
 
 </head>
 <body class="min-h-screen flex flex-col">
@@ -5035,6 +5094,36 @@ html .site-footer{background:var(--soft);-webkit-backdrop-filter:none;backdrop-f
     });
   });});});
   ['gamesContainer','wallSection','fileSection'].forEach(function(id){var c=document.getElementById(id); if(c) lz.observe(c,{childList:true,subtree:true});});
+})();
+</script>
+
+<script>
+(function(){
+  var gc=document.getElementById('gamesContainer'); if(!gc) return;
+  // inside the opened card: comments button sits next to Download
+  function tidy(card){
+    var cm=card.querySelector('.face-front .comments-btn'), dl=card.querySelector('.face-back .download-btn');
+    if(!cm||!dl||dl.parentNode.classList.contains('v3-actions')) return;
+    var row=document.createElement('div'); row.className='v3-actions';
+    dl.parentNode.insertBefore(row,dl); row.appendChild(cm); row.appendChild(dl);
+  }
+  new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(n){
+    if(n.nodeType===1&&n.classList.contains('game-card')) tidy(n);
+  });});}).observe(gc,{childList:true});
+  gc.querySelectorAll('.game-card').forEach(tidy);
+  // tap outside the opened card closes it
+  document.addEventListener('click',function(e){
+    var o=gc.querySelector('.game-card.is-flipped');
+    if(!o||e.target.closest('.game-card,.overlay,[id$="Modal"]')) return;
+    var b=o.querySelector('.flip-back'); if(b) b.click();
+  });
+  // mouse wheel scrolls the grids sideways
+  ['gamesContainer','wallContainer','fileContainer'].forEach(function(id){
+    var el=document.getElementById(id); if(!el) return;
+    el.addEventListener('wheel',function(e){
+      if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){el.scrollLeft+=e.deltaY;e.preventDefault();}
+    },{passive:false});
+  });
 })();
 </script>
 </body>
